@@ -89,6 +89,8 @@ struct LoginView: View {
                         Button("Login") {
                             _ = userManager.login(username: username, password: password)
                         }
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.black)
                         .padding(10)
                         .frame(maxWidth: .infinity,minHeight: 48)
                         .background(.white)
