@@ -12,8 +12,8 @@ struct MoviePreference {
     var isLiked: Bool = false
     var isDisliked: Bool = false
 }
-//MARK: - liked disliked
-class User: ObservableObject {
+//MARK: - userClass blueprint
+class UserBlueprint: ObservableObject {
     
     @Published var username: String
     @Published var profilePictureName: String
@@ -59,19 +59,64 @@ class User: ObservableObject {
     }
 }
 
+
+//MARK: - Class that manages the blueprint
 class UserManager: ObservableObject {
-    @Published var currentUser: User?
+    @Published var currentUser: UserBlueprint?
+    @Published private var userDictionary: [String: UserBlueprint] = [:] // username: User
+    
     static let shared = UserManager()
     
     private init() {}
     
-    func login(username: String, password: String) -> Bool {
-        // Simple login - in a real app you'd want more security
-        currentUser = User(username: username, password: password)
+    // Create new user
+    func createUser(NewUsername: String, Newpassword: String) -> Bool {
+        // Check if username already exists
+        guard !userDictionary.keys.contains(NewUsername) else {
+            return false
+        }
+        
+        // Create new user
+        let newUser = UserBlueprint(username: NewUsername, password: Newpassword)
+        userDictionary[NewUsername] = newUser
         return true
     }
     
+    // Login existing user
+    func login(LoginUsername: String, LoginPassword: String) -> Bool {
+        guard 
+        let Tempuser = userDictionary[LoginUsername],
+              Tempuser.Password == LoginPassword else {
+            return false
+        }
+        
+        currentUser = Tempuser
+        return true
+    }
+    
+    // Delete user account
+    func deleteUser(DelUsername: String, DelPassword: String) -> Bool {
+        guard 
+        let Tempuser = userDictionary[DelUsername],
+        
+        Tempuser.Password == DelPassword else {
+            return false
+        }
+        
+        users.removeValue(forKey: DelUsername)
+        if currentUser?.username == DelUsername {
+            logout()
+        }
+        return true
+    }
+    
+    // Logout current user
     func logout() {
         currentUser = nil
+    }
+    
+    // Check if username exists
+    func userExists(_ username: String) -> Bool {
+        return users.keys.contains(username)
     }
 }

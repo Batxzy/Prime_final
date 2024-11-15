@@ -95,8 +95,6 @@ struct LoginView: View {
                     .cornerRadius(8)
                     .padding(.horizontal,25)
                     
-                    Text("New? Create Account")
-                    .underline(true,pattern:.solid)
                 }
                 .frame(maxWidth: .infinity,alignment: .center)
                 .padding(.horizontal,35)
