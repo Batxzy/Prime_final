@@ -210,7 +210,7 @@ struct ContentView2: View {
     @StateObject private var userManager = UserManager.shared
     
     var body: some View {
-        NavigationView {  // or NavigationStack for iOS 16+
+        NavigationView { 
             if userManager.currentUser != nil {
                 VStack(alignment:.leading, spacing: 0) {
                     //imagen
