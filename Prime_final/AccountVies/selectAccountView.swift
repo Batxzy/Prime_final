@@ -2,28 +2,28 @@
 import SwiftUI
 
 struct SelectAccountView: View {
-@State private isEditing = false
-
+@State private var isEditing = false
 var body: some View {
 //MARK: - main view
         VStack(alignment:.leading, spacing:15){ 
-            VStack(alignment.bottom) {
+            VStack(alignment: .bottom) {
                 Text("Who's Watching?")
                     .font(.system(size: 25, weight: .black))
                     .foregroundColor(.white)
-
-                ProfileGridView().opacity(isEditing ? 0 : 1)
             }
             .padding(27)
             .frame(maxWidth:.infinity,alignment:.bottom)
-
+            
+            ProfileGridView().opacity(isEditing ? 0 : 1)
+            .frame(maxHeight: .infinity ,maxWidth: .infinity)
+            BottomEditView(isEditing: $isEditing)
          }
             .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
      }
 }
 
 //MARK: - Profile Button
-struct profileButton: view {
+struct ProfileButton: View {
     var profileName: String
     var PFPimage: String
     @Binding var isEditing: Bool
@@ -51,15 +51,16 @@ struct profileButton: view {
             }
             .frame(maxWidth: 88 ,maxHeight: 133, alignment: .top)
             .onTapGesture {
-                if isEditing {
-                    userManager.deleteUser(username: profileName)
-                } else {
-                    userManager.currentUser = userManager.userDictionary[profileName]
-                    userManager.currentScreen = .login
-                }
-                }
+            if userManager.currentUser?.username == profileName {
+                userManager.currentScreen = .editAccount // Navigate to edit account view
+            } else {
+                userManager.currentUser = userManager.userDictionary[profileName]
+                userManager.currentScreen = .welcomeBack
+            }
+        }
     }
 }
+
 //MARK: - Add Profile Button
 struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
@@ -87,7 +88,7 @@ struct AddProfileButton: View {
 }
 
 //MARK: - Proflie Grid View
-struct ProfileGridView :View {
+struct ProfileGridView: View {
     @Binding var isEditing : Bool
     //imporatar el objeto que controla los usuarios
     @StateObject private var userManager = UserManager.shared
@@ -101,7 +102,7 @@ struct ProfileGridView :View {
                 ForEach(Array(userManager.userDictionary.values), id: \.username) { user in 
                     ProfileButton(profileName: user.username, PFPimage: user.profilePictureName, isEditing: $isEditing)
                     }
-                AddProfileButton()
+                AddProfileButton().opacity(isEditing ? 0 : 1)
             }
             .padding(.horizontal:51)
         }
@@ -110,21 +111,25 @@ struct ProfileGridView :View {
 
 
 //MARK: - edit profile, learn more
-struct BottomEditView :View{
+struct BottomEditView: View {
     @StateObject private var userManager = UserManager.shared 
-
+    @Binding var isEditing: Bool
     var body: some View {
+
+    //done y editar button
         VStack(alignment:.leading,spacing:26){
             Button(action: {
-                userManager.currentScreen = .createAccount
-            }) {
-                Text("Edit Profile")
-                .font(.system(size: 15, weight: .black))
-            }
+                isEditing.toggle()
+                }) {
+                    Text(isEditing ? "Done" : "Edit Profile")
+                    .font(.system(size: 15, weight: .black))
+                    .foregroundColor(isEditing ? .black : .white)
+                }
             .padding(.horizontal, 10)
             .frame(maxWidth:.infinity, minHeight: 48)
-            .background(.white.opacity(0.2))
+            .background(isEditing ? Color.white : .white.opacity(0.2))
             .cornerRadius(8)
+
         }
         .padding(.horizontal, 41)
         .frame(maxWidth:.infinity,alignment:.topLeading)
@@ -133,5 +138,5 @@ struct BottomEditView :View{
 
 
 #Preview {
-    ProfileGridView()
+    SelectAccountView()
 }
