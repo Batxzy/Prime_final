@@ -2,17 +2,18 @@
 //  LoginView.swift
 //  new_final
 //
-//  Created by Alumno on 13/11/24.
+//  Created by Jose Lopez on 13/11/24.
 //
 
 import SwiftUI
 
-struct LoginView: View {
+struct CreateAccountView: View {
     @StateObject private var userManager = UserManager.shared
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
-    
+    @State private var showError = false
+    @State private var errorMessage = ""
     
     var body: some View {
         ZStack {
@@ -84,9 +85,17 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                         
                    // Login Button     
-                    Button("Login") {
-                            _ = userManager.login(username: username, password: password)
-                        }
+                Button("Create Account") {
+                    if userManager.createUser(username: username, password: password) {
+                        // Account created successfully
+                        username = ""
+                        password = ""
+                        userManager.currentScreen = .selectUser
+                    } else {
+                        showError = true
+                        errorMessage = "Username already exists"
+                    }
+                }
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(.black)
                     .padding(10)
@@ -94,18 +103,25 @@ struct LoginView: View {
                     .background(.white)
                     .cornerRadius(8)
                     .padding(.horizontal,25)
-                    
+                
+                Button("Already have an account? Login") {
+                    userManager.currentScreen = .login
+                }
+                .underline(true, pattern: .solid)
+                .foregroundColor(.white)
                 }
                 .frame(maxWidth: .infinity,alignment: .center)
                 .padding(.horizontal,35)
-                
-            }
-            
         }
-        
+        .alert("Error", isPresented: $showError, actions: {
+                Button("OK", role: .cancel) { }
+            }, message: {
+                Text(errorMessage)
+            })
+        }
     }
 }
 
 #Preview {
-    LoginView()
+    CreateAccountView()
 }

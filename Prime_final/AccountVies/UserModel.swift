@@ -12,6 +12,16 @@ struct MoviePreference {
     var isLiked: Bool = false
     var isDisliked: Bool = false
 }
+
+//MARK: - AuthScreen
+enum AuthScreen {
+    case createAccount
+    case login
+    case selectUser
+    case deleteAccount
+    case welcomeBack
+}
+
 //MARK: - userClass blueprint
 class UserBlueprint: ObservableObject {
     
@@ -64,59 +74,66 @@ class UserBlueprint: ObservableObject {
 class UserManager: ObservableObject {
     @Published var currentUser: UserBlueprint?
     @Published private var userDictionary: [String: UserBlueprint] = [:] // username: User
-    
+    @Published var currentScreen: AuthScreen = .createAccount
+
     static let shared = UserManager()
     
     private init() {}
     
+    var userCount: Int {
+        return userDictionary.count
+    }
+
     // Create new user
-    func createUser(NewUsername: String, Newpassword: String) -> Bool {
+    func createUser(newUsername: String, newPassword: String) -> Bool {
         // Check if username already exists
-        guard !userDictionary.keys.contains(NewUsername) else {
+        guard !userDictionary.keys.contains(newUsername) else {
             return false
         }
         
         // Create new user
-        let newUser = UserBlueprint(username: NewUsername, password: Newpassword)
-        userDictionary[NewUsername] = newUser
+        let newUser = UserBlueprint(username: newUsername, password: newPassword)
+        userDictionary[newUsername] = newUser
         return true
     }
     
     // Login existing user
-    func login(LoginUsername: String, LoginPassword: String) -> Bool {
+    func login(loginUsername: String, loginPassword: String) -> Bool {
         guard 
-        let Tempuser = userDictionary[LoginUsername],
-              Tempuser.Password == LoginPassword else {
+        let tempUser = userDictionary[loginUsername],
+              tempUser.Password == loginPassword else {
             return false
         }
         
-        currentUser = Tempuser
+        currentUser = tempUser
         return true
     }
     
     // Delete user account
-    func deleteUser(DelUsername: String, DelPassword: String) -> Bool {
+    func deleteUser(delUsername: String, delPassword: String) -> Bool {
         guard 
-        let Tempuser = userDictionary[DelUsername],
+        let tempUser = userDictionary[delUsername],
         
-        Tempuser.Password == DelPassword else {
+        tempUser.Password == delPassword else {
             return false
         }
         
-        users.removeValue(forKey: DelUsername)
-        if currentUser?.username == DelUsername {
+        userDictionary.removeValue(forKey: delUsername)
+        if currentUser?.username == delUsername {
             logout()
         }
+        // Determine next screen
+        currentScreen = userCount > 0 ? .selectUser : .createAccount
         return true
     }
-    
     // Logout current user
     func logout() {
         currentUser = nil
+        currentScreen = userCount > 0 ? .selectUser : .createAccount
     }
     
     // Check if username exists
     func userExists(_ username: String) -> Bool {
-        return users.keys.contains(username)
+        return userDictionary.keys.contains(username)
     }
 }

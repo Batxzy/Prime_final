@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var userManager = UserManager.shared
+    @ObservedObject private var userManager = UserManager.shared
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
-    
+    @State private var showError = false
+    @State private var errorMessage = ""
     
     var body: some View {
         ZStack {
@@ -37,7 +38,7 @@ struct LoginView: View {
 
                     // Username
                     VStack(alignment: .leading,spacing: 10){
-                            Text("Login").font(.callout.bold()).foregroundColor(.white)
+                            Text("Username").font(.callout.bold()).foregroundColor(.white)
 
                             TextField("Username", text: $username)
                                 .preferredColorScheme(.dark)
@@ -84,9 +85,16 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                         
                    // Login Button     
-                    Button("Login") {
-                            _ = userManager.login(username: username, password: password)
+                   Button("Login") {
+                            if userManager.login(username: username, password: password) {
+                    // Login successful
+                    username = ""
+                    password = ""
+                        } else {
+                            showError = true
+                            errorMessage = "Invalid username or password"
                         }
+                    }
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(.black)
                     .padding(10)
@@ -95,16 +103,21 @@ struct LoginView: View {
                     .cornerRadius(8)
                     .padding(.horizontal,25)
                     
-                    Text("New? Create Account")
-                    .underline(true,pattern:.solid)
-                }
+                    Button("New? Create a new Account") {
+                        userManager.currentScreen = .createAccount
+                    }
+                            .underline(true, pattern: .solid)
+                            .foregroundColor(.white)
+            }
                 .frame(maxWidth: .infinity,alignment: .center)
                 .padding(.horizontal,35)
-                
             }
-            
+            .alert("Error", isPresented: $showError) {
+                        Button("dissmis") { }
+                            } message: {
+                                Text(errorMessage)
+                                    }
         }
-        
     }
 }
 
