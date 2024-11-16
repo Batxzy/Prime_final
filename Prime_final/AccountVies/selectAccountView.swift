@@ -24,7 +24,9 @@ var body: some View {
 struct profileButton: view {
     var profileName: String
     var PFPimage: String
-
+    @Binding var isEditing: Bool
+    @StateObject private var userManager = UserManager.shared
+    
     var body: some View{
         VStack(alignment:.center,spacing:5){
             Image(PFPimage)
@@ -68,7 +70,7 @@ struct AddProfileButton: View {
 
 //MARK: - Proflie Grid View
 struct ProfileGridView :View {
-    
+    @State private var isEditing = false
     //imporatar el objeto que controla los usuarios
     @StateObject private var userManager = UserManager.shared
 
@@ -79,7 +81,7 @@ struct ProfileGridView :View {
         ScrollView {
             LazyVGrid(columns:columns, spacing: 20) {
                 ForEach(Array(userManager.userDictionary.values), id: \.username) { user in 
-                    ProfileButton(profileName: user.username, PFPimage: user.profilePictureName)
+                    ProfileButton(profileName: user.username, PFPimage: user.profilePictureName, isEditing: $isEditing)
                     }
                 AddProfileButton()
             }
@@ -91,12 +93,26 @@ struct ProfileGridView :View {
 
 //MARK: - edit profile, learn more
 struct BottomEditView :View{
-    VStack(alignment:.leading,spacing:26){
-        
+    @StateObject private var userManager = UserManager.shared 
+
+    var body: some View {
+        VStack(alignment:.leading,spacing:26){
+            Button(action: {
+                userManager.currentScreen = .createAccount
+            }) {
+                Text("Edit Profile")
+                .font(.system(size: 15, weight: .black))
+            }
+            .padding(.horizontal, 10)
+            .frame(maxWidth:.infinity, minHeight: 48)
+            .background(.white.opacity(0.2))
+            .cornerRadius(8)
+        }
+        .padding(.horizontal, 41)
+        .frame(maxWidth:.infinity,alignment:.topLeading)
     }
-    .padding(.horizontal, 41)
-    .frame(maxWidth:.infinity,alignment:.topLeading)
 }
+
 
 #Preview {
     ProfileGridView()
