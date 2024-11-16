@@ -20,6 +20,8 @@ enum AuthScreen {
     case selectUser
     case deleteAccount
     case welcomeBack
+    case editProfile
+    case home
 }
 
 //MARK: - userClass blueprint
@@ -72,6 +74,7 @@ class UserBlueprint: ObservableObject {
 
 //MARK: - Class that manages the blueprint
 class UserManager: ObservableObject {
+    @Published var selectedUserForSwitch: String?
     @Published var currentUser: UserBlueprint?
     @Published private var userDictionary: [String: UserBlueprint] = [:] // username: User
     @Published var currentScreen: AuthScreen = .createAccount
@@ -84,6 +87,15 @@ class UserManager: ObservableObject {
         return userDictionary.count
     }
 
+    // function to switch to user
+    func switchToUser(Switchusername: String) {
+    // Validate user exists before allowing switch
+    guard userDictionary[Switchusername] != nil else { 
+        return
+    }
+    selectedUserForSwitch = Switchusername
+    currentScreen = .welcomeBack
+}
     // Create new user
     func createUser(newUsername: String, newPassword: String) -> Bool {
         // Check if username already exists
@@ -104,7 +116,10 @@ class UserManager: ObservableObject {
               tempUser.Password == loginPassword else {
             return false
         }
-        
+        // If switching from another user, logout first
+   
+        selectedUserForSwitch = nil // Clear selected user after successful switch
+        currentScreen = .home // Or whatever your main screen is
         currentUser = tempUser
         return true
     }
@@ -128,6 +143,8 @@ class UserManager: ObservableObject {
     }
     // Logout current user
     func logout() {
+        currentUser = nil
+        selectedUserForSwitch = nil
         currentUser = nil
         currentScreen = userCount > 0 ? .selectUser : .createAccount
     }

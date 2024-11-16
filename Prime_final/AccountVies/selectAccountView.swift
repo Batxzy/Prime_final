@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct SelectAccountView: View {
+@State private isEditing = false
 
 var body: some View {
 //MARK: - main view
@@ -10,7 +11,8 @@ var body: some View {
                 Text("Who's Watching?")
                     .font(.system(size: 25, weight: .black))
                     .foregroundColor(.white)
-                ProfileGridView()
+
+                ProfileGridView().opacity(isEditing ? 0 : 1)
             }
             .padding(27)
             .frame(maxWidth:.infinity,alignment:.bottom)
@@ -28,20 +30,36 @@ struct profileButton: view {
     @StateObject private var userManager = UserManager.shared
     
     var body: some View{
-        VStack(alignment:.center,spacing:5){
+            VStack(alignment:.center,spacing:5) {
+            ZStack{
             Image(PFPimage)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 85, height: 85)
-                .clipShape(Circle())
-            Text(profileName)
-                .font(.system(size: 15,weight: .black))
-                .foregroundColor(.white)
-        }
-         .frame(maxWidth: 88 ,maxHeight: 133, alignment: .top)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 85, height: 85)
+                    .clipShape(Circle())
+                    .opacity(isEditing ? 0.5 : 1.0)
+
+                if isEditing {
+                        Image(systemName: "pencil.circle.fill") // or your custom pen image
+                            .font(.system(size: 30))
+                            .foregroundColor(.white)
+                    }
+            }
+                Text(profileName)
+                    .font(.system(size: 15,weight: .black))
+                    .foregroundColor(.white)
+            }
+            .frame(maxWidth: 88 ,maxHeight: 133, alignment: .top)
+            .onTapGesture {
+                if isEditing {
+                    userManager.deleteUser(username: profileName)
+                } else {
+                    userManager.currentUser = userManager.userDictionary[profileName]
+                    userManager.currentScreen = .login
+                }
+                }
     }
 }
-
 //MARK: - Add Profile Button
 struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
@@ -70,7 +88,7 @@ struct AddProfileButton: View {
 
 //MARK: - Proflie Grid View
 struct ProfileGridView :View {
-    @State private var isEditing = false
+    @Binding var isEditing : Bool
     //imporatar el objeto que controla los usuarios
     @StateObject private var userManager = UserManager.shared
 
