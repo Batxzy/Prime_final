@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//MARK: - Create Account View
 struct CreateAccountView: View {
     @StateObject private var userManager = UserManager.shared
     @State private var username = ""
@@ -36,7 +37,7 @@ struct CreateAccountView: View {
                 
                 VStack(alignment: .center, spacing: 25) {
 
-                    // Username
+//MARK: - username
                     VStack(alignment: .leading,spacing: 10){
                             Text("Login").font(.callout.bold()).foregroundColor(.white)
 
@@ -54,7 +55,7 @@ struct CreateAccountView: View {
                         }
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                     
-                    // Password
+//MARK: - password
                     VStack(alignment: .leading,spacing: 10){
 
                             Text("Password")
@@ -84,8 +85,8 @@ struct CreateAccountView: View {
                         }
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                         
-                   // Login Button     
-                Button("Create Account") {
+//MARK: - Create Account Button
+                Button("Create") {
                     if userManager.createUser(username: username, password: password) {
                         // Account created successfully
                         username = ""
@@ -103,7 +104,8 @@ struct CreateAccountView: View {
                     .background(.white)
                     .cornerRadius(8)
                     .padding(.horizontal,25)
-                
+                    
+//MARK: - already have an account
                 Button("Already have an account? Login") {
                     userManager.currentScreen = .login
                 }

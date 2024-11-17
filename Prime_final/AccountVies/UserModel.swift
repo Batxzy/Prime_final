@@ -157,6 +157,7 @@ class UserManager: ObservableObject {
     }
 
     func updateProfilePictureName(to newImageName: String) -> Bool {
+   
     // Validate image exists
     let allImages = profilePictureCategories.flatMap { $0.images }
     guard allImages.contains(newImageName) else {

@@ -1,22 +1,64 @@
 import SwiftUI
 
-struct selectProfilePic: View {
-
+struct EditAccountView: View {
+//MARK: - un chingo de variables y el singleton
+    @ObservedObject private var userManager = UserManager.shared
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var originalUsername: String = ""
     @State private var originalPassword: String = ""
     @State private var isSecured: Bool = true
-    @State private var isSaving: Bool = false
+    @State private var showingImagePicker = false
+    @State private var showingDeleteAlert = false
+    @State private var selectedProfilePicture: String?
 
+//MARK:- funciciones
+
+    // propiedad computada para saber si hay cambios
   private var hasChanges: Bool {
         username != originalUsername || password != originalPassword
+    }
+
+    // Que cargeu los datos del usuario
+    private func loadUserData() {
+        if let currentUser = userManager.currentUser {
+            username = currentUser.username
+            password = currentUser.Password
+            originalUsername = currentUser.username 
+            originalPassword = currentUser.Password
+        }
+    }
+    
+    // Guardar los cambios
+    private func saveChanges() {
+        guard let currentUser = userManager.currentUser else { return }
+        
+        // CHECAR SI EL USUARIO YA EXISTE
+        if username != originalUsername || password != originalPassword {
+            //Actualizar el usuario
+            currentUser.username = username
+            currentUser.Password = password
+        }
+        
+        // Update profile picture
+        if let newProfilePic = selectedProfilePicture {
+            _ = userManager.updateProfilePictureName(to: newProfilePic)
+        }
+        
+        userManager.currentScreen = .home
+    }
+
+    // delete functionality 
+    private func deleteAccount() {
+        if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword) {
+            userManager.currentScreen = .selectUser
+        }
     }
 
     var body: some View {
         VStack(alignment: .center){
             VStack(alignment: .center, spacing: 16){
-                // Change Profile Picture
+//MARK: - Edit profile text
                 VStack(alignment: .center, spacing: 28){
                     Text("Edit profile")
                         .font(.title.bold())
@@ -34,7 +76,7 @@ struct selectProfilePic: View {
                             )
                         HStack{
                             Button {
-                                // Navigation action will be added later
+                                    showingImagePicker = true
                             } label: {
                                 HStack {
                                     Text("Change image")
@@ -43,13 +85,15 @@ struct selectProfilePic: View {
                                 }
                                 .foregroundColor(.white)
                             }
+                            .sheet(isPresented: $showingImagePicker) {
+                                ProfilePicturePickerView()
                         }
                     }
                 }
                 .padding(13)
                 .frame(maxWidth: .infinity, alignment: .top)
 
-                // Username text field
+//MARK: - username text field
                 VStack(alignment: .center, spacing: 10){
                     Text("Username")
                         .font(.callout.bold())
@@ -63,7 +107,7 @@ struct selectProfilePic: View {
                     .modifier(TextFieldModifiers())
                 }
 
-                // password text field
+//MARK: - password text field
                 VStack(alignment: .center, spacing: 10){
                     Text("Password")
                         .font(.callout.bold())
@@ -86,19 +130,41 @@ struct selectProfilePic: View {
             
             Spacer()
 
-            SaveDeleteAccountButtons(hasChanges: hasChanges)           
+            SaveDeleteAccountButtons(
+                hasChanges: hasChanges,
+                    onSave: {
+                        saveChanges()
+                        hasChanges = false
+                    },
+                    onDelete: { 
+                        showingDeleteAlert = true }
+                    )
+                    .alert("Delete Account", isPresented: $showingDeleteAlert) {
+                        Button("Delete", role: .destructive, action: deleteAccount)
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("Are you sure you want to delete your account? This action cannot be undone.")
+                    }         
+        }
+
+        .onAppear {
+            loadUserData()
         }
     }
 }
+}
 
+//MARK: - save and delete buttons
+struct SaveDeleteAccountButtons: View{
 
+let hasChanges: Bool
+let onSave: () -> Void
+let onDelete: () -> Void
 
-struct SavedeleteAccountButttons: View{
-@Binding var hasChanges: Bool  
-    var body: some View{
+    var body: some View {
         VStack(alignment: .center, spacing: 26){
             Button {
-                // Save action will be added later
+                onSave()
             } label: {
                 Text("Save")
                     .padding(10)
@@ -116,21 +182,22 @@ struct SavedeleteAccountButttons: View{
             .disabled(!hasChanges)
 
             Button {
-                // Delete action will be added later
+                onDelete()
             } label: {
                 Text("Delete Account")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.red)
                     .padding(10)
-                    .frame(maxWidth: .infinity, maxHeight: 48)
+                    .frame(maxWidth: .infinity, minHeight: 48)
             
             }
-        }
-        .padding(.horizontal, 45)
+        } 
+        .padding(.horizontal, 41)
         .frame(maxWidth: .infinity, alignment: .top)
     }
 }
 
+//MARK: - text field modifiers
 struct TextFieldModifiers: ViewModifier{
     func body(content: Content) -> some View {
         content

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+//MARK: - Variables and singleton object
     @ObservedObject private var userManager = UserManager.shared
     @State private var username = ""
     @State private var password = ""
@@ -36,7 +37,7 @@ struct LoginView: View {
                 
                 VStack(alignment: .center, spacing: 25) {
 
-                    // Username
+//MARK: - username
                     VStack(alignment: .leading,spacing: 10){
                             Text("Username").font(.callout.bold()).foregroundColor(.white)
 
@@ -54,7 +55,7 @@ struct LoginView: View {
                         }
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                     
-                    // Password
+//MARK: - password
                     VStack(alignment: .leading,spacing: 10){
 
                             Text("Password")
@@ -84,9 +85,9 @@ struct LoginView: View {
                         }
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                         
-                   // Login Button     
+//MARK: - login button
                    Button("Login") {
-                            if userManager.login(username: username, password: password) {
+                            if userManager.login(loginUsername: username, loginPassword: password) {
                     // Login successful
                     username = ""
                     password = ""
