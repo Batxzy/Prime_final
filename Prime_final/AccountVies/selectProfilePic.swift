@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct selectProfilePic: View {
+@EnvironmentObject var userManager: UserManager
+@Environment(\.dismiss) var dismiss
+
     var body: some View {
         VStack(alignment: .center){
             Text("Change Profile Picture")
@@ -14,25 +17,29 @@ struct selectProfilePic: View {
 }
 
 struct profilePictureViews: View {
+     @EnvironmentObject var userManager: UserManager
 
 let categories = profilePictureCategories
 
     var body: some View {
         ScrollView(.horizontal){
-            lazyHstack(spacing: 36){
-                    ForEach(categories, id:\.name ){ category in 
+            LazyHStack (spacing: 36){
+                    ForEach(categories, id:\.name) { category in 
                         VStack(alignment: . leading, spacing: 14){
-                            text(category.name)
+                            Text(category.name)
                                 .font(.system(size: 16,weight: .black))
                                 .foregroundColor(.white)
 
                             ScrollView(.horizontal,showsIndicators: false){
-                                lazyHstack(spacing: 10){
-                                ForEach(category.images, id: \.self){ imageName in
-                                    image()
+                                LazyHStack(spacing: 10){
+                                ForEach(category.images, id: \.self) { imageName in
+                                    Image(imageName)
                                         .resizable()
-                                        .scaleToFill()
-                                        .modifier(profileCircle())
+                                        .scaledToFill()
+                                        .modifier(profileCircle(isSelected: userManager.currentUser?.profilePictureName == imageName))
+                                        .onTapGesture {
+                                            userManager.updateProfilePictureName(to: imageName)
+                                        }
                                 }
                             }
                         }
@@ -44,11 +51,16 @@ let categories = profilePictureCategories
     }
 }
 
-struct profileCircle: ViewModifier{
-    func body(content: Content) -> some View{
+struct profileCircle: ViewModifier {
+    var isSelected: Bool
+    func body(content: Content) -> some View {
         content
             .background(.white.opacity(0.05))
             .clipShape(Circle())
             .frame(width: 91, height: 91)
+            .overlay(
+                Circle()
+                    .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
+            )
     }
 }

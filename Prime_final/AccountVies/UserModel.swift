@@ -74,10 +74,12 @@ class UserBlueprint: ObservableObject {
 
 //MARK: - Class that manages the blueprint
 class UserManager: ObservableObject {
+    
     @Published var selectedUserForSwitch: String?
     @Published var currentUser: UserBlueprint?
     @Published private var userDictionary: [String: UserBlueprint] = [:] // username: User
     @Published var currentScreen: AuthScreen = .createAccount
+    @Published var navigateToEditProfileAfterWelcomeBack: Bool = false  // Add this flag
 
     static let shared = UserManager()
     
@@ -152,5 +154,28 @@ class UserManager: ObservableObject {
     // Check if username exists
     func userExists(_ username: String) -> Bool {
         return userDictionary.keys.contains(username)
+    }
+
+    func updateProfilePictureName(to newImageName: String) -> Bool {
+    // Validate image exists
+    let allImages = profilePictureCategories.flatMap { $0.images }
+    guard allImages.contains(newImageName) else {
+        print("Image not found in categories")
+        return false
+    }
+    
+    // Validate user exists
+    guard let username = currentUser?.username,
+          var user = userDictionary[username] else {
+        print("User not found")
+        return false
+    }
+    
+    // Update profile picture
+    currentUser?.profilePictureName = newImageName
+    user.profilePictureName = newImageName
+    userDictionary[username] = user
+    
+    return true
     }
 }

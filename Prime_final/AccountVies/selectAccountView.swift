@@ -50,12 +50,23 @@ struct ProfileButton: View {
                     .foregroundColor(.white)
             }
             .frame(maxWidth: 88 ,maxHeight: 133, alignment: .top)
+            
             .onTapGesture {
-            if userManager.currentUser?.username == profileName {
-                userManager.currentScreen = .editAccount // Navigate to edit account view
+            if isEditing {
+                if userManager.currentUser?.username == profileName {
+                    userManager.currentScreen = .editProfile // Navigate to edit account view
+                } else {
+                    userManager.currentUser = userManager.userDictionary[profileName]
+                    userManager.currentScreen = .welcomeBack
+                    userManager.navigateToEditProfileAfterWelcomeBack = true
+                }
             } else {
-                userManager.currentUser = userManager.userDictionary[profileName]
-                userManager.currentScreen = .welcomeBack
+                if userManager.currentUser?.username == profileName {
+                    userManager.currentScreen = .home // Navigate to home view
+                } else {
+                    userManager.currentUser = userManager.userDictionary[profileName]
+                    userManager.currentScreen = .welcomeBack
+                }
             }
         }
     }
