@@ -37,17 +37,15 @@ struct ScrollVertical: View {
                 .foregroundColor(.white)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack{
+                HStack(spacing: 15) {
                     ForEach(movieDB.movies) { movie in
                         imageV(imageUrl: movie.thumbnailVUrl, movieId: movie.id)
                     }
                 }
             }
-            .padding(.leading, 25)
-            .padding(.trailing, 0)
-            .padding(.vertical, 0)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
+        .padding(.leading, 25)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 }
 
