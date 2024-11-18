@@ -8,16 +8,20 @@
 import SwiftUI
 
 enum Tab {
-    case home, download, search
+    case home, watchlist, search
 }
 
 struct Navbar: View {
+
+    @EnvironmentObject var navigationManager: NavigationManager
     @State private var selectedTab: Tab = .home
         var body: some View {
-            NavigationStack {
                 HStack(alignment: .top) {
                     // Home Tab
-                    NavigationLink(destination: HomeView()) {
+                    Button (action: {   
+                            selectedTab = .home
+                            navigationManager.navigate(to: .home)
+                        }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tabler_home-2")
                                     .frame(width: 24, height: 24)
@@ -25,34 +29,32 @@ struct Navbar: View {
                                 Text("Home")
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(selectedTab == .home ? .white : .gray)
-                                    .font(.footnote)
-                                    .bold()
+                                    .font(.footnote).bold()
                             }
-                        }
-                        .simultaneousGesture(TapGesture().onEnded {
-                        selectedTab = .home
-                    })
+                        }   
                     
                     // Download/Watchlist Tab
-                        NavigationLink(destination: WatchlistView()) {
+                    Button (action: {   
+                            selectedTab = .watchlist
+                            navigationManager.navigate(to: .watchlist)
+                        }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tab_download")
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(selectedTab == .download ? .white : .gray)
-                                Text("Download")
+                                Text("Watchlist")
                                     .multilineTextAlignment(.center)
                                     .foregroundColor(selectedTab == .download ? .white : .gray)
                                     .font(.footnote)
                                     .bold()
                             }
                         }
-                        .simultaneousGesture(TapGesture().onEnded {
-                        selectedTab = .download
-                        })
-                        .frame(maxWidth: .infinity)
                     
                     // Search Tab
-                        NavigationLink(destination: SearchView()) {
+                     Button (action: {   
+                            selectedTab = .search
+                            navigationManager.navigate(to: .search)
+                        }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tabler_search")
                                     .frame(width: 24, height: 24)
@@ -64,15 +66,10 @@ struct Navbar: View {
                                     .bold()
                             }
                         }
-                        .simultaneousGesture(TapGesture().onEnded {
-                        selectedTab = .search
-                        })
-                        .frame(maxWidth: .infinity)
                 }
                 .padding(0)
                 .frame(width: 390, height: 93, alignment: .topLeading)
                 .background(.black)
-        }
     }
 }
 

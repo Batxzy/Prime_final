@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct welcomeBack: View {
+    @EnvironmentObject var navigationManager: NavigationManager // Add this
     @StateObject private var userManager = UserManager.shared
     let selectedUsername: String  
     @State private var password: String = ""
@@ -17,8 +18,10 @@ struct welcomeBack: View {
         // Login successful
         password = ""
         if userManager.navigateToEditProfileAfterWelcomeBack {
-            userManager.currentScreen = .editProfile
+            navigationManager.navigate(to: .editProfile)
             userManager.navigateToEditProfileAfterWelcomeBack = false
+        } else {
+            navigationManager.navigate(to: .home) // Navigate to home
         }
     }
 

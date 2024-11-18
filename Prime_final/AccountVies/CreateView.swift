@@ -10,6 +10,7 @@ import SwiftUI
 //MARK: - Create Account View
 struct CreateAccountView: View {
     @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject var navigationManager: NavigationManager
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
@@ -91,7 +92,7 @@ struct CreateAccountView: View {
                         // Account created successfully
                         username = ""
                         password = ""
-                        userManager.currentScreen = .selectUser
+                        navigationManager.navigate(to: .selectAccount)
                     } else {
                         showError = true
                         errorMessage = "Username already exists"
@@ -104,7 +105,7 @@ struct CreateAccountView: View {
                     .background(.white)
                     .cornerRadius(8)
                     .padding(.horizontal,25)
-                    
+
 //MARK: - already have an account
                 Button("Already have an account? Login") {
                     userManager.currentScreen = .login

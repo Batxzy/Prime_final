@@ -9,5 +9,6 @@ enum AppRoute: Hashable {
     case search
     case selectAccount
     case welcomeBack(String) // Username
+    case createAccount
 }
 

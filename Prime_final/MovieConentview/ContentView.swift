@@ -32,6 +32,7 @@ struct posterview: View {
         .foregroundColor(.clear)
     }
 }
+
 //MARK: - BUTTON AND TITLE
 struct buttontitle: View {
     
@@ -205,13 +206,13 @@ struct infoView: View {
 
 //MARK: -MAIN VIEW
 struct ContentView2: View {
+
     let CurrentmovieId: Int
+    @EnvironmentObject var navigationManager: NavigationManager
     @StateObject private var movieDB = MovieDatabase.shared
     @StateObject private var userManager = UserManager.shared
     
-    var body: some View {
-        NavigationView { 
-            if userManager.currentUser != nil {
+    var body: some View { 
                 VStack(alignment:.leading, spacing: 0) {
                     //imagen
                     posterview(imageUrl:movieDB.movies[CurrentmovieId].thumbnailHUrl)
@@ -231,13 +232,8 @@ struct ContentView2: View {
                             duration:movieDB.movies[CurrentmovieId].duration)
                     }
                     .padding(.horizontal, 25)
-                    .padding(.vertical, 0)
                     .frame(maxWidth: .infinity, alignment: .top)
                 }
-            } else {
-                LoginView()
-            }
-        }
     }
 }
 

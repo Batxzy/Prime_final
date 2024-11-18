@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
 //MARK: - Variables and singleton object
     @ObservedObject private var userManager = UserManager.shared
+    @EnvironmentObject var navigationManager: NavigationManager  // Add this
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
@@ -87,11 +88,14 @@ struct LoginView: View {
                         
 //MARK: - login button
                    Button("Login") {
-                            if userManager.login(loginUsername: username, loginPassword: password) {
-                    // Login successful
-                    username = ""
-                    password = ""
-                        } else {
+                        if userManager.login(loginUsername: username, loginPassword: password) {
+                            navigationManager.navigate(to: .home)
+                            // Login successful
+                            username = ""
+                            password = ""
+                        } 
+                        
+                        else {
                             showError = true
                             errorMessage = "Invalid username or password"
                         }
@@ -105,7 +109,7 @@ struct LoginView: View {
                     .padding(.horizontal,25)
                     
                     Button("New? Create a new Account") {
-                        userManager.currentScreen = .createAccount
+                        navigationManager.navigate(to: .selectAccount)
                     }
                             .underline(true, pattern: .solid)
                             .foregroundColor(.white)

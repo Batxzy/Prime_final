@@ -1,6 +1,8 @@
 import SwiftUI
 
+//MARK: - Select pfp view 
 struct selectProfilePic: View {
+@EnvironmentObject var navigationManager: NavigationManager
 @EnvironmentObject var userManager: UserManager
 @Environment(\.dismiss) var dismiss
 
@@ -16,10 +18,12 @@ struct selectProfilePic: View {
     }
 }
 
+//MARK: - profilePictureViews
 struct profilePictureViews: View {
-     @EnvironmentObject var userManager: UserManager
-
-let categories = profilePictureCategories
+    
+    @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var userManager: UserManager
+    let categories = profilePictureCategories
 
     var body: some View {
         ScrollView(.horizontal){

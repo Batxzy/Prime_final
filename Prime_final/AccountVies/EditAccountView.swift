@@ -3,6 +3,7 @@ import SwiftUI
 struct EditAccountView: View {
 //MARK: - un chingo de variables y el singleton
     @ObservedObject private var userManager = UserManager.shared
+    @EnvironmentObject var navigationManager: NavigationManager
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var originalUsername: String = ""
@@ -45,13 +46,13 @@ struct EditAccountView: View {
             _ = userManager.updateProfilePictureName(to: newProfilePic)
         }
         
-        userManager.currentScreen = .home
+        navigationManager.navigate(to: .home)
     }
 
     // delete functionality 
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword) {
-            userManager.currentScreen = .selectUser
+            navigationManager.navigate(to: .selectAccount)
         }
     }
 

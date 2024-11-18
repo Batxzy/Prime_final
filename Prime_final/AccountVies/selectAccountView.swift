@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct SelectAccountView: View {
+@EnvironmentObject var navigationManager: NavigationManager    
 @State private var isEditing = false
 var body: some View {
 //MARK: - main view
@@ -24,11 +25,13 @@ var body: some View {
 
 //MARK: - Profile Button
 struct ProfileButton: View {
+    
     var profileName: String
     var PFPimage: String
     @Binding var isEditing: Bool
     @StateObject private var userManager = UserManager.shared
-    
+    @EnvironmentObject var navigationManager: NavigationManager
+
     var body: some View{
             VStack(alignment:.center,spacing:5) {
             ZStack{
@@ -54,18 +57,17 @@ struct ProfileButton: View {
             .onTapGesture {
             if isEditing {
                 if userManager.currentUser?.username == profileName {
-                    userManager.currentScreen = .editProfile // Navigate to edit account view
+                    navigationManager.navigate(to: .editProfile) // Navigate to edit account view
                 } else {
                     userManager.currentUser = userManager.userDictionary[profileName]
-                    userManager.currentScreen = .welcomeBack
-                    userManager.navigateToEditProfileAfterWelcomeBack = true
+                    navigationManager.navigate(to: .welcomeBack(profileName))
                 }
             } else {
                 if userManager.currentUser?.username == profileName {
-                    userManager.currentScreen = .home // Navigate to home view
+                    navigationManager.navigate(to: .home) // Navigate to home view
                 } else {
                     userManager.currentUser = userManager.userDictionary[profileName]
-                    userManager.currentScreen = .welcomeBack
+                    userManager.switchToUser(username: profileName)
                 }
             }
         }
@@ -77,7 +79,7 @@ struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
     var body: some View {
         Button(action: {
-            userManager.currentScreen = .createAccount
+            navigationManager.navigate(to: .createAccount)
         }) {
             VStack(alignment: .center, spacing: 5) {
                 Circle()
@@ -123,6 +125,8 @@ struct ProfileGridView: View {
 
 //MARK: - edit profile, learn more
 struct BottomEditView: View {
+    
+    @EnvironmentObject var navigationManager: NavigationManager
     @StateObject private var userManager = UserManager.shared 
     @Binding var isEditing: Bool
     var body: some View {
@@ -130,8 +134,12 @@ struct BottomEditView: View {
     //done y editar button
         VStack(alignment:.leading,spacing:26){
             Button(action: {
-                isEditing.toggle()
-                }) {
+                if isEditing {
+                    isEditing.toggle()
+                } else {
+                    navigationManager.navigate(to: .editProfile)
+                }
+                |}){
                     Text(isEditing ? "Done" : "Edit Profile")
                     .font(.system(size: 15, weight: .black))
                     .foregroundColor(isEditing ? .black : .white)

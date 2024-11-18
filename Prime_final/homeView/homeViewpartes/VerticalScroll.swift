@@ -8,18 +8,21 @@
 import SwiftUI
 //MARK: imageV
 struct imageV: View {
+@EnvironmentObject var navigationManager: NavigationManager
     let imageUrl: String
     let movieId: Int
     
     var body: some View {
-        NavigationLink(destination: ContentView2(CurrentmovieId: movieId)) {
-            Image("\(imageUrl)")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 209)
-                .clipped()
-                .cornerRadius(10)
-        }
+
+        Image("\(imageUrl)")
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 150, height: 209)
+            .clipped()
+            .cornerRadius(10)
+            .onTapGesture {
+                navigationManager.navigate(to: .movieDetail(movieId))
+            }
     }
 }
 

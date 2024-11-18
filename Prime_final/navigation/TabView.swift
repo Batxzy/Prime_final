@@ -10,7 +10,6 @@ import SwiftUI
 struct Tabview: View {
 
 @EnvironmentObject var navigationManager: NavigationManager
-
 @ObservedObject private var userManager = UserManager.shared
    
     var body: some View { 

@@ -3,6 +3,7 @@ import SwiftUI
 //MARK: - watchlistView
 struct watchlistView: View {
     @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var navigationManager: NavigationManager 
     @Environment(\.dismiss) var dismiss
 
     @State private var showEmptyState = false
@@ -81,20 +82,22 @@ struct ListWatchable: View{
 
 //MARK: - watchChip
 struct watchChip: View{
-
+    @EnvironmentObject var navigationManager: NavigationManager
     @State private var showingActionSheet = false
     @EnvironmentObject var userManager: UserManager
     let movie: MovieData
 
     var body some View{
-        NavigationLink(destination: ContentView2(CurrentmovieId: movie.id)) {
+        Button {
+            navigationManager.navigate(to: .movieDetail(movie.id))
+             } {
             HStack(alignment: .top, spacing: 8){
                 Image(movie.thumbnailHUrl)
-                .resizable()
-                .aspectRatio(16/9,contentMode: .fill)
-                .frame(width: 146, height: 86)
-                .cornerRadius(6)
-                .clipped()
+                    .resizable()
+                    .aspectRatio(16/9,contentMode: .fill)
+                    .frame(width: 146, height: 86)
+                    .cornerRadius(6)
+                    .clipped()
 
                 VStack(alignment: .leading, spacing: 8){
                     
@@ -140,7 +143,8 @@ struct ModalSheetView: View {
     let movie: MovieData
     @Binding var isPresented: Bool
     @EnvironmentObject var userManager: UserManager
-    
+    @EnvironmentObject var navigationManager: NavigationManager
+
     var body: some View {
         VStack(alignment: .center){
 
@@ -181,16 +185,18 @@ struct ModalSheetView: View {
                     .frame(maxWidth: .infinity)
                 }
                 
-                NavigationLink(destination: ContentView2(CurrentmovieId: movie.id)) {
+                Button(action: {
+                    isPresented = false
+                    navigationManager.navigate(to: .movieDetail(movie.id))
+                    }) {
                     HStack (alignment: .center, spacing: 15) {
                         Image(systemName: "info.circle")
                         Text("View Details")
                             .foregroundColor(.white)
                             .font(.system(size: 16,weight: .bold))
-                    }
-                    .frame(maxWidth: .infinity)
-                }    
+                }
             }
+        }
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
