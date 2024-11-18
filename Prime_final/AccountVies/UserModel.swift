@@ -110,6 +110,18 @@ class UserManager: ObservableObject {
         userDictionary[newUsername] = newUser
         return true
     }
+
+    // Add this function to UserManager class
+    func removeFromWatchlist(movieId: String) {
+        // Make sure we have a current user
+        guard let currentUsername = currentUser?.username else { return }
+        
+        // Remove the movie ID from the watchlist
+        userDictionary[currentUsername]?.watchlist.removeAll { $0 == movieId }
+        
+        // Update current user reference
+        currentUser = userDictionary[currentUsername]
+    }
     
     // Login existing user
     func login(loginUsername: String, loginPassword: String) -> Bool {

@@ -8,29 +8,35 @@
 import SwiftUI
 
 struct Tabview: View {
+
+@ObservedObject private var userManager = UserManager.shared
+   
     var body: some View {
-        HStack(alignment: .center){
+        HStack(alignment: .leading){
             Image("Vector")
-                .frame(width: 79.00001, height: 25.99999)
+                .frame(width: 80, height: 26)
             
             Spacer()
             
             HStack(alignment: .center, spacing: 10) {
-                Rectangle()
+
+                Image(systemName: "gear")
                     .foregroundColor(.clear)
                     .frame(minWidth: 42.5, maxWidth: 42.5, maxHeight: .infinity)
-                    .background(Color(red: 0.5, green: 0.5, blue: 0.5))
-                    .cornerRadius(11)
                 
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .frame(minWidth: 42.5, maxWidth: 42.5, maxHeight: .infinity)
-                    .background(Color(red: 0.5, green: 0.5, blue: 0.5))
-                    .cornerRadius(11)
+                Image(currentUser.profilePictureName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 42.5, height: 42.5)
+                    .clipShape(Circle())
+                
             }
-            .padding(0).frame(height: 44, alignment: .center)
+            .padding(0)
+            .frame(height: 44, alignment: .center)
         }
-        .padding(.leading, 25).padding(.trailing, 24).padding(.vertical, 3).frame(width: 390, height: 68,alignment: .leading)
+        .padding(.horizontal, 25)
+        .padding(.vertical, 10)
+        .frame(width:.maxWidth,alignment: .leading)
         .background(
             LinearGradient(
                 stops: [

@@ -1,5 +1,6 @@
 import SwiftUI
 
+//MARK: - watchlistView
 struct watchlistView: View {
     @EnvironmentObject var userManager: UserManager
     @Environment(\.dismiss) var dismiss
@@ -56,10 +57,8 @@ struct watchlistView: View {
     }
 }
 
-
-
+//MARK: - ListWatchable
 struct ListWatchable: View{
-
     @EnvironmentObject var userManager: UserManager
     let movieDB = MovieDatabase.shared
    
@@ -68,7 +67,7 @@ struct ListWatchable: View{
         return movieDB.movies.filter { currentUser.watchlist.contains($0.id) }
     }
 
-    var body some View{
+    var body: some View{
         LazyVStack(spacing: 16) {
             ForEach(watchlistMovies) { movie in
                 watchChip(movie: movie)
@@ -80,7 +79,11 @@ struct ListWatchable: View{
     }
 }
 
+//MARK: - watchChip
 struct watchChip: View{
+
+    @State private var showingActionSheet = false
+    @EnvironmentObject var userManager: UserManager
     let movie: MovieData
 
     var body some View{
@@ -113,16 +116,84 @@ struct watchChip: View{
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                     
-                Button(action: {    
-                    //TODO: model sheet view
-                        })
-                {
-                    Image(systemName: "ellipsis")
-                        .rotationEffect(.degrees(90))
-                        .foregroundColor(.white)
-                }
+                Button(action: {showingActionSheet = true}) {
+                        Image(systemName: "ellipsis")
+                            .rotationEffect(.degrees(90))
+                            .foregroundColor(.white)
+                    }
+                    .sheet(isPresented: $showingActionSheet) {
+                        ModalSheetView(movie: movie, isPresented: $showingActionSheet)
+                        .presentationDetents([.height(300)])
+                        .presentationDragIndicator(.visible)
+                        .presentationBackground(.ultraThinMaterial)
+                        .presentationCornerRadius(12)
+
+                    }
             }
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
+    }
+}
+
+//MARK: - ModalSheetView
+struct ModalSheetView: View {
+    let movie: MovieData
+    @Binding var isPresented: Bool
+    @EnvironmentObject var userManager: UserManager
+    
+    var body: some View {
+        VStack(alignment: .center){
+
+            HStack(alignment: .center, spacing: 10) { 
+                Text(movie.title)
+                    .font(.system(size: 16,weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            
+                Spacer()
+                
+                Button(action: {
+                            isPresented = false
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.white)
+                        }
+                
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity, alignment: .center)
+
+            divider()
+
+            VStack(alignment: .leading, spacing: 13) { 
+                Button(action: {
+                    userManager.removeFromWatchlist(movieId: movie.id)
+                    isPresented = false
+                     }) {
+                    HStack (alignment: .center, spacing: 15) {
+                        Image(systemName: "minus.circle")
+                        Text("Remove from Watchlist")
+                            .foregroundColor(.white)
+                            .font(.system(size: 16,weight: .bold))
+
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                NavigationLink(destination: ContentView2(CurrentmovieId: movie.id)) {
+                    HStack (alignment: .center, spacing: 15) {
+                        Image(systemName: "info.circle")
+                        Text("View Details")
+                            .foregroundColor(.white)
+                            .font(.system(size: 16,weight: .bold))
+                    }
+                    .frame(maxWidth: .infinity)
+                }    
+            }
+            .padding(24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+        .background(color.black)
     }
 }
