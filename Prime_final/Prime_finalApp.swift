@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct Prime_finalApp: App {
+    @StateObject private var userManager = UserManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            if userManager.userCount == 0 {
+                CreateAccountView()
+            } else if userManager.currentUser == nil {
+                SelectAccountView()
+            } else {
+                HomeView()
+            }
         }
     }
 }

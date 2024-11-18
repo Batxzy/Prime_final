@@ -9,9 +9,11 @@ import SwiftUI
 
 struct Tabview: View {
 
+@EnvironmentObject var navigationManager: NavigationManager
+
 @ObservedObject private var userManager = UserManager.shared
    
-    var body: some View {
+    var body: some View { 
         HStack(alignment: .leading){
             Image("Vector")
                 .frame(width: 80, height: 26)
@@ -24,11 +26,14 @@ struct Tabview: View {
                     .foregroundColor(.clear)
                     .frame(minWidth: 42.5, maxWidth: 42.5, maxHeight: .infinity)
                 
-                Image(currentUser.profilePictureName)
+                 Image(userManager.currentUser?.profilePictureName ?? "default_profile")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 42.5, height: 42.5)
                     .clipShape(Circle())
+                    .onTapGesture {
+                        navigationManager.navigate(to: .selectAccount)
+                    }
                 
             }
             .padding(0)

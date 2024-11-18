@@ -83,35 +83,41 @@ class UserManager: ObservableObject {
 
     static let shared = UserManager()
     
-    private init() {}
+    private init() {
+
+        let defaultUser = UserBlueprint(
+        username: "julian",
+        password: "12345"
+        )
+    
+        userDictionary["julian"] = defaultUser
+    }
     
     var userCount: Int {
         return userDictionary.count
     }
 
-    // function to switch to user
-    func switchToUser(Switchusername: String) {
-    // Validate user exists before allowing switch
-    guard userDictionary[Switchusername] != nil else { 
-        return
-    }
-    selectedUserForSwitch = Switchusername
-    currentScreen = .welcomeBack
-}
-    // Create new user
-    func createUser(newUsername: String, newPassword: String) -> Bool {
-        // Check if username already exists
-        guard !userDictionary.keys.contains(newUsername) else {
-            return false
-        }
-        
-        // Create new user
-        let newUser = UserBlueprint(username: newUsername, password: newPassword)
-        userDictionary[newUsername] = newUser
-        return true
-    }
 
-    // Add this function to UserManager class
+    func navigateToHome() {
+        cuurrenScreen = .home
+        navigationManager.navigate(to: .home)
+    }
+    
+    func navigateToEditProfile() {
+        
+        currentScreen = .editProfile
+        navigationManager.navigate(to: .editProfile)
+    }
+    
+    func navigateToWatchlist() {
+        navigationManager.navigate(to: .watchlist)
+    }
+    
+    func navigateToMovieDetail(_ id: Int) {
+        navigationManager.navigate(to: .movieDetail(id))
+    }
+    
+
     func removeFromWatchlist(movieId: String) {
         // Make sure we have a current user
         guard let currentUsername = currentUser?.username else { return }
@@ -122,8 +128,34 @@ class UserManager: ObservableObject {
         // Update current user reference
         currentUser = userDictionary[currentUsername]
     }
-    
-    // Login existing user
+
+//MARK: - auth functions
+
+    // function to switch to user
+    func switchToUser(username: String) {
+        guard userDictionary[username] != nil else { 
+            return
+        }
+        selectedUserForSwitch = username
+        navigationManager.navigate(to: .welcomeBack(username))
+    }
+
+    // Create new user
+    func createUser(newUsername: String, newPassword: String) -> Bool {
+
+        // Check if username already exists
+        guard !userDictionary.keys.contains(newUsername) else {
+            return false
+        }
+        // Creates new user
+        userDictionary[username] = newUser
+        currentUser = newUser
+        navigationManager.navigate(to: .home)
+        return true
+
+    }
+
+    // Login user
     func login(loginUsername: String, loginPassword: String) -> Bool {
         guard 
         let tempUser = userDictionary[loginUsername],
@@ -132,9 +164,9 @@ class UserManager: ObservableObject {
         }
         // If switching from another user, logout first
    
-        selectedUserForSwitch = nil // Clear selected user after successful switch
-        currentScreen = .home // Or whatever your main screen is
-        currentUser = tempUser
+        currentUser = user
+        selectedUserForSwitch = nil
+        navigationManager.navigate(to: .home)
         return true
     }
     
@@ -152,43 +184,53 @@ class UserManager: ObservableObject {
             logout()
         }
         // Determine next screen
-        currentScreen = userCount > 0 ? .selectUser : .createAccount
         return true
     }
+
     // Logout current user
     func logout() {
         currentUser = nil
         selectedUserForSwitch = nil
         currentUser = nil
-        currentScreen = userCount > 0 ? .selectUser : .createAccount
+        currentScreen = userCount > 0 ? navigationManager.navigate(to: .selectAccount) : navigationManager.navigate(to: .createAccount)
     }
     
+    // Update user profile
+    func updateProfile(newUsername: String, newPassword: String) -> Bool {
+        guard let currentUsername = currentUser?.username,
+              var user = userDictionary[currentUsername] else {
+            return false
+        }
+        
+        user.username = newUsername
+        user.Password = newPassword
+        userDictionary[newUsername] = user
+        currentUser = user
+        
+        if currentUsername != newUsername {
+            userDictionary.removeValue(forKey: currentUsername)
+        }
+        
+        navigationManager.navigate(to: .home)
+        return true
+    }
+
+//MARK: - profile picture functions
+
     // Check if username exists
     func userExists(_ username: String) -> Bool {
         return userDictionary.keys.contains(username)
     }
 
-    func updateProfilePictureName(to newImageName: String) -> Bool {
-   
-    // Validate image exists
-    let allImages = profilePictureCategories.flatMap { $0.images }
-    guard allImages.contains(newImageName) else {
-        print("Image not found in categories")
-        return false
-    }
-    
-    // Validate user exists
-    guard let username = currentUser?.username,
-          var user = userDictionary[username] else {
-        print("User not found")
-        return false
-    }
-    
-    // Update profile picture
-    currentUser?.profilePictureName = newImageName
-    user.profilePictureName = newImageName
-    userDictionary[username] = user
-    
-    return true
+    func updateProfilePicture(_ pictureName: String) {
+        guard 
+        
+        let username = currentUser?.username 
+        else { 
+            return 
+            }
+
+        userDictionary[username]?.profilePictureName = pictureName
+        currentUser?.profilePictureName = pictureName
     }
 }
