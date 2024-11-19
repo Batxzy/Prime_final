@@ -22,11 +22,16 @@ public class NavigationManager: ObservableObject {
     func goBack() {
         guard !path.isEmpty else { return }
         path.removeLast()
-        currentRoute = path.last as? AppRoute
+        if let elements = path.count as? Int, elements > 0 {
+            let paths = path.map { $0 as? AppRoute }
+            currentRoute = paths.last ?? nil
+        } else {
+            currentRoute = nil
+        }
     }
     
     func popToRoot() {
-        path = NavigationPath()  // Better than removeLast(count)
+        path = NavigationPath()
         currentRoute = nil
     }
 }
