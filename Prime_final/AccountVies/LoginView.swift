@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-//MARK: - Variables and singleton object
+    //MARK: - Variables and singleton object
     @ObservedObject private var userManager = UserManager.shared
     @EnvironmentObject var navigationManager: NavigationManager  // Add this
     @State private var username = ""
@@ -37,50 +37,13 @@ struct LoginView: View {
                     .frame(width: 244, height: 76)
                 
                 VStack(alignment: .center, spacing: 25) {
-
-//MARK: - username
-                    VStack(alignment: .leading,spacing: 10){
-                            Text("Username").font(.callout.bold()).foregroundColor(.white)
-
-                            TextField("Username", text: $username)
-                                .preferredColorScheme(.dark)
-                                .padding(10)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.white.opacity(0.05))
-                                .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .inset(by: 1.5)
-                                        .stroke(.white.opacity(0.07), lineWidth: 3)
-                                    )
-                        }
-                    .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                     
-//MARK: - password
+                    //MARK: - username
                     VStack(alignment: .leading,spacing: 10){
-
-                            Text("Password")
-                            .font(.callout.bold()).foregroundColor(.white)
-
-                        HStack {
-                            if isSecured {
-                                AnyView(SecureField("Password", text: $password))
-                                    .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, minHeight: 58)
-                            } else {
-                                AnyView(TextField("Password", text: $password))
-                                    .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, minHeight: 58)
-                            }
-                        }
-                                
-                                Spacer()
-                                
-                                Button (action:{isSecured.toggle()} )  {
-                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
-                                        .foregroundStyle(.white.opacity(0.8))
-                                }
-                            }
+                        Text("Username").font(.callout.bold()).foregroundColor(.white)
+                        
+                        TextField("Username", text: $username)
+                            .preferredColorScheme(.dark)
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(.white.opacity(0.05))
@@ -90,11 +53,46 @@ struct LoginView: View {
                                     .inset(by: 1.5)
                                     .stroke(.white.opacity(0.07), lineWidth: 3)
                             )
-                        }
+                    }
                     .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
+                    
+                    //MARK: - password
+                    VStack(alignment: .leading,spacing: 10){
                         
-//MARK: - login button
-                   Button("Login") {
+                        Text("Password")
+                            .font(.callout.bold()).foregroundColor(.white)
+                        
+                        HStack {
+                            if isSecured {
+                                AnyView(SecureField("Password", text: $password))
+                                    .preferredColorScheme(.dark)
+                            } else {
+                                AnyView(TextField("Password", text: $password))
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, minHeight: 58)
+                            }
+                            
+                            Spacer()
+                            
+                            Button (action:{isSecured.toggle()} )  {
+                                Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                    .foregroundStyle(.white.opacity(0.8))
+                            }
+                        }
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.white.opacity(0.05))
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .inset(by: 1.5)
+                                .stroke(.white.opacity(0.07), lineWidth: 3)
+                        )
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
+                    
+                    //MARK: - login button
+                    Button("Login") {
                         if userManager.login(loginUsername: username, loginPassword: password) {
                             navigationManager.navigate(to: .home)
                             // Login successful
@@ -118,20 +116,20 @@ struct LoginView: View {
                     Button("New? Create a new Account") {
                         navigationManager.navigate(to: .selectAccount)
                     }
-                            .underline(true, pattern: .solid)
-                            .foregroundColor(.white)
-            }
+                    .underline(true, pattern: .solid)
+                    .foregroundColor(.white)
+                }
                 .frame(maxWidth: .infinity,alignment: .center)
                 .padding(.horizontal,35)
             }
             .alert("Error", isPresented: $showError) {
-                        Button("dissmis") { }
-                            } message: {
-                                Text(errorMessage)
-                                    }
+                Button("dissmis") { }
+            } message: {
+                Text(errorMessage)
+            }
         }
     }
-
+}
 
 #Preview {
     LoginView()

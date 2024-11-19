@@ -24,7 +24,7 @@ struct watchlistView: View {
                     Rectangle()
                         .foregroundColor(.clear)
                         .frame(maxWidth: .infinity, minHeight: 3, maxHeight: 3)
-                        .background(Constants.BackgroundsPrimary)
+                        .background(.black)
                         .opacity(watchlistCount == 0 ? 0 : 1)
 
                 }
@@ -47,7 +47,7 @@ struct watchlistView: View {
             Text("Your watchlist is empty")
                 .foregroundColor(.gray)
                 .padding(.top, 40)
-                .frame(maxWidth: .infinity, alignment: .center, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } 
             
             else {
@@ -86,11 +86,12 @@ struct watchChip: View{
     @State private var showingActionSheet = false
     @EnvironmentObject var userManager: UserManager
     let movie: MovieData
-
-    var body some View{
-        Button {
+    
+    var body: some View {
+        
+        Button(action: {
             navigationManager.navigate(to: .movieDetail(movie.id))
-             } {
+        }) {
             HStack(alignment: .top, spacing: 8){
                 Image(movie.thumbnailHUrl)
                     .resizable()
@@ -98,46 +99,45 @@ struct watchChip: View{
                     .frame(width: 146, height: 86)
                     .cornerRadius(6)
                     .clipped()
-
+                
                 VStack(alignment: .leading, spacing: 8){
                     
                     Text(movie.title)
-                    .font(.system(size: 14,weight: .bold))
-                    .foregroundColor(.white)
-
+                        .font(.system(size: 14,weight: .bold))
+                        .foregroundColor(.white)
+                    
                     HStack(spacing:8){
                         Text(movie.year)
-                        .font(.system(size: 14,weight: .bold))
-                        .kerning(0.56)
-                        .foregroundColor(Color(red: 0.59, green: 0.6, blue: 0.61))
-
+                            .font(.system(size: 14,weight: .bold))
+                            .kerning(0.56)
+                            .foregroundColor(Color(red: 0.59, green: 0.6, blue: 0.61))
+                        
                         Text(movie.duration)
-                        .font(.system(size: 14,weight: .bold))
-                        .kerning(0.56)
-                        .foregroundColor(Color(red: 0.59, green: 0.6, blue: 0.61))
+                            .font(.system(size: 14,weight: .bold))
+                            .kerning(0.56)
+                            .foregroundColor(Color(red: 0.59, green: 0.6, blue: 0.61))
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
-                    
+                
                 Button(action: {showingActionSheet = true}) {
-                        Image(systemName: "ellipsis")
-                            .rotationEffect(.degrees(90))
-                            .foregroundColor(.white)
-                    }
-                    .sheet(isPresented: $showingActionSheet) {
-                        ModalSheetView(movie: movie, isPresented: $showingActionSheet)
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(.degrees(90))
+                        .foregroundColor(.white)
+                }
+                .sheet(isPresented: $showingActionSheet) {
+                    ModalSheetView(movie: movie, isPresented: $showingActionSheet)
                         .presentationDetents([.height(300)])
                         .presentationDragIndicator(.visible)
                         .presentationBackground(.ultraThinMaterial)
                         .presentationCornerRadius(12)
-
-                    }
+                    
+                }
             }
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
     }
 }
-
 //MARK: - ModalSheetView
 struct ModalSheetView: View {
     let movie: MovieData
@@ -168,7 +168,6 @@ struct ModalSheetView: View {
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity, alignment: .center)
 
-            divider()
 
             VStack(alignment: .leading, spacing: 13) { 
                 Button(action: {
@@ -200,6 +199,5 @@ struct ModalSheetView: View {
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .background(color.black)
     }
 }

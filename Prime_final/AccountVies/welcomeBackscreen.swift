@@ -3,7 +3,7 @@ import SwiftUI
 struct welcomeBack: View {
     @EnvironmentObject var navigationManager: NavigationManager // Add this
     @StateObject private var userManager = UserManager.shared
-    let selectedUsername: String  
+    let selectedUsername: String
     @State private var password: String = ""
     @State private var isSecured: Bool = true
     @State private var showError: Bool = false
@@ -56,13 +56,11 @@ struct welcomeBack: View {
                     )
                 }
             }   
-            VStack(alignment: .center, spacing: 25) {                  
+            VStack(alignment: .leading) {
                 // Password
-                VStack(alignment: .leading,spacing: 10){
-
-                        Text("Password")
-                        .font(.callout.bold()).foregroundColor(.white)
-
+                Text("Password")
+                .font(.callout.bold()).foregroundColor(.white)
+                HStack(){
                     if isSecured {
                                 AnyView(SecureField("Password", text: $password)
                                     .preferredColorScheme(.dark)
@@ -83,7 +81,7 @@ struct welcomeBack: View {
                                 }
                             }
                         .padding(10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, maxHeight: 58, alignment: .leading)
                         .background(.white.opacity(0.05))
                         .cornerRadius(8)
                         .overlay(

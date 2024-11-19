@@ -96,7 +96,7 @@ struct EditAccountView: View {
                     .frame(maxWidth: .infinity, alignment: .top)
                     
                     //MARK: - username text field
-                    VStack(alignment: .center, spacing: 10){
+                    VStack(alignment: .leading, spacing: 10){
                         Text("Username")
                             .font(.callout.bold())
                             .foregroundColor(.white)
@@ -110,7 +110,7 @@ struct EditAccountView: View {
                     }
                     
                     //MARK: - password text field
-                    VStack(alignment: .center, spacing: 10){
+                    VStack(alignment: .leading, spacing: 10){
                         Text("Password")
                             .font(.callout.bold())
                             .foregroundColor(.white)
@@ -137,10 +137,9 @@ struct EditAccountView: View {
                 Spacer()
                 
                 SaveDeleteAccountButtons(
-                    hasChanges: $hasChanges,
+                    hasChanges: hasChangesComputed,
                     onSave: {
                         saveChanges()
-                        hasChanges = false
                     },
                     onDelete: {
                         showingDeleteAlert = true
@@ -164,7 +163,7 @@ struct EditAccountView: View {
 //MARK: - save and delete buttons
 struct SaveDeleteAccountButtons: View{
 
-    @Binding var hasChanges: Bool
+    var hasChanges: Bool
     public let onSave: () -> Void
     public let onDelete: () -> Void
 
@@ -218,4 +217,8 @@ struct TextFieldModifiers: ViewModifier{
                     .stroke(.white.opacity(0.13), lineWidth: 2)
             )
     }
+}
+
+#Preview{
+    EditAccountView()
 }

@@ -87,7 +87,8 @@ public class UserManager: ObservableObject {
         
         let defaultUser = UserBlueprint(
             username: "julian",
-            password: "12345"
+            password: "12345",
+            profilePictureName: "Furry_1"
         )
         
         userDictionary["julian"] = defaultUser

@@ -68,3 +68,8 @@ struct profileCircle: ViewModifier {
             )
     }
 }
+
+#Preview {
+@EnvironmentObject var navigationManager: NavigationManager
+    selectProfilePic()
+}

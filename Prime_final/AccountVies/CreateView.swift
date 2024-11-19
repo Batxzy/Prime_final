@@ -66,11 +66,11 @@ struct CreateAccountView: View {
                             if isSecured {
                                 SecureField("Password", text: $password)
                                     .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, minHeight: 58)
+                                    .frame(maxWidth: .infinity, maxHeight: 58)
                             } else {
                                 TextField("Password", text: $password)
                                     .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, minHeight: 58)
+                                    .frame(maxWidth: .infinity, maxHeight: 58)
                             }
 
                             Spacer()
