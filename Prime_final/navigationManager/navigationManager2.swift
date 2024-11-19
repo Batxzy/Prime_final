@@ -1,8 +1,14 @@
+//
+//  navigationManager2.swift
+//  Prime_final
+//
+//  Created by Alumno on 19/11/24.
+//
+
 import SwiftUI
 
-
 // MARK: - NavigationManager remote control
-class NavigationManager: ObservableObject {
+public class NavigationManager: ObservableObject {
     static let shared = NavigationManager()
     
     @Published var path = NavigationPath()
@@ -18,9 +24,9 @@ class NavigationManager: ObservableObject {
         path.removeLast()
         currentRoute = path.last as? AppRoute
     }
-
+    
     func popToRoot() {
-            path = NavigationPath()  // Better than removeLast(count)
-            currentRoute = nil
+        path = NavigationPath()  // Better than removeLast(count)
+        currentRoute = nil
     }
 }

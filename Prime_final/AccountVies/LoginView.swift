@@ -62,10 +62,17 @@ struct LoginView: View {
                             Text("Password")
                             .font(.callout.bold()).foregroundColor(.white)
 
-                            HStack {
-                                (isSecured ? SecureField("Password", text: $password) : TextField("Password", text: $password))
+                        HStack {
+                            if isSecured {
+                                AnyView(SecureField("Password", text: $password))
                                     .preferredColorScheme(.dark)
                                     .frame(maxWidth: .infinity, minHeight: 58)
+                            } else {
+                                AnyView(TextField("Password", text: $password))
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, minHeight: 58)
+                            }
+                        }
                                 
                                 Spacer()
                                 
@@ -124,7 +131,7 @@ struct LoginView: View {
                                     }
         }
     }
-}
+
 
 #Preview {
     LoginView()

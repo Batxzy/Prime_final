@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProfilePictureCategory identifiable {
+struct ProfilePictureCategory: Identifiable {
     let id = UUID()
     let name: String
     let images: [String]

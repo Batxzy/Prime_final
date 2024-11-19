@@ -13,7 +13,7 @@ struct Tabview: View {
 @ObservedObject private var userManager = UserManager.shared
    
     var body: some View { 
-        HStack(alignment: .leading){
+        HStack(alignment: .top){
             Image("Vector")
                 .frame(width: 80, height: 26)
             
@@ -40,7 +40,7 @@ struct Tabview: View {
         }
         .padding(.horizontal, 25)
         .padding(.vertical, 10)
-        .frame(width:.maxWidth,alignment: .leading)
+        .frame(maxWidth: .infinity,alignment: .leading)
         .background(
             LinearGradient(
                 stops: [

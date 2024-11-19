@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct EditAccountView: View {
-//MARK: - un chingo de variables y el singleton
+    //MARK: - un chingo de variables y el singleton
     @ObservedObject private var userManager = UserManager.shared
     @EnvironmentObject var navigationManager: NavigationManager
     @State private var username: String = ""
@@ -12,14 +12,15 @@ struct EditAccountView: View {
     @State private var showingImagePicker = false
     @State private var showingDeleteAlert = false
     @State private var selectedProfilePicture: String?
-
-//MARK:- funciciones
-
+    @State private var hasChanges = false
+    
+    //MARK:- funciciones
+    
     // propiedad computada para saber si hay cambios
-  private var hasChanges: Bool {
+    private var hasChangesComputed: Bool {
         username != originalUsername || password != originalPassword
     }
-
+    
     // Que cargeu los datos del usuario
     private func loadUserData() {
         if let currentUser = userManager.currentUser {
@@ -43,28 +44,28 @@ struct EditAccountView: View {
         
         // Update profile picture
         if let newProfilePic = selectedProfilePicture {
-            _ = userManager.updateProfilePictureName(to: newProfilePic)
+            userManager.updateProfilePictureName(to: newProfilePic)
         }
         
         navigationManager.navigate(to: .home)
     }
-
+    
     // delete functionality 
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword) {
             navigationManager.navigate(to: .selectAccount)
         }
     }
-
+    //MARK: - Edit profile text
+    
     var body: some View {
         VStack(alignment: .center){
             VStack(alignment: .center, spacing: 16){
-//MARK: - Edit profile text
                 VStack(alignment: .center, spacing: 28){
                     Text("Edit profile")
                         .font(.title.bold())
                         .foregroundColor(.white)
-
+                    
                     VStack(alignment: .center, spacing: 10){
                         Circle()
                             .foregroundColor(.white)
@@ -77,7 +78,7 @@ struct EditAccountView: View {
                             )
                         HStack{
                             Button {
-                                    showingImagePicker = true
+                                showingImagePicker = true
                             } label: {
                                 HStack {
                                     Text("Change image")
@@ -87,80 +88,85 @@ struct EditAccountView: View {
                                 .foregroundColor(.white)
                             }
                             .sheet(isPresented: $showingImagePicker) {
-                                ProfilePicturePickerView()
+                                selectProfilePic()
+                            }
                         }
                     }
-                }
-                .padding(13)
-                .frame(maxWidth: .infinity, alignment: .top)
-
-//MARK: - username text field
-                VStack(alignment: .center, spacing: 10){
-                    Text("Username")
-                        .font(.callout.bold())
-                        .foregroundColor(.white)
-                    HStack{
-                        TextField("Username", text: $username)
-                        Spacer()
-                        Image(systemName: "pencil")
+                    .padding(13)
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    
+                    //MARK: - username text field
+                    VStack(alignment: .center, spacing: 10){
+                        Text("Username")
+                            .font(.callout.bold())
                             .foregroundColor(.white)
-                    }
-                    .modifier(TextFieldModifiers())
-                }
-
-//MARK: - password text field
-                VStack(alignment: .center, spacing: 10){
-                    Text("Password")
-                        .font(.callout.bold())
-                        .foregroundColor(.white)
-                    HStack{
-                        (isSecured ? SecureField("Password", text: $password) : TextField("Password", text: $password))
-                        Spacer()
-                        Button {
-                            isSecured.toggle()
-                        } label: {
-                            Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                        HStack{
+                            TextField("Username", text: $username)
+                            Spacer()
+                            Image(systemName: "pencil")
                                 .foregroundColor(.white)
                         }
+                        .modifier(TextFieldModifiers())
                     }
-                    .modifier(TextFieldModifiers())
+                    
+                    //MARK: - password text field
+                    VStack(alignment: .center, spacing: 10){
+                        Text("Password")
+                            .font(.callout.bold())
+                            .foregroundColor(.white)
+                        HStack{
+                            if isSecured {
+                                AnyView(SecureField("Password", text: $password))
+                            } else {
+                                AnyView(TextField("Password", text: $password))
+                            }
+                            Spacer()
+                            Button {
+                                isSecured.toggle()
+                            } label: {
+                                Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .modifier(TextFieldModifiers())
+                    }
                 }
-            }
-            .padding(.horizontal, 35)
-            .frame(maxWidth: .infinity, alignment: .center)
-            
-            Spacer()
-
-            SaveDeleteAccountButtons(
-                hasChanges: hasChanges,
+                .padding(.horizontal, 35)
+                .frame(maxWidth: .infinity, alignment: .center)
+                
+                Spacer()
+                
+                SaveDeleteAccountButtons(
+                    hasChanges: $hasChanges,
                     onSave: {
                         saveChanges()
                         hasChanges = false
                     },
-                    onDelete: { 
-                        showingDeleteAlert = true }
-                    )
-                    .alert("Delete Account", isPresented: $showingDeleteAlert) {
-                        Button("Delete", role: .destructive, action: deleteAccount)
-                        Button("Cancel", role: .cancel) { }
-                    } message: {
-                        Text("Are you sure you want to delete your account? This action cannot be undone.")
-                    }         
-        }
-
-        .onAppear {
-            loadUserData()
+                    onDelete: {
+                        showingDeleteAlert = true
+                    }
+                )
+                .alert("Delete Account", isPresented: $showingDeleteAlert) {
+                    Button("Delete", role: .destructive, action: deleteAccount)
+                    Button("Cancel", role: .cancel) { }
+                } message: {
+                    Text("Are you sure you want to delete your account? This action cannot be undone.")
+                }
+                
+                .onAppear {
+                    loadUserData()
+                }
+            }
         }
     }
-}
 }
 
 //MARK: - save and delete buttons
 struct SaveDeleteAccountButtons: View{
 
-let hasChanges: Bool
-let onSave: () -> Void
-let onDelete: () -> Void
+    @Binding var hasChanges: Bool
+    public let onSave: () -> Void
+    public let onDelete: () -> Void
 
     var body: some View {
         VStack(alignment: .center, spacing: 26){

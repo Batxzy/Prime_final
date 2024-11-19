@@ -7,7 +7,7 @@ struct SelectAccountView: View {
 var body: some View {
 //MARK: - main view
         VStack(alignment:.leading, spacing:15){ 
-            VStack(alignment: .bottom) {
+            VStack(alignment: .leading) {
                 Text("Who's Watching?")
                     .font(.system(size: 25, weight: .black))
                     .foregroundColor(.white)
@@ -15,8 +15,8 @@ var body: some View {
             .padding(27)
             .frame(maxWidth:.infinity,alignment:.bottom)
             
-            ProfileGridView().opacity(isEditing ? 0 : 1)
-            .frame(maxHeight: .infinity ,maxWidth: .infinity)
+            ProfileGridView(isEditing: $isEditing).opacity(isEditing ? 0 : 1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             BottomEditView(isEditing: $isEditing)
          }
             .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
@@ -79,7 +79,7 @@ struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
     var body: some View {
         Button(action: {
-            navigationManager.navigate(to: .createAccount)
+            NavigationManager.shared.navigate(to: .createAccount)
         }) {
             VStack(alignment: .center, spacing: 5) {
                 Circle()
@@ -117,7 +117,7 @@ struct ProfileGridView: View {
                     }
                 AddProfileButton().opacity(isEditing ? 0 : 1)
             }
-            .padding(.horizontal:51)
+            .padding(.horizontal,51)
         }
     }
 }
@@ -139,7 +139,7 @@ struct BottomEditView: View {
                 } else {
                     navigationManager.navigate(to: .editProfile)
                 }
-                |}){
+                }){
                     Text(isEditing ? "Done" : "Edit Profile")
                     .font(.system(size: 15, weight: .black))
                     .foregroundColor(isEditing ? .black : .white)

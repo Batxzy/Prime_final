@@ -10,7 +10,7 @@ struct welcomeBack: View {
     @State private var errorMessage: String = ""
     
     private func handleLogin() {
-        guard userManager.login(username: selectedUsername, password: password) else {
+        guard userManager.login(loginUsername: selectedUsername, loginPassword: password) else {
             showError = true
             errorMessage = "Invalid password"
             return
@@ -63,18 +63,25 @@ struct welcomeBack: View {
                         Text("Password")
                         .font(.callout.bold()).foregroundColor(.white)
 
-                        HStack {
-                            (isSecured ? SecureField("Password", text: $password) : TextField("Password", text: $password))
-                                .preferredColorScheme(.dark)
-                                .frame(maxWidth: .infinity, minHeight: 58)
+                    if isSecured {
+                                AnyView(SecureField("Password", text: $password)
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, minHeight: 58))
+                            } else {
+                                AnyView(TextField("Password", text: $password)
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, minHeight: 58))
+                            }
                             
                             Spacer()
                             
-                            Button { isSecured.toggle() }  {
-                                Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
-                                    .foregroundStyle(.white.opacity(0.8))
+                    Button(action: {
+                                    isSecured.toggle()
+                                }) {
+                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                        .foregroundStyle(.white.opacity(0.8))
+                                }
                             }
-                        }
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(.white.opacity(0.05))
@@ -82,8 +89,7 @@ struct welcomeBack: View {
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
                                 .inset(by: 1.5)
-                                .stroke(.white.opacity(0.07), lineWidth: 3)
-                        )
+                                .stroke(.white.opacity(0.07), lineWidth: 3))
                     }
                 .frame(maxWidth: .infinity, maxHeight: 78, alignment: .topLeading)
                     
@@ -106,10 +112,10 @@ struct welcomeBack: View {
             Button("OK") { showError = false }
             } message: {
                 Text(errorMessage)
-            }
         }
     }
 }
+
 
 #Preview {
     welcomeBack(selectedUsername: "defaultUsername")

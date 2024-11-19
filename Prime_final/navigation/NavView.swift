@@ -41,10 +41,10 @@ struct Navbar: View {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tab_download")
                                     .frame(width: 24, height: 24)
-                                    .foregroundColor(selectedTab == .download ? .white : .gray)
+                                    .foregroundColor(selectedTab == .watchlist ? .white : .gray)
                                 Text("Watchlist")
                                     .multilineTextAlignment(.center)
-                                    .foregroundColor(selectedTab == .download ? .white : .gray)
+                                    .foregroundColor(selectedTab == .watchlist ? .white : .gray)
                                     .font(.footnote)
                                     .bold()
                             }

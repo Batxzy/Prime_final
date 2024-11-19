@@ -62,18 +62,24 @@ struct CreateAccountView: View {
                             Text("Password")
                             .font(.callout.bold()).foregroundColor(.white)
 
-                            HStack {
-                                (isSecured ? SecureField("Password", text: $password) : TextField("Password", text: $password))
+                        HStack {
+                            if isSecured {
+                                SecureField("Password", text: $password)
                                     .preferredColorScheme(.dark)
                                     .frame(maxWidth: .infinity, minHeight: 58)
-                                
-                                Spacer()
-                                
-                                Button (action:{isSecured.toggle()} )  {
-                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
-                                        .foregroundStyle(.white.opacity(0.8))
-                                }
+                            } else {
+                                TextField("Password", text: $password)
+                                    .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, minHeight: 58)
                             }
+
+                            Spacer()
+
+                            Button (action:{isSecured.toggle()} )  {
+                                Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                    .foregroundStyle(.white.opacity(0.8))
+                            }
+                        }
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(.white.opacity(0.05))
@@ -88,7 +94,7 @@ struct CreateAccountView: View {
                         
 //MARK: - Create Account Button
                 Button("Create") {
-                    if userManager.createUser(username: username, password: password) {
+                    if userManager.createUser(newUsername: username, newPassword: password) {
                         // Account created successfully
                         username = ""
                         password = ""

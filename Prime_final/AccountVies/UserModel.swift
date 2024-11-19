@@ -73,109 +73,110 @@ class UserBlueprint: ObservableObject {
 
 
 //MARK: - Class that manages the blueprint
-class UserManager: ObservableObject {
+public class UserManager: ObservableObject {
     
     @Published var selectedUserForSwitch: String?
     @Published var currentUser: UserBlueprint?
-    @Published private var userDictionary: [String: UserBlueprint] = [:] // username: User
+    @Published var userDictionary: [String: UserBlueprint] = [:] // username: User
     @Published var currentScreen: AuthScreen = .createAccount
     @Published var navigateToEditProfileAfterWelcomeBack: Bool = false  // Add this flag
-
+    
     static let shared = UserManager()
     
     private init() {
-
+        
         let defaultUser = UserBlueprint(
-        username: "julian",
-        password: "12345"
+            username: "julian",
+            password: "12345"
         )
-    
+        
         userDictionary["julian"] = defaultUser
     }
     
     var userCount: Int {
         return userDictionary.count
     }
-
-
+    
+    
     func navigateToHome() {
-        cuurrenScreen = .home
-        navigationManager.navigate(to: .home)
+        currentScreen = .home
+        NavigationManager.shared.navigate(to: .home)
     }
     
     func navigateToEditProfile() {
         
         currentScreen = .editProfile
-        navigationManager.navigate(to: .editProfile)
+        NavigationManager.shared.navigate(to: .editProfile)
     }
     
     func navigateToWatchlist() {
-        navigationManager.navigate(to: .watchlist)
+        NavigationManager.shared.navigate(to: .watchlist)
+
     }
     
     func navigateToMovieDetail(_ id: Int) {
-        navigationManager.navigate(to: .movieDetail(id))
+        NavigationManager.shared.navigate(to: .movieDetail(id))
+
     }
     
-
-    func removeFromWatchlist(movieId: String) {
+    
+    func removeFromWatchlist(movieId: Int) {
         // Make sure we have a current user
         guard let currentUsername = currentUser?.username else { return }
         
         // Remove the movie ID from the watchlist
-        userDictionary[currentUsername]?.watchlist.removeAll { $0 == movieId }
+        userDictionary[currentUsername]?.watchlist.remove(movieId)
         
         // Update current user reference
         currentUser = userDictionary[currentUsername]
     }
-
-//MARK: - auth functions
-
+    
+    //MARK: - auth functions
+    
     // function to switch to user
     func switchToUser(username: String) {
-        guard userDictionary[username] != nil else { 
+        guard userDictionary[username] != nil else {
             return
         }
         selectedUserForSwitch = username
-        navigationManager.navigate(to: .welcomeBack(username))
+        NavigationManager.shared.navigate(to: .welcomeBack(username))
     }
-
+    
     // Create new user
     func createUser(newUsername: String, newPassword: String) -> Bool {
-
         // Check if username already exists
         guard !userDictionary.keys.contains(newUsername) else {
             return false
         }
         // Creates new user
-        userDictionary[username] = newUser
+        let newUser = UserBlueprint(username: newUsername, password: newPassword)
+        userDictionary[newUsername] = newUser
         currentUser = newUser
-        navigationManager.navigate(to: .home)
+        NavigationManager.shared.navigate(to: .home)
         return true
-
     }
-
+    
     // Login user
     func login(loginUsername: String, loginPassword: String) -> Bool {
-        guard 
-        let tempUser = userDictionary[loginUsername],
-              tempUser.Password == loginPassword else {
+        guard
+            let tempUser = userDictionary[loginUsername],
+            tempUser.Password == loginPassword else {
             return false
         }
         // If switching from another user, logout first
-   
-        currentUser = user
+        
+        currentUser = tempUser
         selectedUserForSwitch = nil
-        navigationManager.navigate(to: .home)
+        NavigationManager.shared.navigate(to: .home)
         return true
     }
     
     // Delete user account
     func deleteUser(delUsername: String, delPassword: String) -> Bool {
-        guard 
-        let tempUser = userDictionary[delUsername],
-        
-        tempUser.Password == delPassword else {
+        guard
+            let tempUser = userDictionary[delUsername],
+            
+                tempUser.Password == delPassword else {
             return false
         }
         
@@ -186,13 +187,17 @@ class UserManager: ObservableObject {
         // Determine next screen
         return true
     }
-
+    
     // Logout current user
     func logout() {
         currentUser = nil
         selectedUserForSwitch = nil
-        currentUser = nil
-        currentScreen = userCount > 0 ? navigationManager.navigate(to: .selectAccount) : navigationManager.navigate(to: .createAccount)
+        currentScreen = userCount > 0 ? .selectUser : .createAccount
+        if userCount > 0 {
+            NavigationManager.shared.navigate(to: .selectAccount)
+        } else {
+            NavigationManager.shared.navigate(to: .createAccount)
+        }
     }
     
     // Update user profile
@@ -211,25 +216,30 @@ class UserManager: ObservableObject {
             userDictionary.removeValue(forKey: currentUsername)
         }
         
-        navigationManager.navigate(to: .home)
+        NavigationManager.shared.navigate(to: .home)
         return true
     }
-
-//MARK: - profile picture functions
-
+    
+    //MARK: - profile picture functions
+    
     // Check if username exists
     func userExists(_ username: String) -> Bool {
         return userDictionary.keys.contains(username)
     }
-
+    
+    func updateProfilePictureName(to newProfilePic: String) {
+        // Update logic for profile picture
+        currentUser?.profilePictureName = newProfilePic
+    }
+    
     func updateProfilePicture(_ pictureName: String) {
-        guard 
+        guard
+            
+            let username = currentUser?.username
+        else {
+            return
+        }
         
-        let username = currentUser?.username 
-        else { 
-            return 
-            }
-
         userDictionary[username]?.profilePictureName = pictureName
         currentUser?.profilePictureName = pictureName
     }
