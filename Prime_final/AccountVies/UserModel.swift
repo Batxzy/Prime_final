@@ -83,12 +83,12 @@ public class UserManager: ObservableObject {
     
     static let shared = UserManager()
     
-    private init() {
+    public init() {
         
         let defaultUser = UserBlueprint(
             username: "julian",
             password: "12345",
-            profilePictureName: "Furry_1"
+            profilePictureName: "furry1"
         )
         
         userDictionary["julian"] = defaultUser

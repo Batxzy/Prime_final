@@ -2,7 +2,6 @@ import SwiftUI
 
 //MARK: - Select pfp view 
 struct selectProfilePic: View {
-@EnvironmentObject var navigationManager: NavigationManager
 @EnvironmentObject var userManager: UserManager
 @Environment(\.dismiss) var dismiss
 
@@ -10,32 +9,33 @@ struct selectProfilePic: View {
         VStack(alignment: .center){
             Text("Change Profile Picture")
                 .padding(16)
-                .font(.system(size: 16,weight: .black))
+                .font(.system(size: 23,weight: .bold))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity) 
             profilePictureViews()
         }
+        .preferredColorScheme(.dark)
     }
+        
 }
 
 //MARK: - profilePictureViews
 struct profilePictureViews: View {
-    
-    @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var userManager: UserManager
+    
     let categories = profilePictureCategories
 
     var body: some View {
-        ScrollView(.horizontal){
-            LazyHStack (spacing: 36){
-                    ForEach(categories, id:\.name) { category in 
+        ScrollView(.vertical){
+            LazyVStack (spacing: 36){
+                    ForEach(categories, id:\.name) { category in
                         VStack(alignment: . leading, spacing: 14){
                             Text(category.name)
                                 .font(.system(size: 16,weight: .black))
                                 .foregroundColor(.white)
 
                             ScrollView(.horizontal,showsIndicators: false){
-                                LazyHStack(spacing: 10){
+                                LazyHStack(spacing: 13){
                                 ForEach(category.images, id: \.self) { imageName in
                                     Image(imageName)
                                         .resizable()
@@ -70,6 +70,6 @@ struct profileCircle: ViewModifier {
 }
 
 #Preview {
-@EnvironmentObject var navigationManager: NavigationManager
     selectProfilePic()
+            .environmentObject(UserManager())
 }

@@ -22,7 +22,7 @@ struct Tabview: View {
             HStack(alignment: .center, spacing: 10) {
 
                 Image(systemName: "gear")
-                    .foregroundColor(.clear)
+                    .foregroundColor(.gray)
                     .frame(minWidth: 42.5, maxWidth: 42.5, maxHeight: .infinity)
                 
                  Image(userManager.currentUser?.profilePictureName ?? "default_profile")

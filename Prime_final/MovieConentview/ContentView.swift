@@ -77,37 +77,23 @@ struct VideoPlayerView: View {
 struct interactiveView: View{
     let movieId: Int
     @StateObject private var userManager = UserManager.shared
+    @State var movieliked : Bool = false
+    @State var moviedisliked : Bool = false
+    @State var Watchlistadd : Bool = false
     
     var body: some View {
         
         HStack(alignment: .center, spacing: 20) {
-            
-            /*
-             VStack(alignment: .center, spacing: 10) {
-             
-             VStack(alignment: .center) {
-             Image("Trailer")
-             }
-             .frame(width: 25, height: 25, alignment: .center)
-             
-             Text("Trailer")
-             .padding(6)
-             .font(.callout.bold()).multilineTextAlignment(.center)
-             .foregroundColor(.white)
-             .frame(alignment: .center)
-             
-             }
-             .padding(0)
-             .frame(maxHeight: .infinity, alignment: .top)
-             */
-            
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleWatchlist(for: movieId)
+                    Watchlistadd.toggle()
                 }) {
                     VStack(alignment: .center) {
-                        Image("Watchlist")
+                        Image(systemName: Watchlistadd ? "plus.app.fill" : "plus.app" )
+                            .resizable()
+                            .foregroundStyle(.white)
                     }
                     .frame(width: 25, height: 25, alignment: .center)
                 }
@@ -125,9 +111,15 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleLike(for: movieId)
+                    movieliked.toggle()
+                                        if movieliked {
+                                            moviedisliked = false
+                                        }
                 }) {
                     VStack(alignment: .center) {
-                        Image("like")
+                        Image(systemName: movieliked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                            .resizable()
+                            .foregroundStyle(.white)
                     }
                     .frame(width: 25, height: 25, alignment: .center)
                 }
@@ -145,9 +137,15 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleDislike(for: movieId)
+                    moviedisliked.toggle()
+                                        if moviedisliked {
+                                            movieliked = false
+                                        }
                 }) {
                     VStack(alignment: .center) {
-                        Image("dislike")
+                        Image(systemName: moviedisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                            .resizable()
+                            .foregroundStyle(.white)
                     }
                     .frame(width: 25, height: 25, alignment: .center)
                 }
@@ -206,13 +204,13 @@ struct infoView: View {
 
 //MARK: -MAIN VIEW
 struct ContentView2: View {
-
+    
     let CurrentmovieId: Int
     @EnvironmentObject var navigationManager: NavigationManager
     @StateObject private var movieDB = MovieDatabase.shared
     @StateObject private var userManager = UserManager.shared
     
-    var body: some View { 
+    var body: some View {
                 VStack(alignment:.leading, spacing: 0) {
                     //imagen
                     posterview(imageUrl:movieDB.movies[CurrentmovieId].thumbnailHUrl)
@@ -238,5 +236,5 @@ struct ContentView2: View {
 }
 
 #Preview {
-    ContentView2(CurrentmovieId: 15)
+    ContentView2(CurrentmovieId: 1).environmentObject(UserManager())
 }

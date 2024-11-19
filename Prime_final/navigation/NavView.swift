@@ -23,7 +23,7 @@ struct Navbar: View {
                             navigationManager.navigate(to: .home)
                         }) {
                             VStack(alignment: .center, spacing: 6) {
-                                Image("tabler_home-2")
+                                Image(systemName: "house")
                                     .frame(width: 24, height: 24)
                                     .foregroundColor(selectedTab == .home ? .white : .gray)
                                 Text("Home")
@@ -31,7 +31,8 @@ struct Navbar: View {
                                     .foregroundColor(selectedTab == .home ? .white : .gray)
                                     .font(.footnote).bold()
                             }
-                        }   
+                        }
+                        .frame(maxWidth: .infinity)
                     
                     // Download/Watchlist Tab
                     Button (action: {   
@@ -49,6 +50,7 @@ struct Navbar: View {
                                     .bold()
                             }
                         }
+                        .frame(maxWidth: .infinity)
                     
                     // Search Tab
                      Button (action: {   
@@ -66,9 +68,10 @@ struct Navbar: View {
                                     .bold()
                             }
                         }
+                        .frame(maxWidth: .infinity)
                 }
                 .padding(0)
-                .frame(width: 390, height: 93, alignment: .topLeading)
+                .frame(maxWidth: .infinity,maxHeight: 90)
                 .background(.black)
     }
 }
