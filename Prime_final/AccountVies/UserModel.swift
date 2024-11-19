@@ -90,7 +90,15 @@ public class UserManager: ObservableObject {
             password: "12345",
             profilePictureName: "furry1"
         )
-        
+        defaultUser.watchlist.insert(0)  // Puss in Boots
+        defaultUser.watchlist.insert(2)  // Evangelion 1.0
+        defaultUser.watchlist.insert(14) // The Dark Knight
+    
+        // Add some liked/disliked movies
+        defaultUser.likedMovies.insert(0)    // Puss in Boots
+        defaultUser.likedMovies.insert(8)    // Shrek
+        defaultUser.dislikedMovies.insert(7) // Minions
+
         userDictionary["julian"] = defaultUser
     }
     
