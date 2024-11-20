@@ -13,36 +13,10 @@ struct watchlistView: View {
     }
 
     var body: some View {
-        VStack(alignment: .center){
-            //watchlist y su count
-            VStack {
-                VStack(alignment:.center){
-                    Text("Watchlist")
-                        .font(.system(size: 16,weight: .black))
-                        .foregroundColor(.white)
-                        .frame(maxHeight: . infinity)
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(maxWidth: .infinity, minHeight: 3, maxHeight: 3)
-                        .background(.black)
-                        .opacity(watchlistCount == 0 ? 0 : 1)
-
-                }
-                .ignoresSafeArea()
-                .frame(maxWidth: .infinity, maxHeight: 50)
-
-                VStack(alignment:.leading){
-                    Text("\(watchlistCount) videos")
-                    .font(.system(size: 16,weight: .black))
-                    .foregroundColor(.white)
-                }
-                .padding(.horizontal, 25)
-                .frame(maxWidth: .infinity, maxHeight: 40)
-            }
-            .padding(.vertical, 10)
-            .frame(maxWidth: .infinity, alignment: .top)
-            .ignoresSafeArea()
-
+        VStack{
+            
+            watchlistTitle()
+            
             if watchlistCount == 0 {
             Text("Your watchlist is empty")
                 .foregroundColor(.gray)
@@ -51,6 +25,7 @@ struct watchlistView: View {
             } 
             
             else {
+                
             ListWatchable()
                 .frame(maxWidth: .infinity, alignment: .top)
             }
@@ -69,14 +44,16 @@ struct ListWatchable: View{
     }
 
     var body: some View{
-        LazyVStack(spacing: 16) {
-            ForEach(watchlistMovies) { movie in
-                watchChip(movie: movie)
+        ScrollView(.vertical) {
+            LazyVStack(spacing: 16) {
+                ForEach(watchlistMovies) { movie in
+                    watchChip(movie: movie)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .top)
+            .padding(.horizontal, 25)
+            .padding(.vertical, 20)
         }
-        .frame(maxWidth: .infinity, alignment: .top)
-        .padding(.horizontal, 25)
-        .padding(.vertical, 20)
     }
 }
 
@@ -200,4 +177,46 @@ struct ModalSheetView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
     }
+}
+//MARK: - Ttitle
+struct watchlistTitle: View {
+    
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var navigationManager: NavigationManager
+    
+    var watchlistCount: Int {
+        userManager.currentUser?.watchlist.count ?? 0
+    }
+    
+    var body: some View {
+        VStack(alignment: .center){
+            Text("Watchlist")
+                .frame(maxWidth: .infinity, maxHeight: 50,alignment: .top)
+                .font(.system(size: 28,weight: .bold))
+                .foregroundColor(.white)
+                
+            
+            Rectangle()
+                .foregroundColor(.clear)
+                .frame(maxWidth: .infinity, minHeight: 3, maxHeight: 3)
+                .background(.white)
+            
+            VStack(alignment:.leading){
+                Text("\(watchlistCount) videos")
+                    .font(.system(size: 16,weight: .black))
+                    .foregroundColor(.white)
+            }
+            .padding(12)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity,alignment: .leading)
+            
+        }
+        .padding(.vertical, 10)
+        .padding(.top,20)
+        .frame(maxWidth: .infinity, alignment: .top)
+        .background(.white.opacity(0.15))
+    }
+}
+#Preview {
+    watchlistView().environmentObject(UserManager())
 }

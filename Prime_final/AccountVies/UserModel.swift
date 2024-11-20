@@ -100,6 +100,7 @@ public class UserManager: ObservableObject {
         defaultUser.dislikedMovies.insert(7) // Minions
 
         userDictionary["julian"] = defaultUser
+        currentUser = defaultUser // Set the currentUser to the default user
     }
     
     var userCount: Int {
@@ -253,3 +254,5 @@ public class UserManager: ObservableObject {
         currentUser?.profilePictureName = pictureName
     }
 }
+
+

@@ -236,5 +236,5 @@ struct ContentView2: View {
 }
 
 #Preview {
-    ContentView2(CurrentmovieId: 1).environmentObject(UserManager())
+    ContentView2(CurrentmovieId: 0).environmentObject(UserManager())
 }
