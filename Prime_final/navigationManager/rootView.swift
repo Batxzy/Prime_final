@@ -1,18 +1,16 @@
 import SwiftUI
 
-//MARK: - RootView the tv
-
 struct RootView: View {
     @Binding var Navpath: NavigationPath
     @State private var path = NavigationPath()
     @ObservedObject private var userManager = UserManager.shared
-    
+
     var mainContent: some View {
-            VStack {
-                Text("")
-            }
+        VStack {
+            PRIME() // Display Prime Video logo
         }
-    
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
             mainContent
