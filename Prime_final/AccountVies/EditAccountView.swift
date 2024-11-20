@@ -97,7 +97,7 @@ struct EditAccountView: View {
                                 .foregroundColor(.white)
                             }
                             .sheet(isPresented: $showingImagePicker) {
-                                selectProfilePic()
+                                selectProfilePic().environmentObject(UserManager())
                             }
                         }
                     }
