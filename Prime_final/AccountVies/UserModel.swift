@@ -82,6 +82,7 @@ public class UserManager: ObservableObject {
     public init() {
         userDictionary = [:]
         currentUser = nil
+        
     }
     
     var userCount: Int {
