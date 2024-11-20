@@ -32,22 +32,32 @@ struct EditAccountView: View {
     }
     
     // Guardar los cambios
-    private func saveChanges() {
-        guard let currentUser = userManager.currentUser else { return }
-        
-        // CHECAR SI EL USUARIO YA EXISTE
+       // Guardar los cambios
+   private func saveChanges() -> Bool {
+    guard let currentUser = userManager.currentUser else { 
+        return false 
+    }
+        if username != originalUsername && userManager.userExists(username: username) {
+            // Show error or handle duplicate username
+            return false
+        }
+
         if username != originalUsername || password != originalPassword {
-            //Actualizar el usuario
             currentUser.username = username
             currentUser.Password = password
         }
         
         // Update profile picture
-        if let newProfilePic = selectedProfilePicture {
-            userManager.updateProfilePictureName(to: newProfilePic)
+       if let newProfilePic = selectedProfilePicture {
+        userManager.updateProfilePictureName(to: newProfilePic)
         }
         
-        navigationManager.navigate(to: .home)
+        /*
+        Todo: navigation logic
+        userManager.currentScreen = .home
+        */
+
+        return true
     }
     
     // delete functionality 
