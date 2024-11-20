@@ -28,6 +28,9 @@ struct Tabview: View {
                         .font(.system(size: 25))
                         .foregroundColor(.white)
                         .frame(minWidth: 42.5, maxWidth: 42.5, maxHeight: .infinity)
+                        .onTapGesture {
+                            path.append(AppRoute.settings)
+                        }
                     
                     Image(userManager.currentUser?.profilePictureName ?? "default_profile")
                         .resizable()

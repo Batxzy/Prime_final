@@ -28,6 +28,8 @@ var body: some View {
                         CreateAccountView(path: $Navpath)
                     case .search:
                         LoginView(path: $Navpath)
+                    case .settings:
+                        SettingsView(path: $Navpath)
                     }
                 }
         }

@@ -11,6 +11,7 @@ enum AppRoute: Hashable {
     case selectAccount
     case welcomeBack(String) // Username
     case createAccount
+    case settings
 }
 
 enum TabSelection: Hashable {
