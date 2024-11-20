@@ -7,13 +7,14 @@
 
 import SwiftUI
 
+
 @main
 struct Prime_finalApp: App {
-    @StateObject private var userManager = UserManager.shared
-    
+    @State private var navPath = NavigationPath()
+
     var body: some Scene {
         WindowGroup {
-            Text("")
+            RootView(Navpath: $navPath)
         }
     }
 }
