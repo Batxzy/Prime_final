@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct RootView: View {
-    @Binding var Navpath: NavigationPath
-    @State private var path = NavigationPath()
-    @ObservedObject private var userManager = UserManager.shared
+    @Binding var Navpath : NavigationPath
+    @StateObject private var userManager = UserManager.shared
 
     var mainContent: some View {
         VStack {
@@ -12,28 +11,28 @@ struct RootView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $Navpath) {
             mainContent
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .home:
-                        HomeView(path: $path)
+                        HomeView(path: $Navpath)
                     case .movieDetail(let id):
-                        ContentView2(path: $path, CurrentmovieId: id)
+                        ContentView2(path: $Navpath, CurrentmovieId: id)
                     case .editProfile:
-                        EditAccountView(path: $path)
+                        EditAccountView(path: $Navpath)
                     case .watchlist:
                         watchlistView()
                     case .login:
-                        LoginView(path: $path)
+                        LoginView(path: $Navpath)
                     case .selectAccount:
-                        SelectAccountView(path: $path)
+                        SelectAccountView(path: $Navpath)
                     case .welcomeBack(let username):
-                        welcomeBack(path: $path, selectedUsername: username)
+                        welcomeBack(path: $Navpath, selectedUsername: username)
                     case .createAccount:
-                        CreateAccountView(path: $path)
+                        CreateAccountView(path: $Navpath)
                     case .search:
-                        LoginView(path: $path)
+                        LoginView(path: $Navpath)
                     }
                 }
         }
