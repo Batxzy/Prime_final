@@ -21,7 +21,7 @@ struct imageV: View {
             .clipped()
             .cornerRadius(10)
             .onTapGesture {
-                navigationManager.navigate(to: .movieDetail(movieId))
+                path.append(AppRoute.movieDetail(movieId))
             }
     }
 }
@@ -30,6 +30,7 @@ struct imageV: View {
 //MARK: ScrollVertical
 struct ScrollVertical: View {
     @StateObject private var movieDB = MovieDatabase.shared
+    @Binding var path: NavigationPath
     let Sectiontitle: String
     
     var body: some View {
@@ -41,8 +42,10 @@ struct ScrollVertical: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {
-                    ForEach(movieDB.movies) { movie in
-                        imageV(imageUrl: movie.thumbnailVUrl, movieId: movie.id)
+                     ForEach(movieDB.movies) { movie in
+                        imageV(imageUrl: movie.thumbnailVUrl, 
+                              movieId: movie.id,
+                              path: $path)
                     }
                 }
             }

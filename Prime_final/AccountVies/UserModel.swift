@@ -107,27 +107,17 @@ public class UserManager: ObservableObject {
         return userDictionary.count
     }
     
-    
-    func navigateToHome() {
-        currentScreen = .home
-        NavigationManager.shared.navigate(to: .home)
-    }
-    
-    func navigateToEditProfile() {
-        
-        currentScreen = .editProfile
-        NavigationManager.shared.navigate(to: .editProfile)
-    }
-    
-    func navigateToWatchlist() {
-        NavigationManager.shared.navigate(to: .watchlist)
 
-    }
-    
-    func navigateToMovieDetail(_ id: Int) {
-        NavigationManager.shared.navigate(to: .movieDetail(id))
 
+   func logout(path: Binding<NavigationPath>) {
+    currentUser = nil
+    selectedUserForSwitch = nil
+    if userCount > 0 {
+        path.wrappedValue.append(AppRoute.selectAccount)
+    } else {
+        path.wrappedValue.append(AppRoute.createAccount)
     }
+}
     
     
     func removeFromWatchlist(movieId: Int) {
@@ -144,74 +134,71 @@ public class UserManager: ObservableObject {
     //MARK: - auth functions
     
     // function to switch to user
-    func switchToUser(username: String) {
-        guard userDictionary[username] != nil else {
-            return
-        }
+    func switchToUser(username: String, path: Binding<NavigationPath>) {
+        guard userDictionary[username] != nil else { return }
         selectedUserForSwitch = username
-        NavigationManager.shared.navigate(to: .welcomeBack(username))
+        path.wrappedValue.append(AppRoute.welcomeBack(username))
     }
     
     // Create new user
-    func createUser(newUsername: String, newPassword: String) -> Bool {
-        // Check if username already exists
+    func createUser(newUsername: String, newPassword: String, path: Binding<NavigationPath>) -> Bool {
         guard !userDictionary.keys.contains(newUsername) else {
             return false
         }
-        // Creates new user
         let newUser = UserBlueprint(username: newUsername, password: newPassword)
         userDictionary[newUsername] = newUser
         currentUser = newUser
-        NavigationManager.shared.navigate(to: .home)
+        path.wrappedValue.append(AppRoute.home)
         return true
     }
     
     // Login user
-    func login(loginUsername: String, loginPassword: String) -> Bool {
-        guard
-            let tempUser = userDictionary[loginUsername],
-            tempUser.Password == loginPassword else {
+    func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
+        guard let tempUser = userDictionary[loginUsername],
+              tempUser.Password == loginPassword else {
             return false
         }
-        // If switching from another user, logout first
-        
         currentUser = tempUser
         selectedUserForSwitch = nil
-        NavigationManager.shared.navigate(to: .home)
+        path.wrappedValue.append(AppRoute.home)
         return true
     }
     
     // Delete user account
-    func deleteUser(delUsername: String, delPassword: String) -> Bool {
+    func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
         guard
             let tempUser = userDictionary[delUsername],
-            
-                tempUser.Password == delPassword else {
+            tempUser.Password == delPassword else {
             return false
         }
         
         userDictionary.removeValue(forKey: delUsername)
         if currentUser?.username == delUsername {
-            logout()
+            logout(path: path)
         }
-        // Determine next screen
+        
+        // Navigate based on remaining users
+        if userCount > 0 {
+            path.wrappedValue.append(AppRoute.selectAccount)
+        } else {
+            path.wrappedValue.append(AppRoute.createAccount)
+        }
         return true
     }
     
     // Logout current user
-    func logout() {
+     func logout(path: Binding<NavigationPath>) {
         currentUser = nil
         selectedUserForSwitch = nil
-        currentScreen = userCount > 0 ? .selectUser : .createAccount
         if userCount > 0 {
-            NavigationManager.shared.navigate(to: .selectAccount)
+            path.wrappedValue.append(AppRoute.selectAccount)
         } else {
-            NavigationManager.shared.navigate(to: .createAccount)
+            path.wrappedValue.append(AppRoute.createAccount)
         }
     }
     
     // Update user profile
-    func updateProfile(newUsername: String, newPassword: String) -> Bool {
+    func updateProfile(newUsername: String, newPassword: String, path: Binding<NavigationPath>) -> Bool {
         guard let currentUsername = currentUser?.username,
               var user = userDictionary[currentUsername] else {
             return false
@@ -226,7 +213,7 @@ public class UserManager: ObservableObject {
             userDictionary.removeValue(forKey: currentUsername)
         }
         
-        NavigationManager.shared.navigate(to: .home)
+        path.wrappedValue.append(AppRoute.home)
         return true
     }
     

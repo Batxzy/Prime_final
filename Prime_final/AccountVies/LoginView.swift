@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginView: View {
     //MARK: - Variables and singleton object
     @ObservedObject private var userManager = UserManager.shared
-    @EnvironmentObject var navigationManager: NavigationManager  // Add this
+    @Binding var path: NavigationPath
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
@@ -94,7 +94,7 @@ struct LoginView: View {
                     //MARK: - login button
                     Button("Login") {
                         if userManager.login(loginUsername: username, loginPassword: password) {
-                            navigationManager.navigate(to: .home)
+                        path.append(AppRoute.home)
                             // Login successful
                             username = ""
                             password = ""
@@ -114,7 +114,7 @@ struct LoginView: View {
                     .padding(.horizontal,25)
                     
                     Button("New? Create a new Account") {
-                        navigationManager.navigate(to: .selectAccount)
+                        path.append(AppRoute.createAccount)
                     }
                     .underline(true, pattern: .solid)
                     .foregroundColor(.white)

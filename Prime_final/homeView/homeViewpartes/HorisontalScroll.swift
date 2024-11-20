@@ -11,6 +11,7 @@ import SwiftUI
 struct FirstControl: View {
     @State private var currentPage = 0
     private let images = ["wild", "puss"]
+    @Binding var path: NavigationPath
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -23,6 +24,9 @@ struct FirstControl: View {
                         .clipped()
                         .cornerRadius(10)
                         .tag(index)
+                        .onTapGesture {
+                            path.append(AppRoute.movieDetail(index))
+                        }
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))

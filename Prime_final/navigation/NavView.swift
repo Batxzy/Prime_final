@@ -13,14 +13,14 @@ enum Tab {
 
 struct Navbar: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
+    @Binding var path: NavigationPath
     @State private var selectedTab: Tab = .home
         var body: some View {
                 HStack(alignment: .top) {
                     // Home Tab
                     Button (action: {   
                             selectedTab = .home
-                            navigationManager.navigate(to: .home)
+                           path.append(AppRoute.home)
                         }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image(systemName: "house")
@@ -36,8 +36,8 @@ struct Navbar: View {
                     
                     // Download/Watchlist Tab
                     Button (action: {   
-                            selectedTab = .watchlist
-                            navigationManager.navigate(to: .watchlist)
+                             selectedTab = .watchlist
+                           path.append(AppRoute.watchlist)
                         }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tab_download")
@@ -54,8 +54,8 @@ struct Navbar: View {
                     
                     // Search Tab
                      Button (action: {   
-                            selectedTab = .search
-                            navigationManager.navigate(to: .search)
+                        selectedTab = .search
+                           path.append(AppRoute.search)
                         }) {
                             VStack(alignment: .center, spacing: 6) {
                                 Image("tabler_search")

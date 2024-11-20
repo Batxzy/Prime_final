@@ -204,7 +204,7 @@ struct infoView: View {
 
 //MARK: -MAIN VIEW
 struct ContentView2: View {
-    
+    @Binding var path: NavigationPath
     let CurrentmovieId: Int
     @EnvironmentObject var navigationManager: NavigationManager
     @StateObject private var movieDB = MovieDatabase.shared

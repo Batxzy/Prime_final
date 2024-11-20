@@ -2,38 +2,37 @@ import SwiftUI
 
 //MARK: - RootView the tv
 struct RootView: View {
-    @StateObject private var userManager = UserManager.shared
-    @StateObject private var navigationManager = NavigationManager.shared
+    @Binding var path: NavigationPath
+    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             mainContent
-            .navigationDestination(for: AppRoute.self) { route in
+                .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .home:
-                        HomeView()
+                        HomeView(path: $path)
                     case .movieDetail(let id):
-                        ContentView2(CurrentmovieId: id)
+                        ContentView2(CurrentmovieId: id, path: $path)
                     case .editProfile:
-                        EditAccountView()
+                        EditAccountView(path: $path)
                     case .watchlist:
-                        watchlistView()
-                    case .search:
-                        // Add your search view
-                        EmptyView()
+                        watchlistView(path: $path)
+                    case .login:
+                        LoginView(path: $path)
                     case .selectAccount:
-                        SelectAccountView()
+                        SelectAccountView(path: $path)
                     case .welcomeBack(let username):
-                        welcomeBack(selectedUsername: username)
+                        welcomeBack(selectedUsername: username, path: $path)
                     case .createAccount:
-                        CreateAccountView()
+                        CreateAccountView(path: $path)
                     }
                 }
         }
         .environmentObject(userManager)
-        .environmentObject(navigationManager)
     }
-    
+}
+
     @ViewBuilder
     private var mainContent: some View {
         if userManager.userCount == 0 {
@@ -44,4 +43,3 @@ struct RootView: View {
             HomeView()
         }
     }
-}

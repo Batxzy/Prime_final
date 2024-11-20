@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - NavigationManager remote control
+/* MARK: - NavigationManager remote control
 public class NavigationManager: ObservableObject {
     static let shared = NavigationManager()
 

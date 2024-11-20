@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var navigationManager: NavigationManager
-       var body: some View {
+    @Binding var path: NavigationPath
+    @StateObject private var movieDB = MovieDatabase.shared
+    
+    var body: some View {
         VStack(spacing: 0) {
             // Top TabView
             Tabview()
@@ -17,18 +19,18 @@ struct HomeView: View {
             // Main Content
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 15) {
-                    FirstControl()
-                    ScrollVertical(Sectiontitle: "Featured")
-                    ScrollVertical(Sectiontitle: "Amazon Originals")
-                    ScrollVertical(Sectiontitle: "Movies")
-                    ScrollVertical(Sectiontitle: "TV Shows")
-                    ScrollVertical(Sectiontitle: "Kids")
+                    FirstControl(path: $path)
+                    ScrollVertical(path: $path, Sectiontitle: "Featured")
+                    ScrollVertical(path: $path, Sectiontitle: "Amazon Originals")
+                    ScrollVertical(path: $path, Sectiontitle: "Movies")
+                    ScrollVertical(path: $path, Sectiontitle: "TV Shows")
+                    ScrollVertical(path: $path, Sectiontitle: "Kids")
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             
             // Bottom NavBar
-            Navbar()
+            Navbar(path: $path)
         }
         .background(Color.black)
         .preferredColorScheme(.dark)

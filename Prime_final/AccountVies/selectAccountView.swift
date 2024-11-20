@@ -2,6 +2,8 @@
 import SwiftUI
 
 struct SelectAccountView: View {
+
+@Binding var path: NavigationPath
 @EnvironmentObject var navigationManager: NavigationManager    
 @State private var isEditing = false
 var body: some View {
@@ -29,6 +31,7 @@ struct ProfileButton: View {
     var profileName: String
     var PFPimage: String
     @Binding var isEditing: Bool
+    @Binding var path: NavigationPath
     @StateObject private var userManager = UserManager.shared
     
     var body: some View{
@@ -56,20 +59,21 @@ struct ProfileButton: View {
             }
             .frame(maxWidth: 88 ,maxHeight: 133, alignment: .top)
             
-            .onTapGesture {
+           .onTapGesture {
             if isEditing {
                 if userManager.currentUser?.username == profileName {
-                    //navigationManager.navigate(to: .editProfile) // Navigate to edit account view
+                    path.append(AppRoute.editProfile)
                 } else {
                     userManager.currentUser = userManager.userDictionary[profileName]
-                    //navigationManager.navigate(to: .welcomeBack(profileName))
+                    path.append(AppRoute.welcomeBack(profileName))
                 }
             } else {
                 if userManager.currentUser?.username == profileName {
-                    //navigationManager.navigate(to: .home) // Navigate to home view
+                    path.append(AppRoute.home)
                 } else {
                     userManager.currentUser = userManager.userDictionary[profileName]
                     userManager.switchToUser(username: profileName)
+                    path.append(AppRoute.welcomeBack(profileName))
                 }
             }
         }
@@ -81,7 +85,8 @@ struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
     var body: some View {
         Button(action: {
-            //NavigationManager.shared.navigate(to: .createAccount)
+             path.append(AppRoute.createAccount)
+
         }) {
             VStack(alignment: .center, spacing: 5) {
                 Circle()
@@ -105,6 +110,8 @@ struct AddProfileButton: View {
 //MARK: - Proflie Grid View
 struct ProfileGridView: View {
     @Binding var isEditing : Bool
+    @Binding var path: NavigationPath
+
     //imporatar el objeto que controla los usuarios
     @StateObject private var userManager = UserManager.shared
 
@@ -115,9 +122,12 @@ struct ProfileGridView: View {
         ScrollView {
             LazyVGrid(columns:columns, spacing: 20) {
                 ForEach(Array(userManager.userDictionary.values), id: \.username) { user in 
-                    ProfileButton(profileName: user.username, PFPimage: user.profilePictureName, isEditing: $isEditing)
+                    ProfileButton(profileName: user.username, 
+                                PFPimage: user.profilePictureName, 
+                                isEditing: $isEditing,
+                                path: $path)
                     }
-                AddProfileButton().opacity(isEditing ? 0.3 : 1)
+                AddProfileButton(path: $path).opacity(isEditing ? 0.3 : 1)
             }
             .padding(.horizontal,51)
         }
@@ -127,7 +137,6 @@ struct ProfileGridView: View {
 
 //MARK: - edit profile, learn more
 struct BottomEditView: View {
-    
     @StateObject private var userManager = UserManager.shared
     @Binding var isEditing: Bool
     var body: some View {
