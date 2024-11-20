@@ -86,7 +86,7 @@ public class UserManager: ObservableObject {
     public init() {
         
         let defaultUser = UserBlueprint(
-            username: "julian",
+            username: "Julian",
             password: "12345",
             profilePictureName: "furry1"
         )
@@ -99,7 +99,7 @@ public class UserManager: ObservableObject {
         defaultUser.likedMovies.insert(8)    // Shrek
         defaultUser.dislikedMovies.insert(7) // Minions
 
-        userDictionary["julian"] = defaultUser
+        userDictionary["Julian"] = defaultUser
         currentUser = defaultUser // Set the currentUser to the default user
     }
     

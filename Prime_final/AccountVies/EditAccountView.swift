@@ -6,8 +6,11 @@ struct EditAccountView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @State private var username: String = ""
     @State private var password: String = ""
+    
     @State private var originalUsername: String = ""
     @State private var originalPassword: String = ""
+    
+    @State private var originalProfilePicture = ""
     @State private var isSecured: Bool = true
     
     @State private var showingImagePicker = false
@@ -20,7 +23,7 @@ struct EditAccountView: View {
     
     // propiedad computada para saber si hay cambios
     private var hasChangesComputed: Bool {
-        username != originalUsername || password != originalPassword
+        username != originalUsername || password != originalPassword || selectedProfilePicture != originalProfilePicture
     }
     
     // Que cargeu los datos del usuario
@@ -30,6 +33,8 @@ struct EditAccountView: View {
             password = currentUser.Password
             originalUsername = currentUser.username
             originalPassword = currentUser.Password
+            originalProfilePicture = currentUser.profilePictureName
+            selectedProfilePicture = currentUser.profilePictureName
         }
     }
     

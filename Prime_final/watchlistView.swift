@@ -18,9 +18,17 @@ struct watchlistView: View {
             watchlistTitle()
             
             if watchlistCount == 0 {
-            Text("Your watchlist is empty")
-                .foregroundColor(.gray)
-                .padding(.top, 40)
+                
+                VStack {
+                    Image(systemName: "xmark.bin")
+                        .font(.title)
+                        .foregroundStyle(.gray)
+                    
+                    Text("Your watchlist is empty")
+                            .font(.callout.weight(.medium))
+                        .foregroundColor(.gray)
+                        .padding(.top, 15)
+                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } 
             
@@ -67,7 +75,7 @@ struct watchChip: View{
     var body: some View {
         
         Button(action: {
-            navigationManager.navigate(to: .movieDetail(movie.id))
+            //navigationManager.navigate(to: .movieDetail(movie.id))
         }) {
             HStack(alignment: .top, spacing: 8){
                 Image(movie.thumbnailHUrl)
@@ -99,8 +107,10 @@ struct watchChip: View{
                 
                 Button(action: {showingActionSheet = true}) {
                     Image(systemName: "ellipsis")
+                        .frame(maxHeight: 17)
                         .rotationEffect(.degrees(90))
                         .foregroundColor(.white)
+                        
                 }
                 .sheet(isPresented: $showingActionSheet) {
                     ModalSheetView(movie: movie, isPresented: $showingActionSheet)
@@ -111,6 +121,7 @@ struct watchChip: View{
                     
                 }
             }
+            
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
     }
@@ -123,11 +134,11 @@ struct ModalSheetView: View {
     @EnvironmentObject var navigationManager: NavigationManager
 
     var body: some View {
-        VStack(alignment: .center){
+        VStack(alignment: .leading){
 
-            HStack(alignment: .center, spacing: 10) { 
+            HStack() {
                 Text(movie.title)
-                    .font(.system(size: 16,weight: .bold))
+                    .font(.system(.title,weight: .bold))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -142,11 +153,11 @@ struct ModalSheetView: View {
                 
                 }
                 .padding(.horizontal, 24)
-                .padding(.vertical, 16)
+                .padding(.top, 24)
                 .frame(maxWidth: .infinity, alignment: .center)
 
 
-            VStack(alignment: .leading, spacing: 13) { 
+            VStack(alignment: .leading, spacing: 15) {
                 Button(action: {
                     userManager.removeFromWatchlist(movieId: movie.id)
                     isPresented = false
@@ -158,7 +169,6 @@ struct ModalSheetView: View {
                             .font(.system(size: 16,weight: .bold))
 
                     }
-                    .frame(maxWidth: .infinity)
                 }
                 
                 Button(action: {
@@ -173,7 +183,7 @@ struct ModalSheetView: View {
                 }
             }
         }
-            .padding(24)
+            .padding(.horizontal, 24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
     }
