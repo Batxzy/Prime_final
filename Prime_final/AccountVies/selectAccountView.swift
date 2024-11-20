@@ -33,7 +33,7 @@ struct ProfileButton: View {
     @EnvironmentObject var navigationManager: NavigationManager
 
     var body: some View{
-            VStack(alignment:.center,spacing:5) {
+            VStack(alignment:.center,spacing:13) {
             ZStack{
             Image(PFPimage)
                     .resizable()
