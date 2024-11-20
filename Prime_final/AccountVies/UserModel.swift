@@ -237,13 +237,13 @@ public class UserManager: ObservableObject {
         return userDictionary.keys.contains(username)
     }
     
-    func updateProfilePictureName(to newProfilePic: String) {
-    guard let username = currentUser?.username else { return }
-    
-    // Update both the current user and the dictionary entry
-    userDictionary[username]?.profilePictureName = newProfilePic
-    currentUser?.profilePictureName = newProfilePic
-}
+    func updateProfilePictureName(to newName: String) {
+        // Make sure this modifies the currentUser property
+        currentUser?.profilePictureName = newName
+        
+        print("new name: \(newName)")
+        objectWillChange.send() // Explicitly notify observers of the change
+    }
     
     func updateProfilePicture(_ pictureName: String) {
         guard

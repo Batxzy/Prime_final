@@ -28,41 +28,41 @@ struct EditAccountView: View {
         if let currentUser = userManager.currentUser {
             username = currentUser.username
             password = currentUser.Password
-            originalUsername = currentUser.username 
+            originalUsername = currentUser.username
             originalPassword = currentUser.Password
         }
     }
     
     // Guardar los cambios
-       // Guardar los cambios
-   private func saveChanges() -> Bool {
-    guard let currentUser = userManager.currentUser else { 
-        return false 
-    }
-       if username != originalUsername && userManager.userExists(username) {
+    // Guardar los cambios
+    private func saveChanges() -> Bool {
+        guard let currentUser = userManager.currentUser else {
+            return false
+        }
+        if username != originalUsername && userManager.userExists(username) {
             // Show error or handle duplicate username
             return false
         }
-
+        
         if username != originalUsername || password != originalPassword {
             currentUser.username = username
             currentUser.Password = password
         }
         
         // Update profile picture
-       if let newProfilePic = selectedProfilePicture {
-        userManager.updateProfilePictureName(to: newProfilePic)
+        if let newProfilePic = selectedProfilePicture {
+            userManager.updateProfilePictureName(to: newProfilePic)
         }
         
         /*
-        Todo: navigation logic
-        userManager.currentScreen = .home
-        */
-
+         Todo: navigation logic
+         userManager.currentScreen = .home
+         */
+        
         return true
     }
     
-    // delete functionality 
+    // delete functionality
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword) {
             navigationManager.navigate(to: .selectAccount)
@@ -79,12 +79,12 @@ struct EditAccountView: View {
                         .foregroundColor(.white)
                     
                     VStack(alignment: .center, spacing: 10){
-                                Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                            
+                        Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
+                        
                         HStack{
                             Button {
                                 showingImagePicker = true
@@ -97,78 +97,84 @@ struct EditAccountView: View {
                                 .foregroundColor(.white)
                             }
                             .sheet(isPresented: $showingImagePicker) {
-                                selectProfilePic().environmentObject(UserManager())
+                                selectProfilePic()
+                                    .environmentObject(userManager)  // Use the existing userManager instance
+                                    .onChange(of: userManager.currentUser?.profilePictureName) { newValue in
+                                        if let newValue = newValue {
+                                            selectedProfilePicture = newValue
+                                            hasChanges = true
+                                        }
+                                    }
                             }
                         }
-                    }
-                    .padding(13)
-                    .frame(maxWidth: .infinity, alignment: .top)
-                    
-                    //MARK: - username text field
-                    VStack(alignment: .leading, spacing: 10){
-                        Text("Username")
-                            .font(.callout.bold())
-                            .foregroundColor(.white)
-                        HStack{
-                            TextField("Username", text: $username)
-                            Spacer()
-                            Image(systemName: "pencil")
+                        .padding(13)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                        
+                        //MARK: - username text field
+                        VStack(alignment: .leading, spacing: 10){
+                            Text("Username")
+                                .font(.callout.bold())
                                 .foregroundColor(.white)
-                        }
-                        .modifier(TextFieldModifiers())
-                    }
-                    
-                    //MARK: - password text field
-                    VStack(alignment: .leading, spacing: 10){
-                        Text("Password")
-                            .font(.callout.bold())
-                            .foregroundColor(.white)
-                        HStack{
-                            if isSecured {
-                                AnyView(SecureField("Password", text: $password))
-                            } else {
-                                AnyView(TextField("Password", text: $password))
-                            }
-                            Spacer()
-                            Button {
-                                isSecured.toggle()
-                            } label: {
-                                Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                            HStack{
+                                TextField("Username", text: $username)
+                                Spacer()
+                                Image(systemName: "pencil")
                                     .foregroundColor(.white)
                             }
+                            .modifier(TextFieldModifiers())
                         }
-                        .modifier(TextFieldModifiers())
+                        
+                        //MARK: - password text field
+                        VStack(alignment: .leading, spacing: 10){
+                            Text("Password")
+                                .font(.callout.bold())
+                                .foregroundColor(.white)
+                            HStack{
+                                if isSecured {
+                                    AnyView(SecureField("Password", text: $password))
+                                } else {
+                                    AnyView(TextField("Password", text: $password))
+                                }
+                                Spacer()
+                                Button {
+                                    isSecured.toggle()
+                                } label: {
+                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .modifier(TextFieldModifiers())
+                        }
                     }
-                }
-                .padding(.horizontal, 35)
-                .frame(maxWidth: .infinity, alignment: .center)
-                
-                Spacer()
-                
-                SaveDeleteAccountButtons(
-                    hasChanges: hasChangesComputed,
-                    onSave: {
-                        saveChanges()
-                    },
-                    onDelete: {
-                        showingDeleteAlert = true
+                    .padding(.horizontal, 35)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    Spacer()
+                    
+                    SaveDeleteAccountButtons(
+                        hasChanges: hasChangesComputed,
+                        onSave: {
+                            saveChanges()
+                        },
+                        onDelete: {
+                            showingDeleteAlert = true
+                        }
+                    )
+                    .alert("Delete Account", isPresented: $showingDeleteAlert) {
+                        Button("Delete", role: .destructive, action: deleteAccount)
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("Are you sure you want to delete your account? This action cannot be undone.")
                     }
-                )
-                .alert("Delete Account", isPresented: $showingDeleteAlert) {
-                    Button("Delete", role: .destructive, action: deleteAccount)
-                    Button("Cancel", role: .cancel) { }
-                } message: {
-                    Text("Are you sure you want to delete your account? This action cannot be undone.")
-                }
-                
-                .onAppear {
-                    loadUserData()
+                    
+                    .onAppear {
+                        loadUserData()
+                    }
                 }
             }
         }
     }
 }
-
 //MARK: - save and delete buttons
 struct SaveDeleteAccountButtons: View{
 
@@ -228,6 +234,6 @@ struct TextFieldModifiers: ViewModifier{
     }
 }
 
-#Preview{
-    EditAccountView()
+#Preview {
+    EditAccountView().environmentObject(UserManager())
 }
