@@ -9,7 +9,11 @@ import SwiftUI
 
 //MARK: - Create Account View
 struct CreateAccountView: View {
+
+    //punto de acceso para todo el user manager
     @StateObject private var userManager = UserManager.shared
+
+    //variables de estado para el username y password y las alertas
     @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
@@ -18,6 +22,8 @@ struct CreateAccountView: View {
     
     var body: some View {
         ZStack {
+
+            //gradients
             LinearGradient(
                 stops: [
                     Gradient.Stop(color: .black, location: 0.28),
@@ -29,16 +35,19 @@ struct CreateAccountView: View {
             )
             .ignoresSafeArea()
             
+            //main logo y inicio del vstack
             VStack(spacing: 50) {
                 Image("Prime")
                     .resizable()
                     .clipped()
                     .frame(width: 244, height: 76)
-                
-                VStack(alignment: .center, spacing: 25) {
 
-//MARK: - username
+
+                //vstack para los text fields
+                VStack(alignment: .center, spacing: 25) {
+ //MARK: - username                  
                     VStack(alignment: .leading,spacing: 10){
+
                             Text("Login").font(.callout.bold()).foregroundColor(.white)
 
                             TextField("Username", text: $username)
@@ -57,10 +66,10 @@ struct CreateAccountView: View {
                     
 //MARK: - password
                     VStack(alignment: .leading,spacing: 10){
-
                             Text("Password")
                             .font(.callout.bold()).foregroundColor(.white)
 
+                            //todo corregir el estilo del text field y el password
                             HStack {
                                 (isSecured ? SecureField("Password", text: $password) : TextField("Password", text: $password))
                                     .preferredColorScheme(.dark)
@@ -91,7 +100,9 @@ struct CreateAccountView: View {
                         // Account created successfully
                         username = ""
                         password = ""
-                        userManager.currentScreen = .selectUser
+            /*todo: 
+                * corregir la navegacion:
+                        userManager.currentScreen = .selectUser*/
                     } else {
                         showError = true
                         errorMessage = "Username already exists"
@@ -107,7 +118,10 @@ struct CreateAccountView: View {
                     
 //MARK: - already have an account
                 Button("Already have an account? Login") {
+                    /*
+                    todo: corregir la navegacion
                     userManager.currentScreen = .login
+                    */
                 }
                 .underline(true, pattern: .solid)
                 .foregroundColor(.white)
@@ -115,6 +129,7 @@ struct CreateAccountView: View {
                 .frame(maxWidth: .infinity,alignment: .center)
                 .padding(.horizontal,35)
         }
+        //este we controla los errores
         .alert("Error", isPresented: $showError, actions: {
                 Button("OK", role: .cancel) { }
             }, message: {

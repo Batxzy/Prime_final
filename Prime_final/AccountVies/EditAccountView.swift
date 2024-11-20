@@ -1,14 +1,17 @@
 import SwiftUI
 
 struct EditAccountView: View {
-//MARK: - un chingo de variables y el singleton
+//un chingo de variables y el singleton
     @ObservedObject private var userManager = UserManager.shared
+
+// para que jalen los fields
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var originalUsername: String = ""
     @State private var originalPassword: String = ""
     @State private var isSecured: Bool = true
     @State private var showingImagePicker = false
+
     @State private var showingDeleteAlert = false
     @State private var selectedProfilePicture: String?
 
@@ -30,22 +33,31 @@ struct EditAccountView: View {
     }
     
     // Guardar los cambios
-    private func saveChanges() {
-        guard let currentUser = userManager.currentUser else { return }
-        
-        // CHECAR SI EL USUARIO YA EXISTE
+   private func saveChanges() -> Bool {
+    guard let currentUser = userManager.currentUser else { 
+        return false 
+    }
+        if username != originalUsername && userManager.userExists(username: username) {
+            // Show error or handle duplicate username
+            return false
+        }
+
         if username != originalUsername || password != originalPassword {
-            //Actualizar el usuario
             currentUser.username = username
             currentUser.Password = password
         }
         
         // Update profile picture
         if let newProfilePic = selectedProfilePicture {
-            _ = userManager.updateProfilePictureName(to: newProfilePic)
+        userManager.updateProfilePictureName(to: newProfilePic)
         }
         
+        /*
+        Todo: navigation logic
         userManager.currentScreen = .home
+        */
+
+        return true
     }
 
     // delete functionality 
