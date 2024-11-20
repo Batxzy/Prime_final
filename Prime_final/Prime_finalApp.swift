@@ -1,5 +1,3 @@
-import SwiftUI
-
 @main
 struct Prime_finalApp: App {
     @State private var navPath = NavigationPath()
