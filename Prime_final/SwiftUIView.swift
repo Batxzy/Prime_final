@@ -29,6 +29,14 @@ struct SwiftUIView: View {
             .padding(15)
             .background(.ultraThinMaterial)
             .cornerRadius(20)
+            
+                Text("Proyect made with swift ui")
+            
+            Spacer()
+            
+            Text("Programacion avanzada 2024")
+                .font(.footnote)
+            
         }
         .frame(maxHeight: .infinity,alignment: .top)
         .padding(.top, 56)
