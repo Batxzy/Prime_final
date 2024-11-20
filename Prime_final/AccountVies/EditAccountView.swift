@@ -9,8 +9,10 @@ struct EditAccountView: View {
     @State private var originalUsername: String = ""
     @State private var originalPassword: String = ""
     @State private var isSecured: Bool = true
+    
     @State private var showingImagePicker = false
     @State private var showingDeleteAlert = false
+    
     @State private var selectedProfilePicture: String?
     @State private var hasChanges = false
     
@@ -37,7 +39,7 @@ struct EditAccountView: View {
     guard let currentUser = userManager.currentUser else { 
         return false 
     }
-        if username != originalUsername && userManager.userExists(username: username) {
+       if username != originalUsername && userManager.userExists(username) {
             // Show error or handle duplicate username
             return false
         }
@@ -77,15 +79,12 @@ struct EditAccountView: View {
                         .foregroundColor(.white)
                     
                     VStack(alignment: .center, spacing: 10){
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(width: 80, height: 80)
-                            .background(
-                                Image("profile")
+                                Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .clipped()
-                            )
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                            
                         HStack{
                             Button {
                                 showingImagePicker = true
