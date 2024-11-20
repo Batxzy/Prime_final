@@ -5,6 +5,8 @@ struct selectProfilePic: View {
 @EnvironmentObject var userManager: UserManager
 @Environment(\.dismiss) var dismiss
 
+private let categories = profilePictureCategories // Define categories at view level
+
     var body: some View {
         VStack(alignment: .center){
             Text("Change Profile Picture")

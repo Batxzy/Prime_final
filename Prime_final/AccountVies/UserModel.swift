@@ -238,9 +238,12 @@ public class UserManager: ObservableObject {
     }
     
     func updateProfilePictureName(to newProfilePic: String) {
-        // Update logic for profile picture
-        currentUser?.profilePictureName = newProfilePic
-    }
+    guard let username = currentUser?.username else { return }
+    
+    // Update both the current user and the dictionary entry
+    userDictionary[username]?.profilePictureName = newProfilePic
+    currentUser?.profilePictureName = newProfilePic
+}
     
     func updateProfilePicture(_ pictureName: String) {
         guard
