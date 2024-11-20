@@ -4,15 +4,10 @@ struct RootView: View {
     @Binding var Navpath : NavigationPath
     @StateObject private var userManager = UserManager.shared
 
-    var mainContent: some View {
-        VStack {
-            PRIME() // Display Prime Video logo
-        }
-    }
 
     var body: some View {
         NavigationStack(path: $Navpath) {
-            mainContent
+            PRIME()
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .home:
