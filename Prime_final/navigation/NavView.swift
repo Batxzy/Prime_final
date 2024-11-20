@@ -77,5 +77,5 @@ struct Navbar: View {
 }
 
 #Preview {
-    Navbar()
+    Navbar(path: .constant(NavigationPath()))
 }

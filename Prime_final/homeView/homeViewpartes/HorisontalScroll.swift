@@ -76,6 +76,7 @@ struct PageControl: UIViewRepresentable {
         }
     }
 }
+
 #Preview {
-    FirstControl()
+    FirstControl(path: .constant(NavigationPath()))
 }

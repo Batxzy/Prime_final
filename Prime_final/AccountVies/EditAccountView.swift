@@ -3,7 +3,6 @@ import SwiftUI
 struct EditAccountView: View {
     //MARK: - un chingo de variables y el singleton
     @ObservedObject private var userManager = UserManager.shared
-    @EnvironmentObject var navigationManager: NavigationManager
     @State private var username: String = ""
     @State private var password: String = ""
     
@@ -19,6 +18,7 @@ struct EditAccountView: View {
     @State private var selectedProfilePicture: String?
     @State private var hasChanges = false
     
+    @Binding var path: NavigationPath
     //MARK:- funciciones
     
     // propiedad computada para saber si hay cambios
@@ -69,8 +69,8 @@ struct EditAccountView: View {
     
     // delete functionality
     private func deleteAccount() {
-        if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword) {
-            navigationManager.navigate(to: .selectAccount)
+        if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword, path: $path) {
+
         }
     }
     //MARK: - Edit profile text
@@ -240,5 +240,5 @@ struct TextFieldModifiers: ViewModifier{
 }
 
 #Preview {
-    EditAccountView().environmentObject(UserManager())
+    EditAccountView(path: .constant(NavigationPath()))
 }

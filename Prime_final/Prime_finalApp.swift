@@ -13,13 +13,7 @@ struct Prime_finalApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if userManager.userCount == 0 {
-                CreateAccountView()
-            } else if userManager.currentUser == nil {
-                SelectAccountView()
-            } else {
-                HomeView()
-            }
+            Text("")
         }
     }
 }

@@ -10,7 +10,7 @@ struct welcomeBack: View {
     @State private var errorMessage: String = ""
     
     private func handleLogin() {
-        guard userManager.login(loginUsername: selectedUsername, loginPassword: password) else {
+        guard userManager.login(loginUsername: selectedUsername, loginPassword: password, path: $path) else {
             showError = true
             errorMessage = "Invalid password"
             return
@@ -114,5 +114,8 @@ struct welcomeBack: View {
 
 
 #Preview {
-    welcomeBack(selectedUsername: "defaultUsername")
+    welcomeBack(
+        path: .constant(NavigationPath()),
+        selectedUsername: "defaultUsername"
+    )
 }

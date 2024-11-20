@@ -185,17 +185,7 @@ public class UserManager: ObservableObject {
         }
         return true
     }
-    
-    // Logout current user
-     func logout(path: Binding<NavigationPath>) {
-        currentUser = nil
-        selectedUserForSwitch = nil
-        if userCount > 0 {
-            path.wrappedValue.append(AppRoute.selectAccount)
-        } else {
-            path.wrappedValue.append(AppRoute.createAccount)
-        }
-    }
+        
     
     // Update user profile
     func updateProfile(newUsername: String, newPassword: String, path: Binding<NavigationPath>) -> Bool {

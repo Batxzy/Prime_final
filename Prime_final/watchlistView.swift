@@ -3,7 +3,6 @@ import SwiftUI
 //MARK: - watchlistView
 struct watchlistView: View {
     @EnvironmentObject var userManager: UserManager
-    @EnvironmentObject var navigationManager: NavigationManager 
     @Environment(\.dismiss) var dismiss
 
     @State private var showEmptyState = false
@@ -67,7 +66,6 @@ struct ListWatchable: View{
 
 //MARK: - watchChip
 struct watchChip: View{
-    @EnvironmentObject var navigationManager: NavigationManager
     @State private var showingActionSheet = false
     @EnvironmentObject var userManager: UserManager
     let movie: MovieData
@@ -131,8 +129,7 @@ struct ModalSheetView: View {
     let movie: MovieData
     @Binding var isPresented: Bool
     @EnvironmentObject var userManager: UserManager
-    @EnvironmentObject var navigationManager: NavigationManager
-
+    
     var body: some View {
         VStack(alignment: .leading){
 
@@ -173,7 +170,7 @@ struct ModalSheetView: View {
                 
                 Button(action: {
                     isPresented = false
-                    navigationManager.navigate(to: .movieDetail(movie.id))
+
                     }) {
                     HStack (alignment: .center, spacing: 15) {
                         Image(systemName: "info.circle")
@@ -192,7 +189,6 @@ struct ModalSheetView: View {
 struct watchlistTitle: View {
     
     @EnvironmentObject var userManager: UserManager
-    @EnvironmentObject var navigationManager: NavigationManager
     
     var watchlistCount: Int {
         userManager.currentUser?.watchlist.count ?? 0

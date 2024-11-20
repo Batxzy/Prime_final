@@ -11,7 +11,8 @@ import SwiftUI
 struct CreateAccountView: View {
 
     @StateObject private var userManager = UserManager.shared
-    @Binding var path: NavigationPath // Add this    @State private var username = ""
+    @Binding var path: NavigationPath
+    @State private var username = ""
     @State private var password = ""
     @State private var isSecured: Bool = true
     @State private var showError = false
@@ -94,7 +95,7 @@ struct CreateAccountView: View {
                         
 //MARK: - Create Account Button
                 Button("Create") {
-                    if userManager.createUser(newUsername: username, newPassword: password) {
+                    if userManager.createUser(newUsername: username, newPassword: password, path: $path) {
                         // Account created successfully
                         username = ""
                         password = ""
@@ -132,5 +133,5 @@ struct CreateAccountView: View {
 }
 
 #Preview {
-    CreateAccountView()
+    CreateAccountView(path: .constant(NavigationPath()))
 }

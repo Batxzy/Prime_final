@@ -66,10 +66,11 @@ struct LoginView: View {
                             if isSecured {
                                 AnyView(SecureField("Password", text: $password))
                                     .preferredColorScheme(.dark)
+                                    .frame(maxWidth: .infinity, maxHeight: 58)
                             } else {
                                 AnyView(TextField("Password", text: $password))
                                     .preferredColorScheme(.dark)
-                                    .frame(maxWidth: .infinity, minHeight: 58)
+                                    .frame(maxWidth: .infinity, maxHeight: 58)
                             }
                             
                             Spacer()
@@ -93,14 +94,11 @@ struct LoginView: View {
                     
                     //MARK: - login button
                     Button("Login") {
-                        if userManager.login(loginUsername: username, loginPassword: password) {
-                        path.append(AppRoute.home)
-                            // Login successful
+                        if userManager.login(loginUsername: username, loginPassword: password, path: $path) {
+                            path.append(AppRoute.home)
                             username = ""
                             password = ""
-                        } 
-                        
-                        else {
+                        } else {
                             showError = true
                             errorMessage = "Invalid username or password"
                         }
@@ -132,5 +130,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(path: .constant(NavigationPath()))
 }

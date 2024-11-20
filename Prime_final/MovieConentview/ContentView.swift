@@ -206,7 +206,6 @@ struct infoView: View {
 struct ContentView2: View {
     @Binding var path: NavigationPath
     let CurrentmovieId: Int
-    @EnvironmentObject var navigationManager: NavigationManager
     @StateObject private var movieDB = MovieDatabase.shared
     @StateObject private var userManager = UserManager.shared
     
@@ -236,5 +235,9 @@ struct ContentView2: View {
 }
 
 #Preview {
-    ContentView2(CurrentmovieId: 0).environmentObject(UserManager())
+    ContentView2(
+        path: .constant(NavigationPath()),
+        CurrentmovieId: 0
+    )
+    .environmentObject(UserManager())
 }

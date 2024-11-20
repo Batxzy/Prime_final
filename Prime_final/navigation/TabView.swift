@@ -9,7 +9,6 @@ import SwiftUI
 
 struct Tabview: View {
 
-@EnvironmentObject var navigationManager: NavigationManager
 @ObservedObject private var userManager = UserManager.shared
    
     var body: some View { 
@@ -31,7 +30,7 @@ struct Tabview: View {
                     .frame(width: 42.5, height: 42.5)
                     .clipShape(Circle())
                     .onTapGesture {
-                        navigationManager.navigate(to: .selectAccount)
+                        
                     }
                 
             }

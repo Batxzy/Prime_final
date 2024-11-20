@@ -5,6 +5,7 @@ enum AppRoute: Hashable {
     case home
     case movieDetail(Int)  // Movie ID
     case editProfile
+    case login
     case watchlist
     case search
     case selectAccount

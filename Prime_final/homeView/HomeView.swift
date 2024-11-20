@@ -39,5 +39,6 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView().preferredColorScheme(.dark)
+    HomeView(path: .constant(NavigationPath()))
+        .preferredColorScheme(.dark)
 }

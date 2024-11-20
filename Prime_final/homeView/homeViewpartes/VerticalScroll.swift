@@ -8,7 +8,7 @@
 import SwiftUI
 //MARK: imageV
 struct imageV: View {
-@EnvironmentObject var navigationManager: NavigationManager
+    @Binding var path : NavigationPath
     let imageUrl: String
     let movieId: Int
     
@@ -43,9 +43,8 @@ struct ScrollVertical: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {
                      ForEach(movieDB.movies) { movie in
-                        imageV(imageUrl: movie.thumbnailVUrl, 
-                              movieId: movie.id,
-                              path: $path)
+                         imageV(path: $path, imageUrl: movie.thumbnailVUrl, 
+                                movieId: movie.id)
                     }
                 }
             }
@@ -56,5 +55,8 @@ struct ScrollVertical: View {
 }
 
 #Preview {
-    ScrollVertical(Sectiontitle: "Amazon orignals and recommended")
+    ScrollVertical(
+        path: .constant(NavigationPath()),
+        Sectiontitle: "Amazon originals and recommended"
+    )
 }

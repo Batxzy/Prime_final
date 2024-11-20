@@ -4,7 +4,6 @@ import SwiftUI
 struct SelectAccountView: View {
 
 @Binding var path: NavigationPath
-@EnvironmentObject var navigationManager: NavigationManager    
 @State private var isEditing = false
 var body: some View {
 //MARK: - main view
@@ -17,7 +16,7 @@ var body: some View {
             .padding(27)
             .frame(maxWidth:.infinity,alignment:.bottom)
             
-            ProfileGridView(isEditing: $isEditing)
+            ProfileGridView(isEditing: $isEditing, path: $path)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             BottomEditView(isEditing: $isEditing)
          }
@@ -72,7 +71,7 @@ struct ProfileButton: View {
                     path.append(AppRoute.home)
                 } else {
                     userManager.currentUser = userManager.userDictionary[profileName]
-                    userManager.switchToUser(username: profileName)
+                    userManager.switchToUser(username: profileName, path: $path)
                     path.append(AppRoute.welcomeBack(profileName))
                 }
             }
@@ -83,6 +82,7 @@ struct ProfileButton: View {
 //MARK: - Add Profile Button
 struct AddProfileButton: View {
     @StateObject private var userManager = UserManager.shared
+    @Binding var path: NavigationPath
     var body: some View {
         Button(action: {
              path.append(AppRoute.createAccount)
@@ -160,5 +160,5 @@ struct BottomEditView: View {
 
 
 #Preview {
-    SelectAccountView()
+    SelectAccountView(path: .constant(NavigationPath()))
 }

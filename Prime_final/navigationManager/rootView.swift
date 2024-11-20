@@ -1,9 +1,17 @@
 import SwiftUI
 
 //MARK: - RootView the tv
+
 struct RootView: View {
-    @Binding var path: NavigationPath
+    @Binding var Navpath: NavigationPath
     @State private var path = NavigationPath()
+    @ObservedObject private var userManager = UserManager.shared
+    
+    var mainContent: some View {
+            VStack {
+                Text("")
+            }
+        }
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -13,33 +21,24 @@ struct RootView: View {
                     case .home:
                         HomeView(path: $path)
                     case .movieDetail(let id):
-                        ContentView2(CurrentmovieId: id, path: $path)
+                        ContentView2(path: $path, CurrentmovieId: id)
                     case .editProfile:
                         EditAccountView(path: $path)
                     case .watchlist:
-                        watchlistView(path: $path)
+                        watchlistView()
                     case .login:
                         LoginView(path: $path)
                     case .selectAccount:
                         SelectAccountView(path: $path)
                     case .welcomeBack(let username):
-                        welcomeBack(selectedUsername: username, path: $path)
+                        welcomeBack(path: $path, selectedUsername: username)
                     case .createAccount:
                         CreateAccountView(path: $path)
+                    case .search:
+                        LoginView(path: $path)
                     }
                 }
         }
-        .environmentObject(userManager)
+        .environmentObject(UserManager())
     }
 }
-
-    @ViewBuilder
-    private var mainContent: some View {
-        if userManager.userCount == 0 {
-            CreateAccountView()
-        } else if userManager.currentUser == nil {
-            SelectAccountView()
-        } else {
-            HomeView()
-        }
-    }
