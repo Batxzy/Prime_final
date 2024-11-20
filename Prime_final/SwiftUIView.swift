@@ -9,7 +9,29 @@ import SwiftUI
 
 struct SwiftUIView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment:.center,spacing: 24){
+            Image("furry2")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: 150, maxHeight: 150)
+                .clipShape(Circle())
+            
+            VStack(spacing: 10){
+                Text("Made with love by:")
+                    .font(.title.bold())
+                VStack(spacing: 8){
+                    Text("Jose Julian Lopez Huacuja")
+                        .font(.system(size: 24,weight: .medium))
+                        .foregroundStyle(.white.opacity(0.5))
+                }
+                
+            }
+            .padding(15)
+            .background(.ultraThinMaterial)
+            .cornerRadius(20)
+        }
+        .frame(maxHeight: .infinity,alignment: .top)
+        .padding(.top, 56)
     }
 }
 
