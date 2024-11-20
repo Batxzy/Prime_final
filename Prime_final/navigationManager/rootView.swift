@@ -11,6 +11,7 @@ var body: some View {
                     switch route {
                     case .home:
                         HomeView(path: $Navpath)
+                            .navigationBarBackButtonHidden(true)
                     case .movieDetail(let id):
                         ContentView2(path: $Navpath, CurrentmovieId: id)
                     case .editProfile:

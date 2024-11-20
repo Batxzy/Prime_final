@@ -14,7 +14,7 @@ struct Prime_finalApp: App {
                     // Reset navigation path first 
                     navPath = NavigationPath()
                     // Initial routing based on user state
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { // 2 second delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) { // 2 second delay
                         if userManager.userDictionary.isEmpty {
                             navPath.append(AppRoute.createAccount)
                         } else if userManager.currentUser == nil {
