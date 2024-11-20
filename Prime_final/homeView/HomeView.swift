@@ -14,7 +14,7 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Top TabView
-            Tabview()
+            Tabview(path: $path)
             
             // Main Content
             ScrollView(.vertical, showsIndicators: false) {

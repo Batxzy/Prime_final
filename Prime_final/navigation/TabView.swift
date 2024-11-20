@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct Tabview: View {
-
+    
+@Binding var path: NavigationPath
 @ObservedObject private var userManager = UserManager.shared
    
     var body: some View { 
@@ -30,7 +31,7 @@ struct Tabview: View {
                     .frame(width: 42.5, height: 42.5)
                     .clipShape(Circle())
                     .onTapGesture {
-                        
+                        path.append(AppRoute.selectAccount)
                     }
                 
             }
@@ -50,5 +51,5 @@ struct Tabview: View {
 }
 
 #Preview {
-    Tabview()
+    Navbar(path: .constant(NavigationPath()))
 }
