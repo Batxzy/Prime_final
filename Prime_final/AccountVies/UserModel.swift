@@ -74,17 +74,6 @@ public class UserManager: ObservableObject {
     
     public init() {
         
-        let defaultUser = UserBlueprint(
-            username: "Julian",
-            password: "12345",
-            profilePictureName: "furry1"
-        )
-        defaultUser.watchlist.insert(0)  // Puss in Boots
-        defaultUser.watchlist.insert(2)  // Evangelion 1.0
-        defaultUser.watchlist.insert(14) // The Dark Knight
-
-        userDictionary["Julian"] = defaultUser
-        currentUser = defaultUser // Set the currentUser to the default user
     }
     
     var userCount: Int {
@@ -135,6 +124,11 @@ public class UserManager: ObservableObject {
             return false
         }
         let newUser = UserBlueprint(username: newUsername, password: newPassword)
+        
+        newUser.watchlist = []
+        newUser.likedMovies = []
+        newUser.dislikedMovies = []
+        
         userDictionary[newUsername] = newUser
         currentUser = newUser
         path.wrappedValue.append(AppRoute.home)
