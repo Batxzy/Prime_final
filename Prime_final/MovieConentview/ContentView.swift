@@ -102,7 +102,6 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleWatchlist(for: movieId)
-                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
@@ -125,7 +124,6 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleLike(for: movieId)
-                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
@@ -149,7 +147,6 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleDislike(for: movieId)
-                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")

@@ -135,6 +135,7 @@ public class UserManager: ObservableObject {
             
             userDictionary[username] = user
         }
+        objectWillChange.send()
     }
 
 
