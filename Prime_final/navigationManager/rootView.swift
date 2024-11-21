@@ -17,7 +17,7 @@ var body: some View {
                     case .editProfile:
                         EditAccountView(path: $Navpath)
                     case .watchlist:
-                        watchlistView()
+                        watchlistView( path: $Navpath)
                     case .login:
                         LoginView(path: $Navpath)
                     case .selectAccount:

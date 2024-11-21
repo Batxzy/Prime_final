@@ -4,7 +4,7 @@ import SwiftUI
 struct watchlistView: View {
     @EnvironmentObject var userManager: UserManager
     @Environment(\.dismiss) var dismiss
-
+    @Binding var path: NavigationPath
     @State private var showEmptyState = false
 
     var watchlistCount: Int {
@@ -33,15 +33,18 @@ struct watchlistView: View {
             
             else {
                 
-            ListWatchable()
+                ListWatchable(path: $path)
                 .frame(maxWidth: .infinity, alignment: .top)
+                
             }
         }
+        .padding(.top, 45)
     }
 }
 
 //MARK: - ListWatchable
 struct ListWatchable: View{
+    @Binding var path: NavigationPath
     @EnvironmentObject var userManager: UserManager
     let movieDB = MovieDatabase.shared
    
@@ -54,7 +57,7 @@ struct ListWatchable: View{
         ScrollView(.vertical) {
             LazyVStack(spacing: 16) {
                 ForEach(watchlistMovies) { movie in
-                    watchChip(movie: movie)
+                    watchChip(path: $path, movie: movie)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .top)
@@ -68,12 +71,13 @@ struct ListWatchable: View{
 struct watchChip: View{
     @State private var showingActionSheet = false
     @EnvironmentObject var userManager: UserManager
-    let movie: MovieData
+    @Binding var path: NavigationPath
     
+    let movie: MovieData
     var body: some View {
         
         Button(action: {
-            //navigationManager.navigate(to: .movieDetail(movie.id))
+            path.append(AppRoute.movieDetail(movie.id))
         }) {
             HStack(alignment: .top, spacing: 8){
                 Image(movie.thumbnailHUrl)
@@ -111,7 +115,7 @@ struct watchChip: View{
                         
                 }
                 .sheet(isPresented: $showingActionSheet) {
-                    ModalSheetView(movie: movie, isPresented: $showingActionSheet)
+                    ModalSheetView(movie: movie, isPresented: $showingActionSheet, path: $path)
                         .presentationDetents([.height(300)])
                         .presentationDragIndicator(.visible)
                         .presentationBackground(.ultraThinMaterial)
@@ -129,6 +133,7 @@ struct ModalSheetView: View {
     let movie: MovieData
     @Binding var isPresented: Bool
     @EnvironmentObject var userManager: UserManager
+    @Binding var path: NavigationPath
     
     var body: some View {
         VStack(alignment: .leading){
@@ -170,7 +175,8 @@ struct ModalSheetView: View {
                 
                 Button(action: {
                     isPresented = false
-
+                    path.append(AppRoute.movieDetail(movie.id))
+                    
                     }) {
                     HStack (alignment: .center, spacing: 15) {
                         Image(systemName: "info.circle")
@@ -224,5 +230,6 @@ struct watchlistTitle: View {
     }
 }
 #Preview {
-    watchlistView().environmentObject(UserManager())
+    watchlistView(path: .constant(NavigationPath()))
+        .environmentObject(UserManager())
 }

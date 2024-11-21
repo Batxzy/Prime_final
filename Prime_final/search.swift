@@ -1,7 +1,7 @@
 import SwiftUI
 
 
-struct SettingView: View {
+struct SearchView: View {
     @Binding var path: NavigationPath
     @State private var search = ""
     
@@ -32,17 +32,17 @@ struct SettingView: View {
                     
             //generes chips
                         VStack(spacing: 13) {
-                            VStack(spacing: 14){
+                            HStack(spacing: 14){
                                 GenreChip(genreName: "Action and adventure")
-                                GenreChip(genreName: "Anime")  
+                                GenreChip(genreName: "Anime")
                             }
 
-                            VStack(spacing: 14){
+                            HStack(spacing: 14){
                                 GenreChip(genreName: "Comedy")
                                 GenreChip(genreName: "Documentary")  
                             }
 
-                            VStack(spacing: 14){
+                            HStack(spacing: 14){
                                 GenreChip(genreName: "Drama")
                                 GenreChip(genreName: "Fantasy")  
                             }
@@ -72,11 +72,17 @@ struct GenreChip: View {
 
     var body: some View {
         Text(genreName)
+            
             .font(.system(size: 15, weight: .bold))
             .foregroundColor(.white)
             .padding(13)
             .background(Color.white.opacity(0.2))
             .cornerRadius(8)
             .frame(maxWidth: .infinity)
+            
     }
+}
+
+#Preview{
+    SearchView(path: .constant(NavigationPath()))
 }

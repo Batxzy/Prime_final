@@ -15,14 +15,14 @@ enum Tab {
 struct Navbar: View {
 
     @Binding var path: NavigationPath
-    @State private var selectedTab: Tab = .home
+    @Binding var selectedTab: TabSelection
+    
         var body: some View {
             VStack{
                 HStack(alignment: .top) {
                     // Home Tab
                     Button (action: {   
                         selectedTab = .home
-                        path.append(AppRoute.home)
                     }) {
                         VStack(alignment: .center, spacing: 6) {
                             Image(systemName: "house")
@@ -41,7 +41,6 @@ struct Navbar: View {
                     // Download/Watchlist Tab
                     Button (action: {   
                         selectedTab = .watchlist
-                        path.append(AppRoute.watchlist)
                     }) {
                         VStack(alignment: .center, spacing: 6) {
                             Image(systemName: "arrow.down.square")
@@ -61,7 +60,6 @@ struct Navbar: View {
                     // Search Tab
                     Button (action: {   
                         selectedTab = .search
-                        path.append(AppRoute.search)
                     }) {
                         VStack(alignment: .center, spacing: 6) {
                             Image(systemName: "magnifyingglass")
@@ -88,5 +86,5 @@ struct Navbar: View {
 }
 
 #Preview {
-    Navbar(path: .constant(NavigationPath()))
+    Navbar(path: .constant(NavigationPath()), selectedTab: .constant(.home))
 }

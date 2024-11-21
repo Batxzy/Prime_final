@@ -15,7 +15,8 @@ enum AppRoute: Hashable {
 
 enum TabSelection: Hashable {
     case home
-    case watchlist 
+    case watchlist
     case search
 }
+
 

@@ -10,7 +10,8 @@ import SwiftUI
 struct HomeView: View {
     @Binding var path: NavigationPath
     @StateObject private var movieDB = MovieDatabase.shared
-    @State private var selectedTab: TabSelection = .home
+    @State var selectedTab: TabSelection = .home
+    
 
     var body: some View {
         ZStack{
@@ -29,14 +30,15 @@ struct HomeView: View {
                     .padding(.top, 60)
                 }
             case .watchlist:
-                watchlistView()
-            case .settings:
-                SettingView(path: $path)
+               watchlistView(path: $path)
+            
+           case .search:
+               SearchView(path: $path)
             }
             
             Tabview(path: $path)
             // Bottom NavBar
-            Navbar(path: $path)
+            Navbar(path: $path, selectedTab: $selectedTab)
         }
         .background(Color.black)
         .preferredColorScheme(.dark)
@@ -46,5 +48,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView(path: .constant(NavigationPath()))
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.dark).environmentObject(UserManager())
 }
