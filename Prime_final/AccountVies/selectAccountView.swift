@@ -5,6 +5,7 @@ struct SelectAccountView: View {
 
 @Binding var path: NavigationPath
 @State private var isEditing = false
+@StateObject private var userManager = UserManager.shared
 var body: some View {
 //MARK: - main view
         VStack(alignment:.leading, spacing:15){ 
@@ -113,7 +114,7 @@ struct ProfileGridView: View {
     @Binding var path: NavigationPath
 
     //imporatar el objeto que controla los usuarios
-    @StateObject private var userManager = UserManager.shared
+    @ObservedObject private var userManager = UserManager.shared
 
     //definicion de las columnas
     let columns = Array(repeating: GridItem(.flexible(),spacing: 55), count: 2)

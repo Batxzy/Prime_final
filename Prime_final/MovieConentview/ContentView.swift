@@ -237,7 +237,7 @@ struct ContentView2: View {
 #Preview {
     ContentView2(
         path: .constant(NavigationPath()),
-        CurrentmovieId: 0
+        CurrentmovieId: 4
     )
     .environmentObject(UserManager())
 }

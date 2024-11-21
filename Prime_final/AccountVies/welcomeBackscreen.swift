@@ -43,15 +43,11 @@ struct welcomeBack: View {
                     .foregroundColor(.white)
 
                 VStack(alignment: .center, spacing: 10){
-                    Circle()
-                    .foregroundColor(.white)
-                    .frame(width:85, height:85)
-                    .background(
                         Image(userManager.userDictionary[selectedUsername]?.profilePictureName ?? "profile")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .clipped()
-                    )
+                        .clipShape(.circle)
+                        .frame(width:85, height:85)
                 }
             }   
             VStack(alignment: .leading) {
@@ -116,6 +112,6 @@ struct welcomeBack: View {
 #Preview {
     welcomeBack(
         path: .constant(NavigationPath()),
-        selectedUsername: "defaultUsername"
+        selectedUsername: "Julian"
     )
 }

@@ -13,16 +13,6 @@ struct MoviePreference {
     var isDisliked: Bool = false
 }
 
-//MARK: - AuthScreen
-enum AuthScreen {
-    case createAccount
-    case login
-    case selectUser
-    case deleteAccount
-    case welcomeBack
-    case editProfile
-    case home
-}
 
 //MARK: - userClass blueprint
 class UserBlueprint: ObservableObject {
@@ -78,7 +68,6 @@ public class UserManager: ObservableObject {
     @Published var selectedUserForSwitch: String?
     @Published var currentUser: UserBlueprint?
     @Published var userDictionary: [String: UserBlueprint] = [:] // username: User
-    @Published var currentScreen: AuthScreen = .createAccount
     @Published var navigateToEditProfileAfterWelcomeBack: Bool = false  // Add this flag
     
     static let shared = UserManager()
