@@ -76,14 +76,59 @@ public class UserManager: ObservableObject {
     static let shared = UserManager()
     
     public init() {
-        
+           loadUserPreferences() 
     }
     
     var userCount: Int {
         return userDictionary.count
     }
     
+   private func saveUserPreferences() {
+        // Save each user's preferences separately
+        for (username, user) in userDictionary {
+            let userKey = "user_\(username)"
+            let preferences: [String: Any] = [
+                "username": user.username,
+                "profilePictureName": user.profilePictureName,
+                "likedMovies": Array(user.likedMovies),
+                "dislikedMovies": Array(user.dislikedMovies), 
+                "watchlist": Array(user.watchlist),
+                "password": user.Password
+            ]
+            defaults.set(preferences, forKey: userKey)
+        }
+        // Save list of usernames
+        defaults.set(Array(userDictionary.keys), forKey: "userList")
+    }
 
+    private func loadUserPreferences() {
+        guard let usernames = defaults.array(forKey: "userList") as? [String] else { return }
+        
+        for username in usernames {
+            let userKey = "user_\(username)"
+            guard let preferences = defaults.dictionary(forKey: userKey) else { continue }
+            
+            let user = UserBlueprint(
+                username: preferences["username"] as? String ?? "",
+                password: preferences["password"] as? String ?? "",
+                profilePictureName: preferences["profilePictureName"] as? String ?? "default_profile"
+            )
+            
+            // Restore preferences
+            if let liked = preferences["likedMovies"] as? [Int] {
+                user.likedMovies = Set(liked)
+            }
+            if let disliked = preferences["dislikedMovies"] as? [Int] {
+                user.dislikedMovies = Set(disliked)
+            }
+            if let watchlist = preferences["watchlist"] as? [Int] {
+                user.watchlist = Set(watchlist)
+            }
+            
+            userDictionary[username] = user
+        }
+    }
+}
 
    func logout(path: Binding<NavigationPath>) {
     currentUser = nil
@@ -98,6 +143,7 @@ public class UserManager: ObservableObject {
     func syncUserData() {
     guard let username = currentUser?.username else { return }
     userDictionary[username] = currentUser
+    saveUserPreferences() // Save after syncing
     objectWillChange.send()
 }
 
