@@ -125,15 +125,7 @@ public class UserManager: ObservableObject {
     
     // function to switch to user
     func switchToUser(username: String, path: Binding<NavigationPath>) {
-    // First save current user's data if exists
-    if let currentUsername = currentUser?.username {
-        userDictionary[currentUsername] = currentUser
-    }
-    
-    // Then switch to new user
-    guard let newUser = userDictionary[username] else { return }
     selectedUserForSwitch = username
-    currentUser = newUser
     path.wrappedValue.append(AppRoute.welcomeBack(username))
     }
     
