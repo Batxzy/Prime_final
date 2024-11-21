@@ -64,6 +64,7 @@ struct ProfileButton: View {
                 if userManager.currentUser?.username == profileName {
                     path.append(AppRoute.editProfile)
                 } else {
+                    userManager.syncUserData()
                     userManager.currentUser = userManager.userDictionary[profileName]
                     path.append(AppRoute.welcomeBack(profileName))
                 }
@@ -71,9 +72,8 @@ struct ProfileButton: View {
                 if userManager.currentUser?.username == profileName {
                     path.append(AppRoute.home)
                 } else {
-                    userManager.currentUser = userManager.userDictionary[profileName]
+                    userManager.syncUserData()
                     userManager.switchToUser(username: profileName, path: $path)
-                    path.append(AppRoute.welcomeBack(profileName))
                 }
             }
         }
