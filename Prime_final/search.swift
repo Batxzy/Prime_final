@@ -11,13 +11,16 @@ struct SearchView: View {
             VStack(spacing: 24){
                 
                 TextField("Search by actor, title", text: $search)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .background(Color.white)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 53)
+                    .padding(.vertical, 17)
+                    .padding(.horizontal, 53)
+                    .background(Color.white)
+                    .foregroundColor(.gray)
+                    .cornerRadius(7)
+                
                     .overlay(
                         HStack {
                             Image(systemName: "magnifyingglass")
+                                .font(.system(size: 19).bold())
                                 .foregroundColor(.gray)
                                 .padding(.leading, 8)
                             Spacer()
@@ -72,13 +75,13 @@ struct GenreChip: View {
 
     var body: some View {
         Text(genreName)
-            
+            .frame(maxWidth: .infinity,maxHeight: 48)
             .font(.system(size: 15, weight: .bold))
             .foregroundColor(.white)
             .padding(13)
-            .background(Color.white.opacity(0.2))
+            .background(.ultraThickMaterial)
             .cornerRadius(8)
-            .frame(maxWidth: .infinity)
+            
             
     }
 }
