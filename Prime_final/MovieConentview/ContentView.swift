@@ -152,7 +152,7 @@ struct interactiveView: View{
                     updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
-                        Image(systemName: isLiked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                        Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                             .resizable()
                             .foregroundStyle(.white)
                     }
