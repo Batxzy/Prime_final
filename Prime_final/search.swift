@@ -13,8 +13,8 @@ struct SearchView: View {
                 TextField("Search by actor, title", text: $search)
                     .padding(.vertical, 17)
                     .padding(.horizontal, 53)
-                    .background(Color.white)
                     .foregroundColor(.gray)
+                    .background(Color.white)
                     .cornerRadius(7)
                 
                     .overlay(
@@ -64,8 +64,9 @@ struct SearchView: View {
                         )
                 }
             }
+        .frame(maxHeight: .infinity, alignment: .top)
                 .padding(.horizontal, 25)
-                .padding(.top, 125)
+                .padding(.top,80)
     }
 
 }
