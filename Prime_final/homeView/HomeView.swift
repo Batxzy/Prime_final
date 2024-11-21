@@ -12,9 +12,7 @@ struct HomeView: View {
     @StateObject private var movieDB = MovieDatabase.shared
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Top TabView
-            Tabview(path: $path)
+        ZStack{
             
             // Main Content
             ScrollView(.vertical, showsIndicators: false) {
@@ -26,9 +24,11 @@ struct HomeView: View {
                     ScrollVertical(path: $path, Sectiontitle: "TV Shows")
                     ScrollVertical(path: $path, Sectiontitle: "Kids")
                 }
+                .padding(.top,60)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             
+            Tabview(path: $path)
             // Bottom NavBar
             Navbar(path: $path)
         }

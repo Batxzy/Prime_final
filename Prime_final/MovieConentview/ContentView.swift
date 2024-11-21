@@ -76,10 +76,21 @@ struct VideoPlayerView: View {
 //MARK: -INTERACTIVE VIEW
 struct interactiveView: View{
     let movieId: Int
-    @StateObject private var userManager = UserManager.shared
-    @State var movieliked : Bool = false
-    @State var moviedisliked : Bool = false
-    @State var Watchlistadd : Bool = false
+    @EnvironmentObject var userManager : UserManager
+
+    
+    // Computed properties to get current state
+        private var isInWatchlist: Bool {
+            userManager.currentUser?.watchlist.contains(movieId) ?? false
+        }
+        
+        private var isLiked: Bool {
+            userManager.currentUser?.likedMovies.contains(movieId) ?? false
+        }
+        
+        private var isDisliked: Bool {
+            userManager.currentUser?.dislikedMovies.contains(movieId) ?? false
+        }
     
     var body: some View {
         
@@ -88,10 +99,9 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleWatchlist(for: movieId)
-                    Watchlistadd.toggle()
                 }) {
                     VStack(alignment: .center) {
-                        Image(systemName: Watchlistadd ? "plus.app.fill" : "plus.app" )
+                        Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
                             .resizable()
                             .foregroundStyle(.white)
                     }
@@ -111,13 +121,9 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleLike(for: movieId)
-                    movieliked.toggle()
-                                        if movieliked {
-                                            moviedisliked = false
-                                        }
                 }) {
                     VStack(alignment: .center) {
-                        Image(systemName: movieliked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
                             .resizable()
                             .foregroundStyle(.white)
                     }
@@ -137,13 +143,9 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleDislike(for: movieId)
-                    moviedisliked.toggle()
-                                        if moviedisliked {
-                                            movieliked = false
-                                        }
                 }) {
                     VStack(alignment: .center) {
-                        Image(systemName: moviedisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                        Image(systemName: isLiked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                             .resizable()
                             .foregroundStyle(.white)
                     }
