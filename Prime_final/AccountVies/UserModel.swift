@@ -41,6 +41,7 @@ class UserBlueprint: ObservableObject {
             likedMovies.insert(movieId)
             dislikedMovies.remove(movieId)  // Remove from dislikes if present
         }
+        objectWillChange.send()
     }
     
     func toggleDislike(for movieId: Int) {
@@ -50,6 +51,7 @@ class UserBlueprint: ObservableObject {
             dislikedMovies.insert(movieId)
             likedMovies.remove(movieId)  // Remove from likes if present
         }
+        objectWillChange.send()
     }
     
     func toggleWatchlist(for movieId: Int) {
@@ -58,6 +60,7 @@ class UserBlueprint: ObservableObject {
         } else {
             watchlist.insert(movieId)
         }
+        objectWillChange.send()
     }
 }
 
