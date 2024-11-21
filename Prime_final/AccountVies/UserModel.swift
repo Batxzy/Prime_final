@@ -128,9 +128,6 @@ public class UserManager: ObservableObject {
         }
         let newUser = UserBlueprint(username: newUsername, password: newPassword)
         
-        newUser.watchlist = []
-        newUser.likedMovies = []
-        newUser.dislikedMovies = []
         
         userDictionary[newUsername] = newUser
         currentUser = newUser

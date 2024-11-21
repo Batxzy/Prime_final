@@ -52,6 +52,7 @@ struct Prime_finalApp: App {
                     RootView(Navpath: $navPath)
                 }
             }
+            .environmentObject(userManager)
         }
     }
 }
