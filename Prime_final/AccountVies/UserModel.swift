@@ -151,15 +151,25 @@ public class UserManager: ObservableObject {
     
     // Login user
     func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
-        guard let tempUser = userDictionary[loginUsername],
-              tempUser.Password == loginPassword else {
-            return false
-        }
-        currentUser = tempUser
-        selectedUserForSwitch = nil
-        path.wrappedValue.append(AppRoute.home)
-        return true
+    // First save current user's data if it exists
+    if let currentUsername = currentUser?.username {
+        userDictionary[currentUsername] = currentUser
     }
+    
+    // Then attempt to login as new user
+    guard let tempUser = userDictionary[loginUsername],
+          tempUser.Password == loginPassword else {
+        return false
+    }
+    
+    // Update current user and sync data
+    currentUser = tempUser
+    selectedUserForSwitch = nil
+    syncUserData() // Make sure to sync after switching
+    
+    path.wrappedValue.append(AppRoute.home)
+    return true
+}
     
     // Delete user account
     func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
