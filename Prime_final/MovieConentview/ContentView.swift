@@ -79,9 +79,7 @@ struct interactiveView: View{
     @EnvironmentObject var userManager : UserManager
 
     private func updateUserPreferences() {
-           if let username = userManager.currentUser?.username {
-               userManager.userDictionary[username] = userManager.currentUser
-           }
+           userManager.syncUserData()
        }
     
     // Computed properties to get current state

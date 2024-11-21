@@ -10,22 +10,28 @@ import SwiftUI
 struct HomeView: View {
     @Binding var path: NavigationPath
     @StateObject private var movieDB = MovieDatabase.shared
-    
+    @State private var selectedTab: TabSelection = .home
+
     var body: some View {
         ZStack{
             
-            // Main Content
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 15) {
-                    FirstControl(path: $path)
-                    ScrollVertical(path: $path, Sectiontitle: "Featured")
-                    ScrollVertical(path: $path, Sectiontitle: "Amazon Originals")
-                    ScrollVertical(path: $path, Sectiontitle: "Movies")
-                    ScrollVertical(path: $path, Sectiontitle: "TV Shows")
-                    ScrollVertical(path: $path, Sectiontitle: "Kids")
+           switch selectedTab {
+            case .home:
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 15) {
+                        FirstControl(path: $path)
+                        ScrollVertical(path: $path, Sectiontitle: "Featured")
+                        ScrollVertical(path: $path, Sectiontitle: "Amazon Originals")
+                        ScrollVertical(path: $path, Sectiontitle: "Movies")
+                        ScrollVertical(path: $path, Sectiontitle: "TV Shows")
+                        ScrollVertical(path: $path, Sectiontitle: "Kids")
+                    }
+                    .padding(.top, 60)
                 }
-                .padding(.top,60)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            case .watchlist:
+                watchlistView()
+            case .settings:
+                SettingView(path: $path)
             }
             
             Tabview(path: $path)

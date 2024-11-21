@@ -82,11 +82,6 @@ public class UserManager: ObservableObject {
         defaultUser.watchlist.insert(0)  // Puss in Boots
         defaultUser.watchlist.insert(2)  // Evangelion 1.0
         defaultUser.watchlist.insert(14) // The Dark Knight
-    
-        // Add some liked/disliked movies
-        defaultUser.likedMovies.insert(0)    // Puss in Boots
-        defaultUser.likedMovies.insert(8)    // Shrek
-        defaultUser.dislikedMovies.insert(7) // Minions
 
         userDictionary["Julian"] = defaultUser
         currentUser = defaultUser // Set the currentUser to the default user
@@ -108,16 +103,22 @@ public class UserManager: ObservableObject {
     }
 }
     
-    
+    func syncUserData() {
+    guard let username = currentUser?.username else { return }
+    userDictionary[username] = currentUser
+    objectWillChange.send()
+}
+
     func removeFromWatchlist(movieId: Int) {
         // Make sure we have a current user
         guard let currentUsername = currentUser?.username else { return }
         
         // Remove the movie ID from the watchlist
         userDictionary[currentUsername]?.watchlist.remove(movieId)
+        currentUser?.watchlist.remove(movieId)
         
         // Update current user reference
-        currentUser = userDictionary[currentUsername]
+        objectWillChange.send()
     }
     
     //MARK: - auth functions
@@ -196,7 +197,7 @@ public class UserManager: ObservableObject {
         return true
     }
     
-    //MARK: - profile picture functions
+//MARK: - profile picture functions
     
     // Check if username exists
     func userExists(_ username: String) -> Bool {

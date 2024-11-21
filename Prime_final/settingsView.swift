@@ -1,7 +1,7 @@
 import SwiftUI
 
 
-struct Settings: View {
+struct SettingView: View {
     @Binding var path: NavigationPath
     @State private var search = ""
     

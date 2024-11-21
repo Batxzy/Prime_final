@@ -13,3 +13,9 @@ enum AppRoute: Hashable {
     case createAccount
 }
 
+enum TabSelection: Hashable {
+    case home
+    case watchlist 
+    case search
+}
+
