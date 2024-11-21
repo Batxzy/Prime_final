@@ -41,6 +41,8 @@ class UserBlueprint: ObservableObject {
             likedMovies.insert(movieId)
             dislikedMovies.remove(movieId)  // Remove from dislikes if present
         }
+        UserManager.shared.saveUserPreferences()
+
         objectWillChange.send()
     }
     
@@ -51,6 +53,8 @@ class UserBlueprint: ObservableObject {
             dislikedMovies.insert(movieId)
             likedMovies.remove(movieId)  // Remove from likes if present
         }
+        UserManager.shared.saveUserPreferences()
+
         objectWillChange.send()
     }
     
@@ -61,6 +65,7 @@ class UserBlueprint: ObservableObject {
             watchlist.insert(movieId)
         }
         objectWillChange.send()
+        UserManager.shared.saveUserPreferences()
     }
 }
 
@@ -73,6 +78,8 @@ public class UserManager: ObservableObject {
     @Published var userDictionary: [String: UserBlueprint] = [:] // username: User
     @Published var navigateToEditProfileAfterWelcomeBack: Bool = false  // Add this flag
     
+    private let   defaults: UserDefaults = .standard
+    
     static let shared = UserManager()
     
     public init() {
@@ -83,7 +90,8 @@ public class UserManager: ObservableObject {
         return userDictionary.count
     }
     
-   private func saveUserPreferences() {
+
+    func saveUserPreferences() {
         // Save each user's preferences separately
         for (username, user) in userDictionary {
             let userKey = "user_\(username)"
@@ -128,7 +136,7 @@ public class UserManager: ObservableObject {
             userDictionary[username] = user
         }
     }
-}
+
 
    func logout(path: Binding<NavigationPath>) {
     currentUser = nil
