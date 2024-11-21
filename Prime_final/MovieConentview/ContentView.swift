@@ -78,6 +78,11 @@ struct interactiveView: View{
     let movieId: Int
     @EnvironmentObject var userManager : UserManager
 
+    private func updateUserPreferences() {
+           if let username = userManager.currentUser?.username {
+               userManager.userDictionary[username] = userManager.currentUser
+           }
+       }
     
     // Computed properties to get current state
         private var isInWatchlist: Bool {
@@ -99,6 +104,7 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleWatchlist(for: movieId)
+                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
@@ -121,9 +127,11 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleLike(for: movieId)
+                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        
                             .resizable()
                             .foregroundStyle(.white)
                     }
@@ -143,6 +151,7 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleDislike(for: movieId)
+                    updateUserPreferences()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isLiked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
@@ -209,7 +218,7 @@ struct ContentView2: View {
     @Binding var path: NavigationPath
     let CurrentmovieId: Int
     @StateObject private var movieDB = MovieDatabase.shared
-    @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager : UserManager
     
     var body: some View {
                 VStack(alignment:.leading, spacing: 0) {
