@@ -78,10 +78,7 @@ struct interactiveView: View{
     let movieId: Int
     @EnvironmentObject var userManager : UserManager
 
-    private func updateUserPreferences() {
-           userManager.syncUserData()
-       }
-    
+
     // Computed properties to get current state
          var isInWatchlist: Bool {
             userManager.currentUser?.watchlist.contains(movieId) ?? false
@@ -101,10 +98,9 @@ struct interactiveView: View{
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    if let user = userManager.currentUser {
-                        user.toggleLike(for: movieId)
-                        userManager.objectWillChange.send()
-                    }
+                    userManager.currentUser?.toggleWatchlist(for: movieId)
+                    userManager.syncUserData()
+
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
@@ -127,6 +123,7 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleLike(for: movieId)
+                    userManager.syncUserData()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
@@ -150,6 +147,7 @@ struct interactiveView: View{
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
                     userManager.currentUser?.toggleDislike(for: movieId)
+                    userManager.syncUserData()
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
