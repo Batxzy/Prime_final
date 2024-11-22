@@ -83,15 +83,15 @@ struct interactiveView: View{
        }
     
     // Computed properties to get current state
-        private var isInWatchlist: Bool {
+         var isInWatchlist: Bool {
             userManager.currentUser?.watchlist.contains(movieId) ?? false
         }
         
-        private var isLiked: Bool {
+         var isLiked: Bool {
             userManager.currentUser?.likedMovies.contains(movieId) ?? false
         }
         
-        private var isDisliked: Bool {
+         var isDisliked: Bool {
             userManager.currentUser?.dislikedMovies.contains(movieId) ?? false
         }
     
