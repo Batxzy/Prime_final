@@ -8,7 +8,7 @@ struct Prime_finalApp: App {
     @State private var timeRemaining = 2
     @State private var timer: Timer?
 
-    init() {
+    public  init() {
             // Add default user if needed
             let defaultUser = UserBlueprint(
                 username: "Julian",
@@ -16,6 +16,7 @@ struct Prime_finalApp: App {
                 profilePictureName: "furry1"
             )
             UserManager.shared.userDictionary["Julian"] = defaultUser
+
         }
     
     var body: some Scene {

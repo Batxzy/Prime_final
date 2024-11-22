@@ -42,6 +42,7 @@ class UserBlueprint: ObservableObject {
             dislikedMovies.remove(movieId)  // Remove from dislikes if present
         }
         objectWillChange.send()
+        UserManager.shared.syncUserData()
     }
     
     func toggleDislike(for movieId: Int) {
@@ -52,6 +53,7 @@ class UserBlueprint: ObservableObject {
             likedMovies.remove(movieId)  // Remove from likes if present
         }
         objectWillChange.send()
+        UserManager.shared.syncUserData()
     }
     
     func toggleWatchlist(for movieId: Int) {
@@ -61,6 +63,7 @@ class UserBlueprint: ObservableObject {
             watchlist.insert(movieId)
         }
         objectWillChange.send()
+        UserManager.shared.syncUserData()
     }
 }
 
@@ -98,11 +101,6 @@ public class UserManager: ObservableObject {
     }
 }
     
-    func syncUserData() {
-    guard let username = currentUser?.username else { return }
-    userDictionary[username] = currentUser
-    objectWillChange.send()
-}
 
     func removeFromWatchlist(movieId: Int) {
         // Make sure we have a current user
@@ -141,7 +139,7 @@ public class UserManager: ObservableObject {
     // Login user
     func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
         // Save current user data first
-        syncUserData()
+        
         
         // Verify credentials
         guard let tempUser = userDictionary[loginUsername],
@@ -161,12 +159,14 @@ public class UserManager: ObservableObject {
         currentUser?.likedMovies = tempUser.likedMovies
         currentUser?.dislikedMovies = tempUser.dislikedMovies
         
+        syncUserData()
+        
         selectedUserForSwitch = nil
         path.wrappedValue.append(AppRoute.home)
         return true
     }
     
-    func syncUserData1() {
+    func syncUserData() {
         // First check if we have a current user at all
         guard let currentUser = currentUser else { return }
         

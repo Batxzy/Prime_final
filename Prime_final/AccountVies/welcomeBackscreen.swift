@@ -2,7 +2,7 @@ import SwiftUI
 
 struct welcomeBack: View {
     @Binding var path: NavigationPath
-    @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager: UserManager
     let selectedUsername: String
     @State private var password: String = ""
     @State private var isSecured: Bool = true
@@ -10,11 +10,26 @@ struct welcomeBack: View {
     @State private var errorMessage: String = ""
     
     private func handleLogin() {
-        guard userManager.login(loginUsername: selectedUsername, loginPassword: password, path: $path) else {
+        guard let user = userManager.userDictionary[selectedUsername],
+              user.Password == password else {
             showError = true
             errorMessage = "Invalid password"
             return
         }
+        
+        // Create fresh instance with all data
+        userManager.currentUser = UserBlueprint(
+            username: user.username,
+            password: user.Password,
+            profilePictureName: user.profilePictureName
+        )
+        userManager.currentUser?.watchlist = user.watchlist
+        userManager.currentUser?.likedMovies = user.likedMovies
+        userManager.currentUser?.dislikedMovies = user.dislikedMovies
+        
+        // Sync data before navigation
+        userManager.syncUserData()
+        
         if userManager.navigateToEditProfileAfterWelcomeBack {
             path.append(AppRoute.editProfile)
             userManager.navigateToEditProfileAfterWelcomeBack = false
