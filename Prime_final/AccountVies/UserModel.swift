@@ -41,8 +41,10 @@ class UserBlueprint: ObservableObject {
             likedMovies.insert(movieId)
             dislikedMovies.remove(movieId)  // Remove from dislikes if present
         }
-        UserManager.shared.saveUserPreferences()
-
+        if let username = UserManager.shared.currentUser?.username{
+            UserManager.shared.userDictionary[username] = self
+            UserManager.shared.saveUserPreferences()
+        }
         objectWillChange.send()
     }
     
@@ -53,6 +55,7 @@ class UserBlueprint: ObservableObject {
             dislikedMovies.insert(movieId)
             likedMovies.remove(movieId)  // Remove from likes if present
         }
+        UserManager.shared.userDictionary[username] = self
         UserManager.shared.saveUserPreferences()
 
         objectWillChange.send()
@@ -64,8 +67,10 @@ class UserBlueprint: ObservableObject {
         } else {
             watchlist.insert(movieId)
         }
-        objectWillChange.send()
-        UserManager.shared.saveUserPreferences()
+        if let username = UserManager.shared.currentUser?.username{
+            UserManager.shared.userDictionary[username] = self
+            UserManager.shared.saveUserPreferences()
+        }
     }
 }
 

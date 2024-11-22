@@ -101,7 +101,10 @@ struct interactiveView: View{
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    userManager.currentUser?.toggleWatchlist(for: movieId)
+                    if let user = userManager.currentUser {
+                        user.toggleLike(for: movieId)
+                        userManager.objectWillChange.send()
+                    }
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
