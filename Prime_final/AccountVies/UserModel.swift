@@ -77,17 +77,8 @@ public class UserManager: ObservableObject {
     static let shared = UserManager()
     
     public init() {
-        let defaultUser = UserBlueprint(
-            username: "Julian",
-            password: "12345",
-            profilePictureName: "furry1"
-        )
-        defaultUser.watchlist.insert(0)  // Puss in Boots
-        defaultUser.watchlist.insert(2)  // Evangelion 1.0
-        defaultUser.watchlist.insert(14) // The Dark Knight
-
-        userDictionary["Julian"] = defaultUser
-        currentUser = defaultUser // Set the currentUser to the default user
+        userDictionary = [:]
+        currentUser = nil
     }
     
     var userCount: Int {
@@ -149,42 +140,52 @@ public class UserManager: ObservableObject {
     
     // Login user
     func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
-       
-        syncuserData1()
-    
-    // Then attempt to login as new user
-    guard let tempUser = userDictionary[loginUsername],
-          tempUser.Password == loginPassword else {
-        return false
-    }
-    
-    // Update current user and sync data
-        currentUser = UserBlueprint(username: tempUser.username, password: tempUser.username, profilePictureName: tempUser.profilePictureName)
-    // Make sure to sync after switching
-    
+        // Save current user data first
+        syncUserData()
         
-        currentUser?.dislikedMovies = tempUser.dislikedMovies
-        currentUser?.likedMovies = tempUser.likedMovies
+        // Verify credentials
+        guard let tempUser = userDictionary[loginUsername],
+              tempUser.Password == loginPassword else {
+            return false
+        }
+        
+        // Create new instance to prevent sharing
+        currentUser = UserBlueprint(
+            username: tempUser.username,
+            password: tempUser.Password,  // Fix: use correct password
+            profilePictureName: tempUser.profilePictureName
+        )
+        
+        // Copy collections properly
         currentUser?.watchlist = tempUser.watchlist
+        currentUser?.likedMovies = tempUser.likedMovies
+        currentUser?.dislikedMovies = tempUser.dislikedMovies
         
         selectedUserForSwitch = nil
-        
-
-    path.wrappedValue.append(AppRoute.home)
-    return true
-}
+        path.wrappedValue.append(AppRoute.home)
+        return true
+    }
     
-    func syncuserData1() {
+    func syncUserData1() {
+        // First check if we have a current user at all
         guard let currentUser = currentUser else { return }
-        let userCopy = UserBlueprint(username: currentUser.username,password: currentUser.Password,profilePictureName: currentUser.profilePictureName)
         
+        // Create copy with current user's data
+        let userCopy = UserBlueprint(
+            username: currentUser.username,
+            password: currentUser.Password,
+            profilePictureName: currentUser.profilePictureName
+        )
+        
+        // Copy collections
+        userCopy.watchlist = currentUser.watchlist
         userCopy.likedMovies = currentUser.likedMovies
         userCopy.dislikedMovies = currentUser.dislikedMovies
-        userCopy.watchlist = currentUser.watchlist
         
+        // Store in dictionary using username directly
         userDictionary[currentUser.username] = userCopy
         objectWillChange.send()
-        }
+    }
     
     // Delete user account
     func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {

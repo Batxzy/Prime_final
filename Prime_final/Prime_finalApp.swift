@@ -8,6 +8,16 @@ struct Prime_finalApp: App {
     @State private var timeRemaining = 2
     @State private var timer: Timer?
 
+    init() {
+            // Add default user if needed
+            let defaultUser = UserBlueprint(
+                username: "Julian",
+                password: "12345",
+                profilePictureName: "furry1"
+            )
+            UserManager.shared.userDictionary["Julian"] = defaultUser
+        }
+    
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -52,6 +62,7 @@ struct Prime_finalApp: App {
                     RootView(Navpath: $navPath)
                 }
             }
+            .preferredColorScheme(.dark)
         }
     }
 }
