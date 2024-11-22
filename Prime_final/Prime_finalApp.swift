@@ -16,7 +16,7 @@ struct Prime_finalApp: App {
                 profilePictureName: "furry1"
             )
             UserManager.shared.userDictionary["Julian"] = defaultUser
-
+            UserManager.shared.currentUser = defaultUser
         }
     
     var body: some Scene {
