@@ -19,9 +19,9 @@ class UserBlueprint: ObservableObject {
     
     @Published var username: String
     @Published var profilePictureName: String
-    @Published var likedMovies: Set<Int>      // Stores IDs of liked movies
-    @Published var dislikedMovies: Set<Int>   // Stores IDs of disliked movies
-    @Published var watchlist: Set<Int>        // Stores IDs of watchlist movies
+    @Published var likedMovies = Set<Int> ()    // Stores IDs of liked movies
+    @Published var dislikedMovies = Set<Int> () // Stores IDs of disliked movies
+    @Published var watchlist = Set<Int> ()       // Stores IDs of watchlist movies
     @Published var Password: String
     
     
@@ -149,10 +149,8 @@ public class UserManager: ObservableObject {
     
     // Login user
     func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
-    // First save current user's data if it exists
-    if let currentUsername = currentUser?.username {
-        userDictionary[currentUsername] = currentUser
-    }
+       
+        syncuserData1()
     
     // Then attempt to login as new user
     guard let tempUser = userDictionary[loginUsername],
@@ -161,13 +159,32 @@ public class UserManager: ObservableObject {
     }
     
     // Update current user and sync data
-    currentUser = tempUser
-    selectedUserForSwitch = nil
-    syncUserData() // Make sure to sync after switching
+        currentUser = UserBlueprint(username: tempUser.username, password: tempUser.username, profilePictureName: tempUser.profilePictureName)
+    // Make sure to sync after switching
     
+        
+        currentUser?.dislikedMovies = tempUser.dislikedMovies
+        currentUser?.likedMovies = tempUser.likedMovies
+        currentUser?.watchlist = tempUser.watchlist
+        
+        selectedUserForSwitch = nil
+        
+
     path.wrappedValue.append(AppRoute.home)
     return true
 }
+    
+    func syncuserData1() {
+        guard let currentUser = currentUser else { return }
+        let userCopy = UserBlueprint(username: currentUser.username,password: currentUser.Password,profilePictureName: currentUser.profilePictureName)
+        
+        userCopy.likedMovies = currentUser.likedMovies
+        userCopy.dislikedMovies = currentUser.dislikedMovies
+        userCopy.watchlist = currentUser.watchlist
+        
+        userDictionary[currentUser.username] = userCopy
+        objectWillChange.send()
+        }
     
     // Delete user account
     func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
