@@ -23,7 +23,7 @@ struct EditAccountView: View {
 
     @Binding var path: NavigationPath
 
-//MARK:- funciciones
+//MARK: - funciciones
     
     // propiedad computada para saber si hay cambios
     private var hasChangesComputed: Bool {
@@ -62,37 +62,45 @@ struct EditAccountView: View {
 
 // Guardar los cambios
     private func saveChanges() -> Bool {
-        guard var currentUser = userManager.currentUser else {
+        guard let currentUsername = userManager.currentUser?.username else {
             return false
         }
 
         if username != originalUsername && userManager.userExists(username) {
-            // Show error or handle duplicate username
+            showError = true
+            errorMessage = "Username already exists"
             return false
         }
         
-        if username != originalUsername || password != originalPassword {
-            currentUser.username = username
-            currentUser.Password = password
-        }
+        // Create updated user data
+        var updatedUser = userManager.currentUser!
+        updatedUser.username = username
+        updatedUser.Password = password
         
-        // Update profile picture
+        // Update the dictionary
+        userManager.userDictionary.removeValue(forKey: currentUsername)
+        userManager.userDictionary[username] = updatedUser
+        userManager.currentUser = updatedUser
+        
+        // Update profile picture if changed
         if let newProfilePic = selectedProfilePicture {
             userManager.updateProfilePictureName(to: newProfilePic)
         }
         
+        // Clear navigation stack and go home
+        path = NavigationPath()
         path.append(AppRoute.home)
-
+        
         return true
     }
     
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword, path: $path) {
-            // Success case - navigation is handled by UserManager
-            path.append(AppRoute.selectAccount)
+            // Success case - navigation will be handled by UserManager
+            // No need to append additional navigation
+            return
         } else {
-            // Add error handling
-            showError = true 
+            showError = true
             errorMessage = "Failed to delete account"
         }
     }

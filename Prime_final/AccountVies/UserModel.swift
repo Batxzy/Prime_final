@@ -48,7 +48,7 @@ public class UserManager: ObservableObject {
 
     //MARK: - computed properties
     var userCount: Int {
-        return userDictionary.count
+        return userDictionary.filter { $0.value.username.isEmpty == false }.count
     }
     
 
@@ -119,7 +119,7 @@ public class UserManager: ObservableObject {
                 logout(path: path)
             }
 
-            cleanupNavigation(path)
+            path.wrappedValue = NavigationPath()
             
             // Navigate based on remaining users
             if userCount > 0 {
