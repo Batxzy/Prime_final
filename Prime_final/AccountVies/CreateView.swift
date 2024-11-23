@@ -41,7 +41,7 @@ struct CreateAccountView: View {
 
 //MARK: - username
                     VStack(alignment: .leading,spacing: 10){
-                            Text("Login").font(.callout.bold()).foregroundColor(.white)
+                            Text("Username").font(.callout.bold()).foregroundColor(.white)
 
                             TextField("Username", text: $username)
                                 .preferredColorScheme(.dark)

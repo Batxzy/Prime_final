@@ -19,7 +19,8 @@ struct EditAccountView: View {
     @State private var hasChanges = false
     
     @Binding var path: NavigationPath
-    //MARK:- funciciones
+    
+//MARK:- funciciones
     
     // propiedad computada para saber si hay cambios
     private var hasChangesComputed: Bool {
@@ -37,13 +38,14 @@ struct EditAccountView: View {
             selectedProfilePicture = currentUser.profilePictureName
         }
     }
-    
-    // Guardar los cambios
-    // Guardar los cambios
+
+
+// Guardar los cambios
     private func saveChanges() -> Bool {
         guard let currentUser = userManager.currentUser else {
             return false
         }
+
         if username != originalUsername && userManager.userExists(username) {
             // Show error or handle duplicate username
             return false
@@ -59,11 +61,8 @@ struct EditAccountView: View {
             userManager.updateProfilePictureName(to: newProfilePic)
         }
         
-        /*
-         Todo: navigation logic
-         userManager.currentScreen = .home
-         */
-        
+        path.append(AppRoute.home)
+
         return true
     }
     
@@ -73,8 +72,9 @@ struct EditAccountView: View {
 
         }
     }
-    //MARK: - Edit profile text
-    
+
+
+//MARK: - Edit profile text
     var body: some View {
         VStack(alignment: .center){
             VStack(alignment: .center, spacing: 16){
@@ -82,80 +82,83 @@ struct EditAccountView: View {
                     Text("Edit profile")
                         .font(.title.bold())
                         .foregroundColor(.white)
-                    
-                    VStack(alignment: .center, spacing: 10){
-                        Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 80, height: 80)
-                            .clipShape(Circle())
-                        
-                        HStack{
-                            Button {
-                                showingImagePicker = true
-                            } label: {
-                                HStack {
-                                    Text("Change image")
-                                        .font(.callout.bold())
-                                    Image(systemName: "chevron.right")
+
+                        //vstack para la imagen de perfil y el texto de para cambiar la contraseña
+                            VStack(alignment: .center, spacing: 10){
+                                Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(Circle())
+                                
+                            //change image button    
+                                HStack{
+                                    Button {
+                                        showingImagePicker = true
+                                    } label: {
+                                        HStack {
+                                            Text("Change image")
+                                                .font(.callout.bold())
+                                            Image(systemName: "chevron.right")
+                                        }
+                                        .foregroundColor(.white)
+                                    }
+                                    .sheet(isPresented: $showingImagePicker) {
+                                        selectProfilePic()
+                                            .environmentObject(userManager)  // Use the existing userManager instance
+                                            .onChange(of: userManager.currentUser?.profilePictureName) { newValue in
+                                                if let newValue = newValue {
+                                                    selectedProfilePicture = newValue
+                                                    hasChanges = true
+                                                }
+                                            }
+                                    }
                                 }
-                                .foregroundColor(.white)
-                            }
-                            .sheet(isPresented: $showingImagePicker) {
-                                selectProfilePic()
-                                    .environmentObject(userManager)  // Use the existing userManager instance
-                                    .onChange(of: userManager.currentUser?.profilePictureName) { newValue in
-                                        if let newValue = newValue {
-                                            selectedProfilePicture = newValue
-                                            hasChanges = true
+                                .padding(13)
+                                .frame(maxWidth: .infinity, alignment: .top)
+                        
+                            //MARK: - username  and password text field
+                                VStack(alignment: .leading, spacing: 10){
+                                    Text("Username")
+                                        .font(.callout.bold())
+                                        .foregroundColor(.white)
+                                    HStack{
+                                        TextField("Username", text: $username)
+                                        Spacer()
+                                        Image(systemName: "pencil")
+                                            .foregroundColor(.white)
+                                    }
+                                    .modifier(TextFieldModifiers())
+                                }
+                                
+                            
+                                VStack(alignment: .leading, spacing: 10){
+                                    Text("Password")
+                                        .font(.callout.bold())
+                                        .foregroundColor(.white)
+                                    HStack{
+                                        if isSecured {
+                                            AnyView(SecureField("Password", text: $password))
+                                        } else {
+                                            AnyView(TextField("Password", text: $password))
+                                        }
+                                        Spacer()
+                                        Button {
+                                            isSecured.toggle()
+                                        } label: {
+                                            Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                                .foregroundColor(.white)
                                         }
                                     }
-                            }
-                        }
-                        .padding(13)
-                        .frame(maxWidth: .infinity, alignment: .top)
-                        
-                        //MARK: - username text field
-                        VStack(alignment: .leading, spacing: 10){
-                            Text("Username")
-                                .font(.callout.bold())
-                                .foregroundColor(.white)
-                            HStack{
-                                TextField("Username", text: $username)
-                                Spacer()
-                                Image(systemName: "pencil")
-                                    .foregroundColor(.white)
-                            }
-                            .modifier(TextFieldModifiers())
-                        }
-                        
-                        //MARK: - password text field
-                        VStack(alignment: .leading, spacing: 10){
-                            Text("Password")
-                                .font(.callout.bold())
-                                .foregroundColor(.white)
-                            HStack{
-                                if isSecured {
-                                    AnyView(SecureField("Password", text: $password))
-                                } else {
-                                    AnyView(TextField("Password", text: $password))
+                                    .modifier(TextFieldModifiers())
                                 }
-                                Spacer()
-                                Button {
-                                    isSecured.toggle()
-                                } label: {
-                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
-                                        .foregroundColor(.white)
-                                }
-                            }
-                            .modifier(TextFieldModifiers())
-                        }
                     }
                     .padding(.horizontal, 35)
                     .frame(maxWidth: .infinity, alignment: .center)
                     
                     Spacer()
-                    
+
+                //mark: - save and delete buttons
                     SaveDeleteAccountButtons(
                         hasChanges: hasChangesComputed,
                         onSave: {
@@ -180,6 +183,7 @@ struct EditAccountView: View {
         }
     }
 }
+
 //MARK: - save and delete buttons
 struct SaveDeleteAccountButtons: View{
 
