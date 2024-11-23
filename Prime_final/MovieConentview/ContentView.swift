@@ -38,7 +38,7 @@ struct posterview: View {
 struct buttontitle: View {
     
     let Movietitle: String
-    
+    let VideoUrl : String
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             // Title
@@ -48,7 +48,7 @@ struct buttontitle: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             // Button
-            NavigationLink(destination: VideoPlayerView(VideoUrl:"")) {
+            NavigationLink(destination: VideoPlayerView(VideoUrl:VideoUrl)) {
                 HStack(alignment: .center, spacing: 10) {
                     Image("PlayButton")
                     Text("play")
@@ -235,7 +235,7 @@ struct ContentView2: View {
                     //stack del boton y la info
                     VStack(alignment: .leading, spacing: 11) {
                         //titulo y boton
-                        buttontitle(Movietitle: movieDB.movies[CurrentmovieId].title)
+                        buttontitle(Movietitle: movieDB.movies[CurrentmovieId].title, VideoUrl: movieDB.movies[CurrentmovieId].videoUrl)
                         //fin del titulo y boton
                         interactiveView(movieId: CurrentmovieId)
                         // inico de los botones de interracion

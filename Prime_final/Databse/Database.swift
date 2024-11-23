@@ -93,7 +93,7 @@ public class MovieDatabase: ObservableObject {  // Make the class public
             id: 5,
             thumbnailHUrl: "evangelion4",
             thumbnailVUrl: "evangelion4_V",
-            videoUrl: "",
+            videoUrl: "evangelion4.mp4",
             title: "EVANGELION: 3.0+1.01 THRICE UPON A TIME",
             description: "The fourth and final installment of the Rebuild of Evangelion. Misato and her anti-Nerv group Wille arrive in Paris, a city now red from core-ization. Crew from the flagship Wunder land on a containment tower.",
             year: "1997",
