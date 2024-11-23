@@ -28,7 +28,7 @@ struct posterview: View {
                 endPoint: UnitPoint(x: 0.5, y: 1)
             )
         }
-        .frame(maxWidth: .infinity, minHeight: 221, maxHeight: 221)
+        .frame(maxWidth: .infinity, maxHeight: 221)
         .foregroundColor(.clear)
     }
 }
@@ -98,9 +98,7 @@ struct interactiveView: View{
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    userManager.currentUser?.toggleWatchlist(for: movieId)
-                    userManager.syncUserData()
-
+                       userManager.toggleWatchlist(movieId: movieId)
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
@@ -122,8 +120,7 @@ struct interactiveView: View{
             
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    userManager.currentUser?.toggleLike(for: movieId)
-                    userManager.syncUserData()
+                    userManager.toggleLike(movieId: movieId)
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
@@ -146,8 +143,7 @@ struct interactiveView: View{
             
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    userManager.currentUser?.toggleDislike(for: movieId)
-                    userManager.syncUserData()
+                    userManager.toggleDislike(movieId: movieId)
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
@@ -190,17 +186,26 @@ struct infoView: View {
             Text(description).font(.footnote.bold())
             
             VStack(alignment: .leading, spacing: 10) {
-                Text(genres.joined(separator: " • ")).font(.footnote.bold())
-                Text(subgenres.joined(separator: " • ")).font(.footnote.bold())
-            }.padding(0)
+                Text(genres.joined(separator: " • "))
+                    .font(.footnote.bold())
+                Text(subgenres.joined(separator: " • "))
+                    .font(.footnote.bold())
+            }
+                .padding(0)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             
             VStack(alignment: .leading, spacing: 5){
-                Text("IMDB \(rating)").font(.footnote.bold()).foregroundColor(.white.opacity(0.50))
+                Text("IMDB \(rating)")
+                    .font(.footnote.bold())
+                    .foregroundColor(.white.opacity(0.50))
                 
                 HStack(alignment: .center, spacing: 8){
-                    Text(year).font(.footnote.bold()).foregroundColor(.white.opacity(0.50))
-                    Text(duration).font(.footnote.bold()).foregroundColor(.white.opacity(0.50))
+                    Text(year)
+                    .font(.footnote.bold())
+                    .foregroundColor(.white.opacity(0.50))
+                    Text(duration)
+                    .font(.footnote.bold())
+                    .foregroundColor(.white.opacity(0.50))
                 }
             }
         }
@@ -236,7 +241,7 @@ struct ContentView2: View {
                             duration:movieDB.movies[CurrentmovieId].duration)
                     }
                     .padding(.horizontal, 25)
-                    .frame(maxWidth: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight:, .infinity alignment: .top)
                 }
     }
 }

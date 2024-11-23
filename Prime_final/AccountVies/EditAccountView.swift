@@ -18,25 +18,45 @@ struct EditAccountView: View {
     @State private var selectedProfilePicture: String?
     @State private var hasChanges = false
     
+    @State private var showError = false  // Missing
+    @State private var errorMessage = ""  // Missing
+
     @Binding var path: NavigationPath
-    
+
 //MARK:- funciciones
     
     // propiedad computada para saber si hay cambios
     private var hasChangesComputed: Bool {
-        username != originalUsername || password != originalPassword || selectedProfilePicture != originalProfilePicture
+        !username.isEmpty && !password.isEmpty &&
+        (username != originalUsername || 
+        password != originalPassword || 
+        selectedProfilePicture != originalProfilePicture)    
     }
     
     // Que cargeu los datos del usuario
-    private func loadUserData() {
-        if let currentUser = userManager.currentUser {
-            username = currentUser.username
-            password = currentUser.Password
-            originalUsername = currentUser.username
-            originalPassword = currentUser.Password
-            originalProfilePicture = currentUser.profilePictureName
-            selectedProfilePicture = currentUser.profilePictureName
+        private func loadUserData() {
+        // Safely unwrap current user
+        guard let currentUser = userManager.currentUser else {
+            // Handle error case
+            showError = true
+            errorMessage = "Could not load user data"
+            return
         }
+        
+        // Load all user data
+        username = currentUser.username
+        password = currentUser.Password
+        
+        // Store original values for change detection
+        originalUsername = currentUser.username
+        originalPassword = currentUser.Password
+        originalProfilePicture = currentUser.profilePictureName
+        
+        // Set profile picture
+        selectedProfilePicture = currentUser.profilePictureName
+        
+        // Ensure UserManager data is synced
+        userManager.syncUserData()
     }
 
 
@@ -66,10 +86,14 @@ struct EditAccountView: View {
         return true
     }
     
-    // delete functionality
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword, path: $path) {
-
+            // Success case - navigation is handled by UserManager
+            path.append(AppRoute.selectAccount)
+        } else {
+            // Add error handling
+            showError = true 
+            errorMessage = "Failed to delete account"
         }
     }
 

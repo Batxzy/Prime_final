@@ -62,7 +62,7 @@ public class UserManager: ObservableObject {
 
 //MARK: - user functions
 
-  // Create new user
+    // Create new user
         func createUser(newUsername: String, newPassword: String, path: Binding<NavigationPath>) -> Bool {
             guard !userDictionary.keys.contains(newUsername) else {
                 return false
@@ -93,13 +93,13 @@ public class UserManager: ObservableObject {
             }
         }
 
-    //switch user
+    // switch user
         func switchToUser(username: String, path: Binding<NavigationPath>) {
             selectedUserForSwitch = username
             path.wrappedValue.append(AppRoute.welcomeBack(username))
         }
 
-    //Login user
+    // Login user
         func login(loginUsername: String, loginPassword: String, path: Binding<NavigationPath>) -> Bool {
             // Verify credentials
             guard let tempUser = userDictionary[loginUsername],
@@ -114,7 +114,7 @@ public class UserManager: ObservableObject {
             return true
         }
 
-    //Delete user account
+    // Delete user account
         func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
             guard
                 let tempUser = userDictionary[delUsername],
@@ -126,6 +126,8 @@ public class UserManager: ObservableObject {
             if currentUser?.username == delUsername {
                 logout(path: path)
             }
+
+            cleanupNavigation(path)
             
             // Navigate based on remaining users
             if userCount > 0 {
@@ -156,6 +158,12 @@ public class UserManager: ObservableObject {
             return true
         }
     
+    // delete path
+        private func cleanupNavigation(_ path: Binding<NavigationPath>) {
+            if path.wrappedValue.count > 0 {
+                path.wrappedValue.removeLast()
+            }
+        }
 //MARK: - movie functions
 
     // Add movie to watchlist and un add watchlist
@@ -183,37 +191,32 @@ public class UserManager: ObservableObject {
             objectWillChange.send()
         }
 
-    //like and dislike functions
-        func likeMovie(movieId: Int) {
-            // Make sure we have a current user
+        func toggleLike(movieId: Int) {
             guard let currentUsername = currentUser?.username else { return }
             
-            // Add the movie ID to the liked movies
-            userDictionary[currentUsername]?.likedMovies.insert(movieId)
-            currentUser?.likedMovies.insert(movieId)
-            
-            // Remove from disliked movies if present
-            userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
-            currentUser?.dislikedMovies.remove(movieId)
-            
-            // Update current user reference
-            objectWillChange.send()
+            if currentUser?.likedMovies.contains(movieId) == true {
+                // Unlike
+                userDictionary[currentUsername]?.likedMovies.remove(movieId)
+                currentUser?.likedMovies.remove(movieId)
+            } else {
+                // Like and remove dislike if exists
+                likeMovie(movieId: movieId)
+            }
+            syncUserData()
         }
 
-        func dislike(movieId: Int) {
-            // Make sure we have a current user
+        func toggleDislike(movieId: Int) {
             guard let currentUsername = currentUser?.username else { return }
             
-            // Add the movie ID to the disliked movies
-            userDictionary[currentUsername]?.dislikedMovies.insert(movieId)
-            currentUser?.dislikedMovies.insert(movieId)
-            
-            // Remove from liked movies if present
-            userDictionary[currentUsername]?.likedMovies.remove(movieId)
-            currentUser?.likedMovies.remove(movieId)
-            
-            // Update current user reference
-            objectWillChange.send()
+            if currentUser?.dislikedMovies.contains(movieId) == true {
+                // Remove dislike
+                userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
+                currentUser?.dislikedMovies.remove(movieId)
+            } else {
+                // Dislike and remove like if exists
+                dislike(movieId: movieId)
+            }
+            syncUserData()
         }
     
 //MARK: - profile picture functions
@@ -234,24 +237,29 @@ public class UserManager: ObservableObject {
     
 }
 
-
+// Remove the comment marks and update the syncUserData function:
 func syncUserData() {
-        // First check if we have a current user at all
-        guard let currentUser = currentUser else { return }
-        
-        // Create copy with current user's data
-        let userCopy = UserBlueprint(
-            username: currentUser.username,
-            password: currentUser.Password,
-            profilePictureName: currentUser.profilePictureName
-        )
-        
-        // Copy collections
-        userCopy.watchlist = currentUser.watchlist
-        userCopy.likedMovies = currentUser.likedMovies
-        userCopy.dislikedMovies = currentUser.dislikedMovies
-        
-        // Store in dictionary using username directly
-        userDictionary[currentUser.username] = userCopy
-        objectWillChange.send()
-    }
+    // First check if we have a current user at all
+    guard let currentUser = currentUser else { return }
+    
+    // Since UserBlueprint is now a struct (value type), creating a copy is safe
+    var userCopy = UserBlueprint(
+        username: currentUser.username,
+        password: currentUser.Password,
+        profilePictureName: currentUser.profilePictureName
+    )
+    
+    // Copy collections - this creates new Sets since Set is a value type
+    userCopy.watchlist = currentUser.watchlist 
+    userCopy.likedMovies = currentUser.likedMovies
+    userCopy.dislikedMovies = currentUser.dislikedMovies
+    
+    // Update dictionary with the new copy
+    userDictionary[currentUser.username] = userCopy
+    
+    // Update currentUser to match
+    currentUser = userCopy
+    
+    // Notify observers
+    objectWillChange.send()
+}

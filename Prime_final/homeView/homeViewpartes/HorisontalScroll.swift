@@ -10,29 +10,33 @@ import SwiftUI
 
 struct FirstControl: View {
     @State private var currentPage = 0
-    private let images = ["wild", "puss"]
+    @StateObject private var movieDB = MovieDatabase.shared
     @Binding var path: NavigationPath
     
+    private var featuredMovies: [MovieData] {
+        Array(movieDB.movies.prefix(5))
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             TabView(selection: $currentPage) {
-                ForEach(0..<images.count, id: \.self) { index in
-                    Image(images[index])
+                ForEach(featuredMovies) { movie in
+                    Image(movie.thumbnailHUrl)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 340, height: 187)
                         .clipped()
                         .cornerRadius(10)
-                        .tag(index)
+                        .tag(movie.id)
                         .onTapGesture {
-                            path.append(AppRoute.movieDetail(index))
+                            path.append(AppRoute.movieDetail(movie.id))
                         }
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 187)
             
-            PageControl(numberOfPages: images.count, currentPage: $currentPage)
+            PageControl(numberOfPages: featuredMovies.count, currentPage: $currentPage)
                 .frame(height: 20)
                 .padding(.top, 10)
         }

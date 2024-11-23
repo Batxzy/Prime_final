@@ -3,26 +3,27 @@ import SwiftUI
 
 struct SelectAccountView: View {
 
-@Binding var path: NavigationPath
-@State private var isEditing = false
-@StateObject private var userManager = UserManager.shared
-var body: some View {
-//MARK: - main view
+    @Binding var path: NavigationPath
+    @State private var isEditing = false
+    @EnvironmentObject private var userManager : UserManager
+
+    var body: some View {
+        //MARK: - main view
         VStack(alignment:.leading, spacing:15){ 
             VStack(alignment: .leading) {
                 Text("Who's Watching?")
                     .font(.system(size: 25, weight: .black))
                     .foregroundColor(.white)
             }
-            .padding(27)
-            .frame(maxWidth:.infinity,alignment:.bottom)
-            
+                .padding(27)
+                .frame(maxWidth:.infinity,alignment:.bottom)
+
             ProfileGridView(isEditing: $isEditing, path: $path)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             BottomEditView(isEditing: $isEditing)
-         }
+        }
             .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
-     }
+    }
 }
 
 //MARK: - Profile Button
@@ -32,7 +33,7 @@ struct ProfileButton: View {
     var PFPimage: String
     @Binding var isEditing: Bool
     @Binding var path: NavigationPath
-    @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager : UserManager
     
     var body: some View{
             VStack(alignment:.center,spacing:13) {
@@ -82,7 +83,7 @@ struct ProfileButton: View {
 
 //MARK: - Add Profile Button
 struct AddProfileButton: View {
-    @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager : UserManager
     @Binding var path: NavigationPath
     var body: some View {
         Button(action: {
@@ -113,8 +114,7 @@ struct ProfileGridView: View {
     @Binding var isEditing : Bool
     @Binding var path: NavigationPath
 
-    //imporatar el objeto que controla los usuarios
-    @ObservedObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager : UserManager
 
     //definicion de las columnas
     let columns = Array(repeating: GridItem(.flexible(),spacing: 55), count: 2)
@@ -138,7 +138,7 @@ struct ProfileGridView: View {
 
 //MARK: - edit profile, learn more
 struct BottomEditView: View {
-    @StateObject private var userManager = UserManager.shared
+    @EnvironmentObject private var userManager : UserManager
     @Binding var isEditing: Bool
     var body: some View {
         VStack(alignment: .leading, spacing: 26) {
