@@ -43,14 +43,16 @@ struct buttontitle: View {
         VStack(alignment: .leading, spacing: 15) {
             // Title
             Text(Movietitle)
-                .font(.title.bold())// Allows for two lines before truncating
-                .fixedSize(horizontal: false, vertical: true) // Allows text to wrap
+                .font(.title.bold())
+                .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             // Button
             NavigationLink(destination: VideoPlayerView(VideoUrl:VideoUrl)) {
                 HStack(alignment: .center, spacing: 10) {
-                    Image("PlayButton")
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 22).bold())
+                        .foregroundStyle(.black)
                     Text("play")
                         .font(.headline.bold())
                         .kerning(0.56)
@@ -228,7 +230,7 @@ struct infoView: View {
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             
             VStack(alignment: .leading, spacing: 5){
-                Text("IMDB \(rating)")
+                Text("IMDB \(String(format: "%.1f", rating))")
                     .font(.footnote.bold())
                     .foregroundColor(.white.opacity(0.50))
                 
