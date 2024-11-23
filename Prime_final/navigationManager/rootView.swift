@@ -21,15 +21,13 @@ var body: some View {
                         watchlistView( path: $Navpath)
                     case .login:
                         LoginView(path: $Navpath)
+                            .navigationBarBackButtonHidden(true)
                     case .selectAccount:
                         SelectAccountView(path: $Navpath)
                     case .welcomeBack(let username):
                         welcomeBack(path: $Navpath, selectedUsername: username)
                     case .createAccount:
                         CreateAccountView(path: $Navpath)
-                    case .search:
-                        LoginView(path: $Navpath)
-                            .navigationBarBackButtonHidden(true)
                     case .settings:
                         SettingsView(path: $Navpath)
                     }

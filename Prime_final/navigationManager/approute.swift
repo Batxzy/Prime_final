@@ -7,7 +7,6 @@ enum AppRoute: Hashable {
     case editProfile
     case login
     case watchlist
-    case search
     case selectAccount
     case welcomeBack(String) // Username
     case createAccount
