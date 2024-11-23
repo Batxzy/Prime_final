@@ -98,7 +98,7 @@ struct interactiveView: View{
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                       userManager.toggleWatchlist(movieId: movieId)
+                    userManager.toggleLike(movieId: movieId)
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
@@ -241,7 +241,7 @@ struct ContentView2: View {
                             duration:movieDB.movies[CurrentmovieId].duration)
                     }
                     .padding(.horizontal, 25)
-                    .frame(maxWidth: .infinity, maxHeight:, .infinity alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight:.infinity, alignment: .top)
                 }
     }
 }

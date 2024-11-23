@@ -68,7 +68,7 @@ public class UserManager: ObservableObject {
                 Password: newPassword
                 )
             
-            userDictionary.append(newUsername, newUser)
+            userDictionary[newUsername] = newUser
             currentUser = newUser
             path.wrappedValue.append(AppRoute.home)
             return true
@@ -206,7 +206,7 @@ public class UserManager: ObservableObject {
                 currentUser?.dislikedMovies.remove(movieId)
             } else {
                 // Dislike and remove like if exists
-                toggleDislike(movieId: <#T##Int#>)
+                toggleDislike(movieId: movieId)
             }
             syncUserData()
         }
@@ -229,13 +229,16 @@ public class UserManager: ObservableObject {
     // Remove the comment marks and update the syncUserData function:
     func syncUserData() {
         // First check if we have a current user at all
-        guard let currentUser = currentUser else { return }
+        guard var currentUser = currentUser else { return }
         
         // Since UserBlueprint is now a struct (value type), creating a copy is safe
         var userCopy = UserBlueprint(
             username: currentUser.username,
-            profilePictureName: currentUser.Password,
-            likedMovies: currentUser.profilePictureName, Password: <#String#>
+            profilePictureName: currentUser.profilePictureName,
+            likedMovies: currentUser.likedMovies,
+            dislikedMovies: currentUser.dislikedMovies,
+            watchlist: currentUser.watchlist,
+            Password: currentUser.Password
         )
         
         // Copy collections - this creates new Sets since Set is a value type

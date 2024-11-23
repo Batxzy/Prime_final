@@ -12,8 +12,9 @@ struct Prime_finalApp: App {
             // Add default user if needed
             let defaultUser = UserBlueprint(
                 username: "Julian",
-                password: "12345",
-                profilePictureName: "furry1"
+                profilePictureName: "furry1",
+                likedMovies: [],
+                Password: "12345"
             )
             UserManager.shared.userDictionary["Julian"] = defaultUser
             UserManager.shared.currentUser = defaultUser

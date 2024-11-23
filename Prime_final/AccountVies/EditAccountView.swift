@@ -62,7 +62,7 @@ struct EditAccountView: View {
 
 // Guardar los cambios
     private func saveChanges() -> Bool {
-        guard let currentUser = userManager.currentUser else {
+        guard var currentUser = userManager.currentUser else {
             return false
         }
 
