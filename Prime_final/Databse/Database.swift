@@ -177,8 +177,8 @@ public class MovieDatabase: ObservableObject {  // Make the class public
             year: "2000",
             duration: "104 min",
             rating: 6.3,
-            genres: ["Animation", "Comedy", "Family"],
-            subgeneres: ["Fantasy"]
+            genres: ["Fantasy", "Comedy", "Family"],
+            subgeneres: ["Holiday family"]
         ),
         MovieData(
             id: 12,
