@@ -6,6 +6,26 @@
 //
 
 import SwiftUI
+// Import required framework at top of file
+import WebKit
+
+// Create a GIF view wrapper
+struct GIFView: UIViewRepresentable {
+    let gifName: String
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        if let gifPath = Bundle.main.path(forResource: gifName, ofType: "gif") {
+            let url = URL(fileURLWithPath: gifPath)
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
+        return webView
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+    }
+}
 
 struct SettingsView: View {
     @Binding var path: NavigationPath
@@ -14,14 +34,13 @@ struct SettingsView: View {
             LinearGradient(colors: [.black,.blue], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             VStack(alignment:.center,spacing: 24){
-                Image("furry2")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                GIFView(gifName: "jack-get-real")
                     .frame(maxWidth: 150, maxHeight: 150)
                     .clipShape(Circle())
+                    .shadow(radius: 10)
                 
                 VStack(spacing: 10){
-                    Text("Made with love by:")
+                    Text("Made with ♥ by:")
                         .font(.title.bold())
                     VStack(spacing: 8){
                         Text("Jose Julian Lopez Huacuja")
@@ -33,8 +52,9 @@ struct SettingsView: View {
                 .padding(15)
                 .background(.ultraThinMaterial)
                 .cornerRadius(20)
+                .shadow(radius: 10, x: 0, y: 10)
                 
-                Text("Proyect made with swift ui")
+                Text("Proyect made with SwiftUi and GitHub")
                 
                 Spacer()
                 

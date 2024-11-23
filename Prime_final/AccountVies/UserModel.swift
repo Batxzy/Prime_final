@@ -108,29 +108,37 @@ public class UserManager: ObservableObject {
             return true
         }
 
-    // Delete user account
-        func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
-            guard
-                let tempUser = userDictionary[delUsername],
-                tempUser.Password == delPassword else {
-                return false
-            }
-            
-            userDictionary.removeValue(forKey: delUsername)
-            if currentUser?.username == delUsername {
-                logout(path: path)
-            }
+    // In UserModel.swift
 
-            path.wrappedValue = NavigationPath()
-            
-            // Navigate based on remaining users
-            if !userDictionary.isEmpty {
-                    path.wrappedValue.append(AppRoute.selectAccount)
-                } else {
-                    path.wrappedValue.append(AppRoute.login)
-            }
-            return true
+    func deleteUser(delUsername: String, delPassword: String, path: Binding<NavigationPath>) -> Bool {
+        guard
+            let tempUser = userDictionary[delUsername],
+            tempUser.Password == delPassword else {
+            return false
         }
+        
+        // Remove user from dictionary
+        userDictionary.removeValue(forKey: delUsername)
+        
+        // Clear current user if it's the one being deleted
+        if currentUser?.username == delUsername {
+            currentUser = nil
+        }
+
+        // Reset navigation path
+        path.wrappedValue = NavigationPath()
+        
+        // Navigate based on remaining users
+        if userDictionary.isEmpty {
+            // If no users left, go to login
+            path.wrappedValue.append(AppRoute.login)
+        } else {
+            // If users remain, go to select account
+            path.wrappedValue.append(AppRoute.selectAccount)
+        }
+        
+        return true
+    }
 
     // Update user profile
         func updateProfile(newUsername: String, newPassword: String, path: Binding<NavigationPath>) -> Bool {

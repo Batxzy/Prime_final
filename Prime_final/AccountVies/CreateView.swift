@@ -95,6 +95,17 @@ struct CreateAccountView: View {
                         
 //MARK: - Create Account Button
                 Button("Create") {
+                    if username.isEmpty {
+                            showError = true
+                            errorMessage = "Username cannot be empty"
+                            return
+                        }
+                        
+                        if password.isEmpty {
+                            showError = true
+                            errorMessage = "Password cannot be empty"
+                            return
+                        }
                     if userManager.createUser(newUsername: username, newPassword: password, path: $path) {
                         // Account created successfully
                         username = ""

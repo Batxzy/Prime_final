@@ -7,7 +7,7 @@ struct Prime_finalApp: App {
     @State private var showSplash = true
     @State private var timeRemaining = 2
     @State private var hasNavigated  = false
-/*
+
     public  init() {
             // Add default user if needed
             let defaultUser = UserBlueprint(
@@ -19,7 +19,7 @@ struct Prime_finalApp: App {
             UserManager.shared.userDictionary["Julian"] = defaultUser
             UserManager.shared.currentUser = defaultUser
         }
-    */
+    
     var body: some Scene {
            WindowGroup {
                ZStack {

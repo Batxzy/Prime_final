@@ -14,20 +14,20 @@ struct FirstControl: View {
     @Binding var path: NavigationPath
     
     private var featuredMovies: [MovieData] {
-        Array(movieDB.movies.prefix(5))
+        Array(movieDB.movies.shuffled().prefix(6))
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             TabView(selection: $currentPage) {
-                ForEach(featuredMovies) { movie in
+                ForEach (Array(featuredMovies.enumerated()), id: \.element.id) { index, movie in
                     Image(movie.thumbnailHUrl)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 340, height: 187)
                         .clipped()
                         .cornerRadius(10)
-                        .tag(movie.id)
+                        .tag(index)
                         .onTapGesture {
                             path.append(AppRoute.movieDetail(movie.id))
                         }
