@@ -115,7 +115,7 @@ struct CreateAccountView: View {
 
 //MARK: - already have an account
                 Button("Already have an account? Login") {
-                    path.append(AppRoute.selectAccount)
+                    path.removeLast()
                 }
                 .underline(true, pattern: .solid)
                 .foregroundColor(.white)

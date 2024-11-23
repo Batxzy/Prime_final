@@ -6,7 +6,7 @@ struct RootView: View {
 
 var body: some View {
     NavigationStack(path: $Navpath) {
-            PRIME() // Show Prime logo initially
+        Color.clear // Show Prime logo initially
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .home:
@@ -16,6 +16,7 @@ var body: some View {
                         ContentView2(path: $Navpath, CurrentmovieId: id)
                     case .editProfile:
                         EditAccountView(path: $Navpath)
+                            .navigationBarBackButtonHidden(true)
                     case .watchlist:
                         watchlistView( path: $Navpath)
                     case .login:
@@ -28,6 +29,7 @@ var body: some View {
                         CreateAccountView(path: $Navpath)
                     case .search:
                         LoginView(path: $Navpath)
+                            .navigationBarBackButtonHidden(true)
                     case .settings:
                         SettingsView(path: $Navpath)
                     }
