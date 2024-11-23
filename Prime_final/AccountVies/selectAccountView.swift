@@ -23,6 +23,9 @@ struct SelectAccountView: View {
             BottomEditView(isEditing: $isEditing)
         }
             .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topLeading)
+            .onAppear {
+                print("Current users: \(userManager.userDictionary)")
+            }
     }
 }
 
@@ -122,8 +125,10 @@ struct ProfileGridView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns:columns, spacing: 20) {
-                ForEach(Array(userManager.userDictionary.values), id: \.username) { user in 
-                    ProfileButton(profileName: user.username, 
+                
+                ForEach(Array(userManager.userDictionary.values), id: \.username) { user in
+                    
+                    ProfileButton(profileName: user.username,
                                 PFPimage: user.profilePictureName, 
                                 isEditing: $isEditing,
                                 path: $path)

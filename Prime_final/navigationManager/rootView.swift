@@ -33,6 +33,6 @@ var body: some View {
                     }
                 }
         }
-        .environmentObject(UserManager())
+    .environmentObject(UserManager.shared)
     }
 }
