@@ -67,11 +67,38 @@ struct buttontitle: View {
 
 //MARK: - Video player
 struct VideoPlayerView: View {
-    let VideoUrl :String
+    let VideoUrl: String
+    @Environment(\.dismiss) private var dismiss
+    @State private var player: AVPlayer?
+    @State private var showError = false
+    
     var body: some View {
-        let url = URL(string: VideoUrl)!
-        VideoPlayer(player: AVPlayer(url: url))
-            .edgesIgnoringSafeArea(.all)
+        Group {
+            if let player = player {
+                VideoPlayer(player: player)
+                    .edgesIgnoringSafeArea(.all)
+                    .onDisappear {
+                        player.pause()
+                    }
+            } else {
+                ProgressView()
+            }
+        }
+        .alert("Error", isPresented: $showError) {
+            Button("OK") { dismiss() }
+        } message: {
+            Text("Could not load video")
+        }
+        .onAppear {
+            // Try to load local video from bundle
+            if let path = Bundle.main.path(forResource: VideoUrl.replacingOccurrences(of: ".mp4", with: ""), ofType: "mp4") {
+                let url = URL(fileURLWithPath: path)
+                player = AVPlayer(url: url)
+                player?.play()
+            } else {
+                showError = true
+            }
+        }
     }
 }
 
