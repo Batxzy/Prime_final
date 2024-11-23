@@ -70,6 +70,7 @@ public class UserManager: ObservableObject {
             
             userDictionary[newUsername] = newUser
             currentUser = newUser
+            path.wrappedValue = NavigationPath()
             path.wrappedValue.append(AppRoute.home)
             return true
         }
@@ -123,10 +124,10 @@ public class UserManager: ObservableObject {
             path.wrappedValue = NavigationPath()
             
             // Navigate based on remaining users
-            if userCount > 0 {
-                path.wrappedValue.append(AppRoute.selectAccount)
-            } else {
-                path.wrappedValue.append(AppRoute.createAccount)
+            if !userDictionary.isEmpty {
+                    path.wrappedValue.append(AppRoute.selectAccount)
+                } else {
+                    path.wrappedValue.append(AppRoute.login)
             }
             return true
         }

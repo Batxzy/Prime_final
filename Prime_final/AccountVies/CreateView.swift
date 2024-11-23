@@ -99,7 +99,7 @@ struct CreateAccountView: View {
                         // Account created successfully
                         username = ""
                         password = ""
-                        path.append(AppRoute.selectAccount)
+                
                     } else {
                         showError = true
                         errorMessage = "Username already exists"

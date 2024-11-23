@@ -96,9 +96,6 @@ struct EditAccountView: View {
     
     private func deleteAccount() {
         if userManager.deleteUser(delUsername: originalUsername, delPassword: originalPassword, path: $path) {
-           
-            path.removeLast(path.count)
-            path.append(AppRoute.login)
             return
         } else {
             showError = true
