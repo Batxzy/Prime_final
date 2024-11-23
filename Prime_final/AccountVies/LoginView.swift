@@ -95,7 +95,6 @@ struct LoginView: View {
                     //MARK: - login button
                     Button("Login") {
                         if userManager.login(loginUsername: username, loginPassword: password, path: $path) {
-                            path.append(AppRoute.home)
                             username = ""
                             password = ""
                         } else {

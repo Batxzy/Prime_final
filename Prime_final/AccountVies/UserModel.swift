@@ -102,7 +102,8 @@ public class UserManager: ObservableObject {
             currentUser = tempUser
 
             selectedUserForSwitch = nil
-            path.wrappedValue.append(AppRoute.home)
+            path.wrappedValue = NavigationPath()
+            path.wrappedValue.append(AppRoute.selectAccount)
             return true
         }
 
