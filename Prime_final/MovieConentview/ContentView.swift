@@ -9,6 +9,7 @@ import SwiftUI
 import AVKit
 
 // MARK: - POSTER
+//este es la imagen
 struct posterview: View {
     let imageUrl: String
     var body: some View {
@@ -64,10 +65,11 @@ struct buttontitle: View {
     }
 }
 
+//MARK: - Video player
 struct VideoPlayerView: View {
     let VideoUrl :String
     var body: some View {
-        let url = URL(string: "https://your-video-url.com")!
+        let url = URL(string: VideoUrl)!
         VideoPlayer(player: AVPlayer(url: url))
             .edgesIgnoringSafeArea(.all)
     }
@@ -219,6 +221,7 @@ struct infoView: View {
 }
 
 //MARK: -MAIN VIEW
+// y esta es deke 
 struct ContentView2: View {
     @Binding var path: NavigationPath
     let CurrentmovieId: Int

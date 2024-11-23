@@ -92,6 +92,7 @@ struct watchChip: View{
                     Text(movie.title)
                         .font(.system(size: 14,weight: .bold))
                         .foregroundColor(.white)
+                        .multilineTextAlignment(.leading)
                     
                     HStack(spacing:8){
                         Text(movie.year)
@@ -229,7 +230,24 @@ struct watchlistTitle: View {
         .background(.white.opacity(0.15))
     }
 }
+
 #Preview {
-    watchlistView(path: .constant(NavigationPath()))
-        .environmentObject(UserManager())
+    let mockUserManager = UserManager.shared
+    
+    // Create a mock user with 3 movies in watchlist
+    let mockUser = UserBlueprint(
+        username: "TestUser",
+        profilePictureName: "default_profile",
+        likedMovies: [],
+        dislikedMovies: [],
+        watchlist: [0, 1, 2], // IDs of Puss in Boots, Wild Robot, and Evangelion 1.11
+        Password: "test123"
+    )
+    
+    // Set the mock user as current user
+    mockUserManager.userDictionary["TestUser"] = mockUser
+    mockUserManager.currentUser = mockUser
+    
+    return watchlistView(path: .constant(NavigationPath()))
+        .environmentObject(mockUserManager)
 }
