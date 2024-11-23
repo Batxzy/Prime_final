@@ -183,33 +183,45 @@ public class UserManager: ObservableObject {
             objectWillChange.send()
         }
 
-        func toggleLike(movieId: Int) {
-            guard let currentUsername = currentUser?.username else { return }
+    // In UserManager class, replace the toggleLike function with:
+    func toggleLike(movieId: Int) {
+        guard let currentUsername = currentUser?.username else { return }
+        
+        if currentUser?.likedMovies.contains(movieId) == true {
+            // Unlike
+            userDictionary[currentUsername]?.likedMovies.remove(movieId)
+            currentUser?.likedMovies.remove(movieId)
+        } else {
+            // Like and remove from disliked if it exists
+            userDictionary[currentUsername]?.likedMovies.insert(movieId)
+            currentUser?.likedMovies.insert(movieId)
             
-            if currentUser?.likedMovies.contains(movieId) == true {
-                // Unlike
-                userDictionary[currentUsername]?.likedMovies.remove(movieId)
-                currentUser?.likedMovies.remove(movieId)
-            } else {
-                // Like and remove dislike if exists
-                toggleLike(movieId: movieId)
-            }
-            syncUserData()
+            // Remove from disliked if present
+            userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
+            currentUser?.dislikedMovies.remove(movieId)
         }
+        syncUserData()
+    }
 
-        func toggleDislike(movieId: Int) {
-            guard let currentUsername = currentUser?.username else { return }
+    // Replace the toggleDislike function with:
+    func toggleDislike(movieId: Int) {
+        guard let currentUsername = currentUser?.username else { return }
+        
+        if currentUser?.dislikedMovies.contains(movieId) == true {
+            // Remove dislike
+            userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
+            currentUser?.dislikedMovies.remove(movieId)
+        } else {
+            // Dislike and remove from liked if it exists
+            userDictionary[currentUsername]?.dislikedMovies.insert(movieId)
+            currentUser?.dislikedMovies.insert(movieId)
             
-            if currentUser?.dislikedMovies.contains(movieId) == true {
-                // Remove dislike
-                userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
-                currentUser?.dislikedMovies.remove(movieId)
-            } else {
-                // Dislike and remove like if exists
-                toggleDislike(movieId: movieId)
-            }
-            syncUserData()
+            // Remove from liked if present
+            userDictionary[currentUsername]?.likedMovies.remove(movieId)
+            currentUser?.likedMovies.remove(movieId)
         }
+        syncUserData()
+    }
     
 //MARK: - profile picture functions
 

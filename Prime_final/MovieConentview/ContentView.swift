@@ -60,7 +60,7 @@ struct buttontitle: View {
                 .cornerRadius(10)
             }
         }
-        .padding(0) // Add horizontal padding
+        .padding(.top, 10) // Add horizontal padding
     }
 }
 
@@ -98,7 +98,11 @@ struct interactiveView: View{
             //watchlist
             VStack(alignment: .center, spacing: 10) {
                 Button(action: {
-                    userManager.toggleLike(movieId: movieId)
+                    if isInWatchlist {
+                                userManager.removeFromWatchlist(movieId: movieId)
+                            } else {
+                                userManager.addToWatchlist(movieId: movieId)
+                            }
                 }) {
                     VStack(alignment: .center) {
                         Image(systemName: isInWatchlist ? "plus.app.fill" : "plus.app" )
