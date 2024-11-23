@@ -10,7 +10,7 @@ import SwiftUI
 
 
 //MARK: - userStruct blueprint
-struct UserBlueprint: ObservableObject {
+struct UserBlueprint {
     
      var username: String
      var profilePictureName: String
@@ -20,14 +20,6 @@ struct UserBlueprint: ObservableObject {
      var Password: String
     
     
-    init(username: String, password: String, profilePictureName: String = "default_profile") {
-        self.username = username
-        self.profilePictureName = profilePictureName
-        self.likedMovies = []
-        self.dislikedMovies = []
-        self.watchlist = []
-        self.Password = password
-    }
 }
 
 
@@ -69,14 +61,14 @@ public class UserManager: ObservableObject {
             }
             let newUser = UserBlueprint(
                 username: newUsername, 
-                password: newPassword,
-                profileptictureName: "default_profile",
+                profilePictureName: "default_profile",
                 likedMovies: [],
                 dislikedMovies: [],
-                watchlist: []
+                watchlist: [],
+                Password: newPassword
                 )
             
-            userDictionary.append(newUser)
+            userDictionary.append(newUsername, newUser)
             currentUser = newUser
             path.wrappedValue.append(AppRoute.home)
             return true
@@ -200,7 +192,7 @@ public class UserManager: ObservableObject {
                 currentUser?.likedMovies.remove(movieId)
             } else {
                 // Like and remove dislike if exists
-                likeMovie(movieId: movieId)
+                toggleLike(movieId: movieId)
             }
             syncUserData()
         }
@@ -214,7 +206,7 @@ public class UserManager: ObservableObject {
                 currentUser?.dislikedMovies.remove(movieId)
             } else {
                 // Dislike and remove like if exists
-                dislike(movieId: movieId)
+                toggleDislike(movieId: <#T##Int#>)
             }
             syncUserData()
         }
@@ -234,32 +226,32 @@ public class UserManager: ObservableObject {
         print("new name: \(newName)")
         objectWillChange.send() // Explicitly notify observers of the change
     }
-    
+    // Remove the comment marks and update the syncUserData function:
+    func syncUserData() {
+        // First check if we have a current user at all
+        guard let currentUser = currentUser else { return }
+        
+        // Since UserBlueprint is now a struct (value type), creating a copy is safe
+        var userCopy = UserBlueprint(
+            username: currentUser.username,
+            profilePictureName: currentUser.Password,
+            likedMovies: currentUser.profilePictureName, Password: <#String#>
+        )
+        
+        // Copy collections - this creates new Sets since Set is a value type
+        userCopy.watchlist = currentUser.watchlist
+        userCopy.likedMovies = currentUser.likedMovies
+        userCopy.dislikedMovies = currentUser.dislikedMovies
+        
+        // Update dictionary with the new copy
+        userDictionary[currentUser.username] = userCopy
+        
+        // Update currentUser to match
+        currentUser = userCopy
+        
+        // Notify observers
+        objectWillChange.send()
+    }
+
 }
 
-// Remove the comment marks and update the syncUserData function:
-func syncUserData() {
-    // First check if we have a current user at all
-    guard let currentUser = currentUser else { return }
-    
-    // Since UserBlueprint is now a struct (value type), creating a copy is safe
-    var userCopy = UserBlueprint(
-        username: currentUser.username,
-        password: currentUser.Password,
-        profilePictureName: currentUser.profilePictureName
-    )
-    
-    // Copy collections - this creates new Sets since Set is a value type
-    userCopy.watchlist = currentUser.watchlist 
-    userCopy.likedMovies = currentUser.likedMovies
-    userCopy.dislikedMovies = currentUser.dislikedMovies
-    
-    // Update dictionary with the new copy
-    userDictionary[currentUser.username] = userCopy
-    
-    // Update currentUser to match
-    currentUser = userCopy
-    
-    // Notify observers
-    objectWillChange.send()
-}
