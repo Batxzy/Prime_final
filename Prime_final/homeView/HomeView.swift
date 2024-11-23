@@ -12,6 +12,18 @@ struct HomeView: View {
     @StateObject private var movieDB = MovieDatabase.shared
     @State var selectedTab: TabSelection = .home
     
+    private var randomCategories: [(MovieCategory, String)] {
+        let categories: [(MovieCategory, String)] = [
+            (.trending, "Trending Now"),
+            (.action, "Action Movies"),
+            (.animation, "Animation"),
+            (.drama, "Drama"),
+            (.sciFi, "Sci-Fi"),
+            (.random, "Random Picks"),
+            (.all, "All Movies")
+        ]
+        return categories.shuffled()
+    }
 
     var body: some View {
         ZStack{
@@ -21,13 +33,12 @@ struct HomeView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 15) {
                         FirstControl(path: $path)
-                        ScrollVertical(path: $path, Sectiontitle: "Featured")
-                        ScrollVertical(path: $path, Sectiontitle: "Amazon Originals")
-                        ScrollVertical(path: $path, Sectiontitle: "Movies")
-                        ScrollVertical(path: $path, Sectiontitle: "TV Shows")
-                        ScrollVertical(path: $path, Sectiontitle: "Kids")
+                        ForEach(randomCategories, id: \.0) { category, title in
+                            CategoryScroll(path: $path,category: category,title: title)
+                        }
                     }
                     .padding(.top, 60)
+                    .padding(.bottom, 100)
                 }
             case .watchlist:
                watchlistView(path: $path)

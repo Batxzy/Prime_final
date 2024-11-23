@@ -28,6 +28,10 @@ struct CategoryScroll: View {
             return movieDB.movies.filter { $0.genres.contains("Sci-Fi") }
         case .trending:
             return movieDB.movies.filter { $0.rating >= 8.0 }
+        case .random:
+            return Array(movieDB.movies.shuffled().prefix(5))
+        case .all:
+            return movieDB.movies
         }
     }
     
@@ -60,10 +64,10 @@ enum MovieCategory {
     case drama
     case sciFi
     case trending
-    case ourPicks
-    case allMovies
+    case random
+    case all
 }
 
 #Preview {
-    CategoryScroll(path: .constant(NavigationPath()), category: .animation, title: "Action")
+    CategoryScroll(path: .constant(NavigationPath()), category: .random, title: "Action")
 }
