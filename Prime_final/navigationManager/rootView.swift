@@ -21,7 +21,7 @@ var body: some View {
                         watchlistView( path: $Navpath)
                     case .login:
                         LoginView(path: $Navpath)
-                            .navigationBarBackButtonHidden(true)
+                            .navigationBarBackButtonHidden(userManager.backButtonlogin)
                     case .selectAccount:
                         SelectAccountView(path: $Navpath)
                             .navigationBarBackButtonHidden(userManager.isComingFromLoginOrDelete)

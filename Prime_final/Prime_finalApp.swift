@@ -30,6 +30,7 @@ struct Prime_finalApp: App {
                                    withAnimation {
                                        showSplash = false
                                        if !hasNavigated {
+                                           userManager.backButtonlogin = true
                                            navPath.append(AppRoute.login)
                                            hasNavigated = true
                                        }

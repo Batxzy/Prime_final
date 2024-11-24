@@ -36,6 +36,8 @@ public class UserManager: ObservableObject {
     
     @Published var isComingFromLoginOrDelete: Bool = false
     
+    @Published var backButtonlogin: Bool = false
+    
     //singleton
     static let shared = UserManager()
     
@@ -134,7 +136,7 @@ public class UserManager: ObservableObject {
         
         // Navigate based on remaining users
         if userDictionary.isEmpty {
-            // If no users left, go to login
+            backButtonlogin = true
             path.wrappedValue.append(AppRoute.login)
         } else {
             // If users remain, go to select account

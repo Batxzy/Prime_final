@@ -90,7 +90,7 @@ struct AddProfileButton: View {
     @Binding var path: NavigationPath
     var body: some View {
         Button(action: {
-            
+            userManager.backButtonlogin = false
             path.append(AppRoute.login)
 
         }) {
