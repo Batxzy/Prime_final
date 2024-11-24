@@ -24,6 +24,7 @@ var body: some View {
                             .navigationBarBackButtonHidden(true)
                     case .selectAccount:
                         SelectAccountView(path: $Navpath)
+                            .navigationBarBackButtonHidden(userManager.isComingFromLoginOrDelete)
                     case .welcomeBack(let username):
                         welcomeBack(path: $Navpath, selectedUsername: username)
                     case .createAccount:

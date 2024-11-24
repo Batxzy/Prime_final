@@ -90,10 +90,11 @@ struct AddProfileButton: View {
     @Binding var path: NavigationPath
     var body: some View {
         Button(action: {
-             path.append(AppRoute.createAccount)
+            
+            path.append(AppRoute.login)
 
         }) {
-            VStack(alignment: .center, spacing: 5) {
+            VStack(alignment: .center, spacing: 13) {
                 Circle()
                     .fill(.white.opacity(0.1))
                     .frame(width: 85, height: 85)

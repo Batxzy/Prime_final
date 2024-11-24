@@ -32,7 +32,9 @@ public class UserManager: ObservableObject {
 
     @Published var userDictionary: [String: UserBlueprint] = [:] // username: User
     
-    @Published var navigateToEditProfileAfterWelcomeBack: Bool = false  // Add this flag
+    @Published var navigateToEditProfileAfterWelcomeBack: Bool = false
+    
+    @Published var isComingFromLoginOrDelete: Bool = false
     
     //singleton
     static let shared = UserManager()
@@ -101,7 +103,8 @@ public class UserManager: ObservableObject {
             }
             
             currentUser = tempUser
-
+            
+            isComingFromLoginOrDelete = true
             selectedUserForSwitch = nil
             path.wrappedValue = NavigationPath()
             path.wrappedValue.append(AppRoute.selectAccount)
@@ -124,7 +127,8 @@ public class UserManager: ObservableObject {
         if currentUser?.username == delUsername {
             currentUser = nil
         }
-
+        
+        isComingFromLoginOrDelete = true
         // Reset navigation path
         path.wrappedValue = NavigationPath()
         

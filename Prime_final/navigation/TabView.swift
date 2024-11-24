@@ -38,6 +38,7 @@ struct Tabview: View {
                         .frame(width: 42.5, height: 42.5)
                         .clipShape(Circle())
                         .onTapGesture {
+                            userManager.isComingFromLoginOrDelete = false
                             path.append(AppRoute.selectAccount)
                         }
                     

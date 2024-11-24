@@ -251,6 +251,7 @@ struct SaveDeleteAccountButtons: View{
                     .frame(maxWidth: .infinity, minHeight: 48)
             
             }
+            
         }
         .padding(.horizontal, 41)
         .frame(maxWidth: .infinity, alignment: .top)
