@@ -65,7 +65,7 @@ public class UserManager: ObservableObject {
             }
             let newUser = UserBlueprint(
                 username: newUsername, 
-                profilePictureName: "default_profile",
+                profilePictureName: "default1",
                 likedMovies: [],
                 dislikedMovies: [],
                 watchlist: [],
