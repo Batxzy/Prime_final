@@ -22,7 +22,7 @@ struct welcomeBack: View {
             return
         }
         
-        // Create fresh instance with all data
+        
         userManager.currentUser = UserBlueprint(
             username: user.username,
             profilePictureName: user.profilePictureName,
@@ -32,9 +32,6 @@ struct welcomeBack: View {
         userManager.currentUser?.watchlist = user.watchlist
         userManager.currentUser?.likedMovies = user.likedMovies
         userManager.currentUser?.dislikedMovies = user.dislikedMovies
-        
-        // Sync data before navigation
-        //$userManager.syncUserData
         
         if userManager.navigateToEditProfileAfterWelcomeBack {
             path.append(AppRoute.editProfile)

@@ -18,8 +18,8 @@ struct EditAccountView: View {
     @State private var selectedProfilePicture: String?
     @State private var hasChanges = false
     
-    @State private var showError = false  // Missing
-    @State private var errorMessage = ""  // Missing
+    @State private var showError = false  
+    @State private var errorMessage = "" 
 
     @Binding var path: NavigationPath
 
@@ -35,27 +35,27 @@ struct EditAccountView: View {
     
     // Que cargeu los datos del usuario
         private func loadUserData() {
-        // Safely unwrap current user
+        
         guard let currentUser = userManager.currentUser else {
-            // Handle error case
+            e
             showError = true
             errorMessage = "Could not load user data"
             return
         }
         
-        // Load all user data
+        
         username = currentUser.username
         password = currentUser.Password
         
-        // Store original values for change detection
+        
         originalUsername = currentUser.username
         originalPassword = currentUser.Password
         originalProfilePicture = currentUser.profilePictureName
         
-        // Set profile picture
+       
         selectedProfilePicture = currentUser.profilePictureName
         
-        // Ensure UserManager data is synced
+       
         userManager.syncUserData()
     }
 
@@ -72,22 +72,22 @@ struct EditAccountView: View {
             return false
         }
         
-        // Create updated user data
+        
         var updatedUser = userManager.currentUser!
         updatedUser.username = username
         updatedUser.Password = password
         
-        // Update the dictionary
+        
         userManager.userDictionary.removeValue(forKey: currentUsername)
         userManager.userDictionary[username] = updatedUser
         userManager.currentUser = updatedUser
         
-        // Update profile picture if changed
+        
         if let newProfilePic = selectedProfilePicture {
             userManager.updateProfilePictureName(to: newProfilePic)
         }
         
-        // Clear navigation stack and go home
+        
         path = NavigationPath()
         path.append(AppRoute.home)
         

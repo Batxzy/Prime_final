@@ -106,8 +106,7 @@ struct CreateAccountView: View {
                             errorMessage = "Password cannot be empty"
                             return
                         }
-                    if userManager.createUser(newUsername: username, newPassword: password, path: $path) {
-                        // Account created successfully
+                    if userManager.createUser(newUsername: username, newPassword: password, path: $path) {                      
                         username = ""
                         password = ""
                 

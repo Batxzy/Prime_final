@@ -14,9 +14,9 @@ struct UserBlueprint {
     
      var username: String
      var profilePictureName: String
-     var likedMovies = Set<Int> ()    // Stores IDs of liked movies
-     var dislikedMovies = Set<Int> () // Stores IDs of disliked movies
-     var watchlist = Set<Int> ()       // Stores IDs of watchlist movies
+     var likedMovies = Set<Int> ()    
+     var dislikedMovies = Set<Int> () 
+     var watchlist = Set<Int> ()
      var Password: String
     
     
@@ -30,7 +30,7 @@ public class UserManager: ObservableObject {
 
     @Published var currentUser: UserBlueprint?
 
-    @Published var userDictionary: [String: UserBlueprint] = [:] // username: User
+    @Published var userDictionary: [String: UserBlueprint] = [:]
     
     @Published var navigateToEditProfileAfterWelcomeBack: Bool = false
     
@@ -122,24 +122,24 @@ public class UserManager: ObservableObject {
             return false
         }
         
-        // Remove user from dictionary
+       
         userDictionary.removeValue(forKey: delUsername)
         
-        // Clear current user if it's the one being deleted
+        
         if currentUser?.username == delUsername {
             currentUser = nil
         }
         
         isComingFromLoginOrDelete = true
-        // Reset navigation path
+        
         path.wrappedValue = NavigationPath()
         
-        // Navigate based on remaining users
+        
         if userDictionary.isEmpty {
             backButtonlogin = true
             path.wrappedValue.append(AppRoute.login)
         } else {
-            // If users remain, go to select account
+            
             path.wrappedValue.append(AppRoute.selectAccount)
         }
         
@@ -174,32 +174,32 @@ public class UserManager: ObservableObject {
         }
 //MARK: - movie functions
 
-    // Add movie to watchlist and un add watchlist
+   
         func removeFromWatchlist(movieId: Int) {
-            // Make sure we have a current user
+            
             guard let currentUsername = currentUser?.username else { return }
             
             // Remove the movie ID from the watchlist
             userDictionary[currentUsername]?.watchlist.remove(movieId)
             currentUser?.watchlist.remove(movieId)
             
-            // Update current user reference
+            
             objectWillChange.send()
         }   
 
         func addToWatchlist(movieId: Int) {
-            // Make sure we have a current user
+            
             guard let currentUsername = currentUser?.username else { return }
             
-            // Add the movie ID to the watchlist
+            
             userDictionary[currentUsername]?.watchlist.insert(movieId)
             currentUser?.watchlist.insert(movieId)
             
-            // Update current user reference
+           
             objectWillChange.send()
         }
 
-    // In UserManager class, replace the toggleLike function with:
+    
     func toggleLike(movieId: Int) {
         guard let currentUsername = currentUser?.username else { return }
         
@@ -208,18 +208,18 @@ public class UserManager: ObservableObject {
             userDictionary[currentUsername]?.likedMovies.remove(movieId)
             currentUser?.likedMovies.remove(movieId)
         } else {
-            // Like and remove from disliked if it exists
+            
             userDictionary[currentUsername]?.likedMovies.insert(movieId)
             currentUser?.likedMovies.insert(movieId)
             
-            // Remove from disliked if present
+            
             userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
             currentUser?.dislikedMovies.remove(movieId)
         }
         syncUserData()
     }
 
-    // Replace the toggleDislike function with:
+   
     func toggleDislike(movieId: Int) {
         guard let currentUsername = currentUser?.username else { return }
         
@@ -228,11 +228,11 @@ public class UserManager: ObservableObject {
             userDictionary[currentUsername]?.dislikedMovies.remove(movieId)
             currentUser?.dislikedMovies.remove(movieId)
         } else {
-            // Dislike and remove from liked if it exists
+            
             userDictionary[currentUsername]?.dislikedMovies.insert(movieId)
             currentUser?.dislikedMovies.insert(movieId)
             
-            // Remove from liked if present
+            
             userDictionary[currentUsername]?.likedMovies.remove(movieId)
             currentUser?.likedMovies.remove(movieId)
         }
@@ -241,25 +241,26 @@ public class UserManager: ObservableObject {
     
 //MARK: - profile picture functions
 
-    // Check if username exists
+    
     func userExists(_ username: String) -> Bool {
         return userDictionary.keys.contains(username)
     }
     
-    // Update profile picture name
+    
     func updateProfilePictureName(to newName: String) {
-        // Make sure this modifies the currentUser property
+        
         currentUser?.profilePictureName = newName
         
         print("new name: \(newName)")
-        objectWillChange.send() // Explicitly notify observers of the change
+        objectWillChange.send()
     }
-    // Remove the comment marks and update the syncUserData function:
+
+
     func syncUserData() {
-        // First check if we have a current user at all
+        
         guard var currentUser = currentUser else { return }
         
-        // Since UserBlueprint is now a struct (value type), creating a copy is safe
+        
         var userCopy = UserBlueprint(
             username: currentUser.username,
             profilePictureName: currentUser.profilePictureName,
@@ -269,18 +270,18 @@ public class UserManager: ObservableObject {
             Password: currentUser.Password
         )
         
-        // Copy collections - this creates new Sets since Set is a value type
+       
         userCopy.watchlist = currentUser.watchlist
         userCopy.likedMovies = currentUser.likedMovies
         userCopy.dislikedMovies = currentUser.dislikedMovies
         
-        // Update dictionary with the new copy
+        
         userDictionary[currentUser.username] = userCopy
         
-        // Update currentUser to match
+        
         currentUser = userCopy
         
-        // Notify observers
+        
         objectWillChange.send()
     }
 

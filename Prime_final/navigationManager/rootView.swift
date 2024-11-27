@@ -6,7 +6,7 @@ struct RootView: View {
 
 var body: some View {
     NavigationStack(path: $Navpath) {
-        Color.clear // Show Prime logo initially
+        Color.clear
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .home:

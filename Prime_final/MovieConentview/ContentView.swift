@@ -9,6 +9,7 @@ import SwiftUI
 import AVKit
 
 // MARK: - POSTER
+
 //este es la imagen
 struct posterview: View {
     let imageUrl: String
@@ -63,7 +64,7 @@ struct buttontitle: View {
                 .cornerRadius(10)
             }
         }
-        .padding(.top, 10) // Add horizontal padding
+        .padding(.top, 10)
     }
 }
 

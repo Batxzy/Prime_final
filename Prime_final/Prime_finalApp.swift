@@ -9,7 +9,6 @@ struct Prime_finalApp: App {
     @State private var hasNavigated  = false
 
     public  init() {
-            // Add default user if needed
             let defaultUser = UserBlueprint(
                 username: "Julian",
                 profilePictureName: "furry1",

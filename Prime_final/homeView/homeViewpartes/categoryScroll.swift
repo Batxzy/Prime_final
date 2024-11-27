@@ -8,14 +8,13 @@
 import SwiftUI
 
 
-// Genre-based scroll view
 struct CategoryScroll: View {
     @StateObject private var movieDB = MovieDatabase.shared
     @Binding var path: NavigationPath
     let category: MovieCategory
     let title: String
     
-    // Filter movies based on category
+
     var filteredMovies: [MovieData] {
         switch category {
         case .action:

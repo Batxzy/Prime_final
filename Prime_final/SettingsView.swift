@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
-// Import required framework at top of file
 import WebKit
 
-// Create a GIF view wrapper
+
 struct GIFView: UIViewRepresentable {
     let gifName: String
     

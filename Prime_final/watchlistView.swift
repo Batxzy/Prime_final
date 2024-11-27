@@ -234,17 +234,17 @@ struct watchlistTitle: View {
 #Preview {
     let mockUserManager = UserManager.shared
     
-    // Create a mock user with 3 movies in watchlist
+    //mock user
     let mockUser = UserBlueprint(
         username: "TestUser",
         profilePictureName: "default_profile",
         likedMovies: [],
         dislikedMovies: [],
-        watchlist: [0, 1, 2], // IDs of Puss in Boots, Wild Robot, and Evangelion 1.11
+        watchlist: [0, 1, 2], 
         Password: "test123"
     )
     
-    // Set the mock user as current user
+    
     mockUserManager.userDictionary["TestUser"] = mockUser
     mockUserManager.currentUser = mockUser
     

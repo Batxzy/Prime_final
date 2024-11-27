@@ -3,12 +3,12 @@ import SwiftUI
 //MARK: - AppRoute list of channels
 enum AppRoute: Hashable {
     case home
-    case movieDetail(Int)  // Movie ID
+    case movieDetail(Int)
     case editProfile
     case login
     case watchlist
     case selectAccount
-    case welcomeBack(String) // Username
+    case welcomeBack(String)
     case createAccount
     case settings
 }
