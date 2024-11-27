@@ -182,7 +182,7 @@ public class MovieDatabase: ObservableObject {  // Make the class public
         ),
         MovieData(
             id: 12,
-            thumbnailHUrl: "inception",
+            thumbnailHUrl: "Inception",
             thumbnailVUrl: "Inception_V",
             videoUrl: "Inception",
             title: "Inception",
@@ -195,8 +195,8 @@ public class MovieDatabase: ObservableObject {  // Make the class public
         ),
         MovieData(
             id: 13,
-            thumbnailHUrl: "interstellar",
-            thumbnailVUrl: "Interstellar_V",
+            thumbnailHUrl: "Interstellar",
+            thumbnailVUrl: "interstellar_V",
             videoUrl: "Inter",
             title: "Interstellar",
             description: "Filmmaker Christopher Nolan takes us on another epic science fiction journey. Matthew McConaughey and Anne Hathaway join an acclaimed crew as members of an interspace exploratory team that overcome the impossible.",
