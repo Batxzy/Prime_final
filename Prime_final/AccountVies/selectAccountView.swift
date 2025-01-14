@@ -167,5 +167,5 @@ struct BottomEditView: View {
 
 
 #Preview {
-    SelectAccountView(path: .constant(NavigationPath()))
+    SelectAccountView(path: .constant(NavigationPath())).environmentObject(UserManager())
 }

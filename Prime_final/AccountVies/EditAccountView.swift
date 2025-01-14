@@ -3,6 +3,7 @@ import SwiftUI
 struct EditAccountView: View {
     //MARK: - un chingo de variables y el singleton
     @ObservedObject private var userManager = UserManager.shared
+    
     @State private var username: String = ""
     @State private var password: String = ""
     
@@ -21,6 +22,7 @@ struct EditAccountView: View {
     @State private var showError = false  
     @State private var errorMessage = "" 
 
+    //hay un state  que controla la navegacion por stacks
     @Binding var path: NavigationPath
 
 //MARK: - funciciones
@@ -33,11 +35,15 @@ struct EditAccountView: View {
         selectedProfilePicture != originalProfilePicture)    
     }
     
-    // Que cargeu los datos del usuario
+    // funcion para que cargue los datos del usario
         private func loadUserData() {
         
+            
+        // use unguard para poder manejar el caso de que que el current user. bascimenete si no existe un usuario para nadota y trato de cargar datos
+        
+        //current user esta en el user model  y guarda la informacion del usario actual
+            
         guard let currentUser = userManager.currentUser else {
-            e
             showError = true
             errorMessage = "Could not load user data"
             return
@@ -48,11 +54,12 @@ struct EditAccountView: View {
         password = currentUser.Password
         
         
+        //guardo en memoria la imagen original y el pfp original y el selecionado para poder hacer cambios depues
+            
         originalUsername = currentUser.username
         originalPassword = currentUser.Password
-        originalProfilePicture = currentUser.profilePictureName
         
-       
+        originalProfilePicture = currentUser.profilePictureName
         selectedProfilePicture = currentUser.profilePictureName
         
        
@@ -62,15 +69,26 @@ struct EditAccountView: View {
 
 // Guardar los cambios
     private func saveChanges() -> Bool {
+        
+        // cuando no exsite un usario en el user manager y este da nil valio madres y la funcion save changes va retornar falso lol
+        
+        //tipo ahi lo que anda haciendo es crear una variable que solo va ser usada en la funcion. asi k si accedo al user manager y no existe un current user la fakin shit va dar nil si da nil va retornar que es falso
+        
         guard let currentUsername = userManager.currentUser?.username else {
             return false
         }
 
+        //si es exitoso, va checcar primero que tu usuario no sea el mismo que ya tenias y hacer una funcion en el user manager que va checha y va decir. " a chinga este usario ya existe en el prime de este cel, nell perro"
+        
         if username != originalUsername && userManager.userExists(username) {
+            //esto dispara un mensaje de error que es definido mas abaajo
             showError = true
             errorMessage = "Username already exists"
             return false
         }
+        
+        
+        // si todo bien y todo correcto primero guardo el  el current user en un una variable y actualizo los valores de este im not sure this does something lol
         
         
         var updatedUser = userManager.currentUser!
@@ -81,6 +99,7 @@ struct EditAccountView: View {
         userManager.userDictionary.removeValue(forKey: currentUsername)
         userManager.userDictionary[username] = updatedUser
         userManager.currentUser = updatedUser
+        
         
         
         if let newProfilePic = selectedProfilePicture {
@@ -106,109 +125,119 @@ struct EditAccountView: View {
 
 //MARK: - Edit profile text
     var body: some View {
-        VStack(alignment: .center){
-            VStack(alignment: .center, spacing: 16){
-                VStack(alignment: .center, spacing: 28){
-                    Text("Edit profile")
-                        .font(.title.bold())
-                        .foregroundColor(.white)
+        VStack(alignment: .center, spacing: 28){
+            
+            Text("Edit profile")
+                .font(.title.bold())
+                .foregroundColor(.white)
 
-                        //vstack para la imagen de perfil y el texto de para cambiar la contraseña
-                            VStack(alignment: .center, spacing: 10){
-                                Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                                
-                            //change image button    
-                                HStack{
-                                    Button {
-                                        showingImagePicker = true
-                                    } label: {
-                                        HStack {
-                                            Text("Change image")
-                                                .font(.callout.bold())
-                                            Image(systemName: "chevron.right")
-                                        }
-                                        .foregroundColor(.white)
-                                    }
-                                    .sheet(isPresented: $showingImagePicker) {
-                                        selectProfilePic()
-                                            .environmentObject(userManager)  // Use the existing userManager instance
-                                            .onChange(of: userManager.currentUser?.profilePictureName) { newValue in
-                                                if let newValue = newValue {
-                                                    selectedProfilePicture = newValue
-                                                    hasChanges = true
-                                                }
-                                            }
-                                    }
-                                }
-                                .padding(13)
-                                .frame(maxWidth: .infinity, alignment: .top)
+                //vstack para la imagen de perfil y el texto de para cambiar la contraseña
+                    VStack(alignment: .center, spacing: 10){
+                        Image(UserManager.shared.currentUser?.profilePictureName ?? "default_profile")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
                         
-                            //MARK: - username  and password text field
-                                VStack(alignment: .leading, spacing: 10){
-                                    Text("Username")
+                    //change image button
+                        HStack{
+                            Button {
+                                //cuando le puchas al boton cambias la state variable
+                                showingImagePicker = true
+                            } label: {
+                                HStack {
+                                    Text("Change image")
                                         .font(.callout.bold())
-                                        .foregroundColor(.white)
-                                    HStack{
-                                        TextField("Username", text: $username)
-                                        Spacer()
-                                        Image(systemName: "pencil")
-                                            .foregroundColor(.white)
-                                    }
-                                    .modifier(TextFieldModifiers())
+                                    Image(systemName: "chevron.right")
                                 }
-                                
+                                .foregroundColor(.white)
+                            }
                             
-                                VStack(alignment: .leading, spacing: 10){
-                                    Text("Password")
-                                        .font(.callout.bold())
-                                        .foregroundColor(.white)
-                                    HStack{
-                                        if isSecured {
-                                            AnyView(SecureField("Password", text: $password))
-                                        } else {
-                                            AnyView(TextField("Password", text: $password))
-                                        }
-                                        Spacer()
-                                        Button {
-                                            isSecured.toggle()
-                                        } label: {
-                                            Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
-                                                .foregroundColor(.white)
+                            //usando una sheet para presentar el selecionador de imagenes de perfil
+                            
+                            //esta madre ocupa una state variable para controlar si se ve o ne
+                            .sheet(isPresented: $showingImagePicker) {
+                                
+                                //llamo a la view de selecionar imagenes de perfil
+                                selectProfilePic()
+                                
+                                //tengo que usar el protocolo enviorment object, para poder acceder a la informacion que esta adentro de user manager siendo este la clase que hay detras
+                                
+                            //NOTA: no se si esto sirva, prolly necesito chechar el codigo
+                                    .environmentObject(userManager)
+                                
+                                //NOTA: lo mismo aca en teoria checha si hubo algun cambio
+                                    .onChange(of: userManager.currentUser?.profilePictureName) { newValue in
+                                        if let newValue = newValue {
+                                            selectedProfilePicture = newValue
+                                            hasChanges = true
                                         }
                                     }
-                                    .modifier(TextFieldModifiers())
-                                }
-                    }
-                    .padding(.horizontal, 35)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    Spacer()
-
-                //mark: - save and delete buttons
-                    SaveDeleteAccountButtons(
-                        hasChanges: hasChangesComputed,
-                        onSave: {
-                            saveChanges()
-                        },
-                        onDelete: {
-                            showingDeleteAlert = true
+                            }
                         }
-                    )
-                    .alert("Delete Account", isPresented: $showingDeleteAlert) {
-                        Button("Delete", role: .destructive, action: deleteAccount)
-                        Button("Cancel", role: .cancel) { }
-                    } message: {
-                        Text("Are you sure you want to delete your account? This action cannot be undone.")
-                    }
+                        .padding(13)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                
+                    //MARK: - username  and password text field
+                        VStack(alignment: .leading, spacing: 10){
+                            Text("Username")
+                                .font(.callout.bold())
+                                .foregroundColor(.white)
+                            HStack{
+                                TextField("Username", text: $username)
+                                Spacer()
+                                Image(systemName: "pencil")
+                                    .foregroundColor(.white)
+                            }
+                            .modifier(TextFieldModifiers())
+                        }
+                        
                     
-                    .onAppear {
-                        loadUserData()
-                    }
+                        VStack(alignment: .leading, spacing: 10){
+                            Text("Password")
+                                .font(.callout.bold())
+                                .foregroundColor(.white)
+                            HStack{
+                                if isSecured {
+                                    AnyView(SecureField("Password", text: $password))
+                                } else {
+                                    AnyView(TextField("Password", text: $password))
+                                }
+                                Spacer()
+                                Button {
+                                    isSecured.toggle()
+                                } label: {
+                                    Image(systemName: isSecured ? "eye.fill" : "eye.slash.fill")
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .modifier(TextFieldModifiers())
+                        }
+            }
+            .padding(.horizontal, 35)
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            Spacer()
+
+        //mark: - save and delete buttons
+            SaveDeleteAccountButtons(
+                hasChanges: hasChangesComputed,
+                onSave: {
+                    saveChanges()
+                },
+                onDelete: {
+                    showingDeleteAlert = true
                 }
+            )
+            .alert("Delete Account", isPresented: $showingDeleteAlert) {
+                Button("Delete", role: .destructive, action: deleteAccount)
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Are you sure you want to delete your account? This action cannot be undone.")
+            }
+            
+            .onAppear {
+                loadUserData()
             }
         }
     }
@@ -218,6 +247,7 @@ struct EditAccountView: View {
 struct SaveDeleteAccountButtons: View{
 
     var hasChanges: Bool
+    
     public let onSave: () -> Void
     public let onDelete: () -> Void
 
